@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('Users', function (Blueprint $table) {
-            $table->unsignedBigInteger('city_id')->nullable()->after('fcm_token');
+            $table->unsignedBigInteger('city_id')->nullable()->after('address');
             $table->foreign('city_id')->references('id')->on('cities')->cascadeOnDelete();
-            $table->longText('address')->nullable()->after('city_id');
         });
     }
 

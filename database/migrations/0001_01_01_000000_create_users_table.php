@@ -18,12 +18,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('user_name');
             $table->string('image')->nullable();
-            $table->string('email')->unique();
+            $table->string(column: 'email')->unique();
             $table->string('phone')->unique();
             $table->longText('fcm_token')->nullable();
             $table->integer('provider')->comment('App\Enums\Provider')->default(Provider::Application->value);
             $table->integer('status')->comment('App\Enums\User')->default(UserStatus::Active->value);
             $table->string('password');
+            $table->longText('address')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->rememberToken();
