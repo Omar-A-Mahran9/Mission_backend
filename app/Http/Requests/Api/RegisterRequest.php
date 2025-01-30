@@ -30,10 +30,10 @@ class RegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'user_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            'phone' => ['required', 'string', new PhoneNumber(), 'max:20', new ExistPhone(new User(), null, false)],
+            'phone' => ['required', new PhoneNumber(), new ExistPhone(new User(), null, false)],
             'email' => 'required|string|email|unique:users',
             'provider' => ['required', 'in:' . implode(',', array_keys(Provider::values()))],
-            'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed', new PasswordNumberAndLetter()],
+            'password' => ['required', 'string', 'min:8', 'max:16', 'confirmed', new PasswordNumberAndLetter()],
             'password_confirmation' => 'required|same:password',
         ];
     }

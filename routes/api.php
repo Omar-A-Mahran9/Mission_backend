@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('register', 'Auth\AuthController@register');
-    Route::post('login', 'Auth\AuthController@loginByEmail');
+    Route::post('login', 'Auth\AuthController@login');
     Route::get('resend-otp/{phone}', 'Auth\AuthController@resendOTP');
     Route::post('check-otp/{phone}', 'Auth\AuthController@checkOTP');
     Route::get('google/redirect', 'Auth\GoogleAuthController@redirectToGoogle');

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\LoginRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Http\Requests\Api\RegisterRequest;
 
@@ -19,6 +20,19 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $data                 = $request->validated();
+        $user = User::create($data);
+        // $user->otp()->create([
+        //     'otp' => rand(1111, 9999), // Generate a random 4-digit OTP
+        // ]);
+        $token = $user->createToken('Personal access token to apis')->plainTextToken;
+
+        return $this->success(__("registered in successfully"), ['token' => $token, "customer" => new UserResource($user)]);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $data                 = $request->validated();
+        dd($data);
         $user = User::create($data);
         // $user->otp()->create([
         //     'otp' => rand(1111, 9999), // Generate a random 4-digit OTP
