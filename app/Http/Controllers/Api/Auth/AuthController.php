@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Http\Requests\Api\RegisterRequest;
@@ -32,14 +33,15 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $data                 = $request->validated();
-        dd($data);
-        $user = User::create($data);
-        // $user->otp()->create([
-        //     'otp' => rand(1111, 9999), // Generate a random 4-digit OTP
-        // ]);
-        $token = $user->createToken('Personal access token to apis')->plainTextToken;
+        $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
+        // dd($user);
+        if (Hash::check($request->password, $user->password)) {
+            $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
-        return $this->success(__("registered in successfully"), ['token' => $token, "customer" => new UserResource($user)]);
+            return $this->success("logged in successfully", ['token' => $token, "user" => new UserResource($user)]);
+        } else {
+            return $this->validationFailure(["password" => [__("Password mismatch")]]);
+        }
     }
 
     public function resendOTP(Request $request, $mobile)

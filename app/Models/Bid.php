@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Bid extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = [];
-     /**
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

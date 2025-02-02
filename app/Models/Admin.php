@@ -45,4 +45,34 @@ class Admin extends Authenticatable
     {
         return $this->roles->map->abilities->flatten()->pluck('name')->unique();
     }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'cities_id');
+    }
+
+    public function providers()
+    {
+        return $this->hasMany(UserProvider::class);
+    }
+
+    public function otp()
+    {
+        return $this->hasOne(UserOtp::class);
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
+
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class, 'tickets_users_id');
+    }
 }

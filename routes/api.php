@@ -28,15 +28,19 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('check-otp/{phone}', 'Auth\ForgetPasswordController@checkOTP');
     Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
 
-    Route::middleware(['auth:api', 'checkOtpNotNull'])->group(function () {
-        Route::post('products/{product}/rate', 'ProductController@rate');
-        Route::post('/customers/update-info', 'ProfileController@updateInfo');
-        Route::post('/customers/update-password', 'ProfileController@updatePassword');
-        Route::get('orders', 'OrderController@orderBy');
-        Route::get('track-orders', 'OrderController@trackOrderLogin');
+    Route::get('products', 'ProductController@index');
+    Route::get('products/{product}', 'ProductController@show');
 
-        // Route::get('/current', function (Request $request) {
-        //     return auth()->user();
-        // });
-    });
+    // Route::middleware(['auth:api'])->group(function () {
+    //     Route::get('products', 'ProductController@index');
+    //     Route::post('products/{product}/rate', 'ProductController@rate');
+    //     Route::post('/customers/update-info', 'ProfileController@updateInfo');
+    //     Route::post('/customers/update-password', 'ProfileController@updatePassword');
+    //     Route::get('orders', 'OrderController@orderBy');
+    //     Route::get('track-orders', 'OrderController@trackOrderLogin');
+
+    //     // Route::get('/current', function (Request $request) {
+    //     //     return auth()->user();
+    //     // });
+    // });
 });

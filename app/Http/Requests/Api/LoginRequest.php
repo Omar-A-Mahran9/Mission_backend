@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\User;
 use App\Rules\PhoneNumber;
 use App\Rules\PasswordNumberAndLetter;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,8 +28,15 @@ class LoginRequest extends FormRequest
             'phone' => [
                 'required',
                 new PhoneNumber(),
-                function()=>{
-                    
+                function ($attribute, $value, $fail) {
+                    $user = User::where('phone', 'LIKE', "%$value%")->first();
+                    if (!$user) {
+                        return $fail(__('The phone number does not exist'));
+                    }
+
+                    if ($user->status == 2) {
+                        return $fail(__('User is not active'));
+                    }
                 }
             ],
             'password' => ['required', 'string', 'min:8', 'max:16', new PasswordNumberAndLetter()],
