@@ -15,13 +15,14 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // dd(now());
         return [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
             'start_price' => $this->start_price,
-            'remaining' => Carbon::parse($this->start_time)->isToday() ? (now()->lessThan($this->start_time) ? now()->diff($this->start_time)->format('%H:%I:%S') : "00:00:00") : Carbon::parse($this->start_time)->format('d/m/Y'),
+            // 'remaining' => Carbon::parse($this->start_time)->isToday() ? (now()->lessThan($this->start_time) ? now()->diff($this->start_time)->format('%H:%I:%S') : "00:00:00") : Carbon::parse($this->start_time)->format('d/m/Y'),
+            'remaining' => Carbon::parse($this->start_time)->isToday() ? (now()->lessThan($this->start_time) ? now()->diff($this->start_time)->format('%H:%I:%S') : now()->diff($this->end_time)->format('%H:%I:%S')) : Carbon::parse($this->start_time)->format('d/m/Y'),
+            'is_start' => now()->lessThan($this->start_time) ? 'yes' : 'no',
             'start_time' => Carbon::parse($this->start_time)->format('H:i:s'),
             'end_time' => Carbon::parse($this->end_time)->format('H:i:s'),
             'session_duration' => Carbon::parse($this->end_time)->diffInMinutes(Carbon::parse($this->start_time)),
