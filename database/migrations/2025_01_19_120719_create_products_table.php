@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description_ar');
             $table->string('description_en');
             $table->double('product_price');
+            $table->double('minimum_bid');
             $table->double('start_price');
             $table->double('ticket_price');
             $table->timestamp('start_time')->nullable();

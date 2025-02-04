@@ -494,7 +494,7 @@ return [
         "variations.*.total" => "المجموع",
         "branch_number" => "رقم التواصل بالفرع",
         "shipping_value" => "قيمة الشحن",
-        "" => "",
+        "reason" => "السبب",
         "" => "",
         "" => "",
         "" => "",

@@ -12,11 +12,11 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request)
     {
-        // dd($request->is('dashboard'));
-        if ($request->is('dashboard') || $request->is('dashboard/*'))
-        {
+        // dd($request);
+        if ($request->is('dashboard') || $request->is('dashboard/*')) {
             return route('admin.login-form');
+        } else {
+            return abort(401);
         }
-
     }
 }

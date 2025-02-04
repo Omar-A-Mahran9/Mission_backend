@@ -23,15 +23,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function ($admin, $ability)
-        {
-            if(Auth::guard('admin')->check() && abilities()->contains($ability))
-            {
+        Gate::before(function ($admin, $ability) {
+            if (Auth::guard('admin')->check() && abilities()->contains($ability)) {
                 return true;
             }
-
             return false;
-
         });
     }
 }

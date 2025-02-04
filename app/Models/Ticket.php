@@ -33,4 +33,9 @@ class Ticket extends Model
     {
         static::addGlobalScope(new SortingScope);
     }
+
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class, 'ticket_id'); // Correct one-to-many relationship
+    }
 }
