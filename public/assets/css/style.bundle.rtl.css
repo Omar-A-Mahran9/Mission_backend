@@ -34,7 +34,8 @@
     --bs-primary: #1B84FF;
     --bs-secondary: #F1F1F4;
     --bs-success: #17C653;
-    --bs-info: #7239EA;
+    --bs-info: #211261;
+    /* --bs-info: #7239EA; */
     --bs-warning: #F6C000;
     --bs-danger: #F8285A;
     --bs-dark: #1E2129;
@@ -34525,7 +34526,8 @@ fieldset:disabled .btn {
     --bs-primary: #1B84FF;
     --bs-secondary: #F1F1F4;
     --bs-success: #17C653;
-    --bs-info: #7239EA;
+    --bs-info: #211261;
+    /* --bs-info: #7239EA; */
     --bs-warning: #F6C000;
     --bs-danger: #F8285A;
     --bs-dark: #1E2129;

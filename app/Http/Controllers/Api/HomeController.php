@@ -14,7 +14,7 @@ use App\Http\Requests\Api\StoreRefundRequest;
 use App\Http\Requests\Api\StoreTicketRequest;
 use App\Http\Resources\Api\ProductListResource;
 
-class ProductController extends Controller
+class HomeController extends Controller
 {
     public function index(Request $request)
     {

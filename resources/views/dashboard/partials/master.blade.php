@@ -32,6 +32,7 @@
                 themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
             }
             document.documentElement.setAttribute("data-bs-theme", themeMode);
+           
         }
     </script>
     <!--end::Theme mode setup on page load-->
@@ -123,6 +124,16 @@
     </div>
     <!-- end::Toast -->
     <script>
+        var sessionHasSuccess = {{ request()->session()->has('success') ? 1 : 0 }};
+
+        if (sessionHasSuccess) {
+            showToast()
+        }
+        $(document).ready(function() {
+            let mode = "{{ setting('theme_mode') ?? 'light' }}";
+            localStorage.setItem("data-theme", mode);
+            localStorage.setItem("data-theme-mode", mode);
+        });
         {{--  var favIconCounter = {{ $unreadNotifications->count() }};
         var favicon;
 

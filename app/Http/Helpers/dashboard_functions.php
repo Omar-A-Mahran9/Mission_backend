@@ -113,6 +113,15 @@ if (!function_exists('isTabActive')) {
     }
 }
 
+if (!function_exists('isTabHere')) {
+
+    function isTabHere($path)
+    {
+        if (request()->routeIs($path))
+            return 'here';
+    }
+}
+
 
 if (!function_exists('isTabOpen')) {
 

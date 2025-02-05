@@ -32,7 +32,7 @@ class ProductResource extends JsonResource
             'is_start' => now()->lessThan($this->start_time) ? 'yes' : 'no',
             'start_time' => Carbon::parse($this->start_time)->format('H:i:s'),
             'end_time' => Carbon::parse($this->end_time)->format('H:i:s'),
-              'session_duration' => $this->end_time
+            'session_duration' => $this->end_time
                 ? $this->formatDuration(Carbon::parse($this->start_time)->diff(Carbon::parse($this->end_time)))
                 : 0,
             'bids_count' => $this->bids_count,

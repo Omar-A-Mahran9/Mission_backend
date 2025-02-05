@@ -32,14 +32,14 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('check-otp/{phone}', 'Auth\ForgetPasswordController@checkOTP');
     Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
 
-    // 🔹 Public Product Routes (No Auth Required)
-    Route::get('products', 'ProductController@index');
-    Route::get('products/{product}', 'ProductController@show');
+    // 🔹 Public Home Routes (Both No Auth Required, Require)
+    Route::get('products', 'HomeController@index');
+    Route::get('products/{product}', 'HomeController@show');
 
     // 🔒 Protected Routes (Require Auth)
     Route::group(['middleware' => ['auth:api']], function () {
-        Route::post('refund/{product}', 'ProductController@refund');
-        Route::post('ticket/{product}', 'ProductController@buyTicket');
+        Route::post('refund/{product}', 'HomeController@refund');
+        Route::post('ticket/{product}', 'HomeController@buyTicket');
         // // Authenticated Product Routes
         // Route::get('products', 'ProductController@index'); // Authenticated users get same products
         // Route::get('products/{product}', 'ProductController@show');

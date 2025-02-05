@@ -21,22 +21,13 @@ class Role extends Model
     public static $modules = [
         'admins',
         'users',
-        'tickets',
+        'cities',
         'roles',
-        'bid',
+        'refunds',
         'products',
-        'newsletter',
-        'contact_us',
         'settings',
-        'home_content',
-        'design_types',
-        'fast_cities',
-        'orders',
-        'sliders',
         'recycle_bin',
-        'order_reasons',
-        'order_refund_cancel',
-        'report'
+        'dashboard'
     ];
 
     protected static function booted()
