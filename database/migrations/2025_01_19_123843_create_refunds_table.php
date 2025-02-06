@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->longText('reason');
             $table->unsignedBigInteger('ticket_id');
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('User_id');
             $table->foreign('ticket_id')->references('id')->on('tickets')->cascadeOnDelete();
             $table->timestamps();
         });

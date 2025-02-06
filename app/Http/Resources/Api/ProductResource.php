@@ -35,7 +35,7 @@ class ProductResource extends JsonResource
             'session_duration' => $this->end_time
                 ? $this->formatDuration(Carbon::parse($this->start_time)->diff(Carbon::parse($this->end_time)))
                 : 0,
-            'bids_count' => $this->bids_count,
+            'tickets_count' => $this->refunded_tickets_count,
             'full_image_path' => $this->images()->first()->full_image_path ?? null,
         ];
     }

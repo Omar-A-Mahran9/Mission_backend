@@ -69,4 +69,9 @@ class Product extends Model
     {
         return $this->hasMany(Bid::class, 'product_id');
     }
+
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class); // Correct one-to-many relationship
+    }
 }

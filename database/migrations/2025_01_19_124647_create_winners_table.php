@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('winners', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bid_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('products_id');
             $table->boolean('is_bought');
             $table->double('paid_at');
             $table->foreign('bid_id')->references('id')->on('bids')->cascadeOnDelete();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('products_id')->references('id')->on('products')->cascadeOnDelete();
             $table->timestamps();
         });
     }
