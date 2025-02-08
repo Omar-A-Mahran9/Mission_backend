@@ -36,6 +36,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('products', 'ProductController@index');
     Route::get('products/{product}', 'ProductController@show');
 
+    Route::get('support', 'SupportController@supportData');
     // 🔒 Protected Routes (Require Auth)
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('refund/{product}', 'ProductController@refund');
@@ -43,6 +44,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('auctions', 'ProductController@floatingAuctions');
         Route::get('auctions/products', 'ProductController@auctions');
         Route::get('products/unpaid-wins', 'ProductController@unpaidWinningProducts');
+        Route::get('profile', 'ProfileController@profile');
+        Route::post('profile', 'ProfileController@updateProfile');
+        Route::post('profile/password', 'ProfileController@updatePassword');
         // // Authenticated Product Routes
 
         // 🔹 Add more authenticated routes here

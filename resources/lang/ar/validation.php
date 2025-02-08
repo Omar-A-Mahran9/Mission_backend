@@ -42,6 +42,7 @@ return [
     'exists' => 'القيمة المحددة ( :attribute ) غير موجودة',
     'file' => 'الـ ( :attribute ) يجب أن يكون ملفا',
     'filled' => '( :attribute ) إجباري',
+
     'gt' => [
         'numeric' => 'يجب أن تكون قيمة ( :attribute ) أكبر من :value',
         'file' => 'يجب أن يكون حجم الملف ( :attribute ) أكبر من :value كيلوبايت',
@@ -87,7 +88,16 @@ return [
         'file' => 'يجب أن يكون حجم الملف ( :attribute ) على الأقل :min كيلوبايت',
         'string' => 'يجب أن يكون طول النص ( :attribute ) على الأقل :min حروفٍ/حرفًا',
         'array' => 'يجب أن يحتوي ( :attribute ) على الأقل على :min عُنصرًا/عناصر',
+
     ],
+    'password' => [
+        'regex' => '  يجب أن تحتوي :attribute علي حرف و رقم واحد علي الأقل ',
+        'letters' => 'يجب أن يحتوي ( :attribute ) على حرف واحد على الأقل',
+        'numbers' => 'يجب أن يحتوي ( :attribute ) على رقم واحد على الأقل',
+        'min' => 'يجب أن تحتوي ( :attribute ) على 8 أحرف على الأقل',
+    ],
+
+    'current_password' => '( :attribute ) غير صحيحة',
     'not_in' => '( :attribute ) موجود',
     'not_regex' => 'صيغة ( :attribute ) غير صحيحة',
     'numeric' => 'يجب على ( :attribute ) أن يكون رقمًا',
@@ -161,9 +171,6 @@ return [
         ],
         'phone' => [
             'regex' => 'رقم الهاتف يجب ان يبدأ ب 05 متبوعاً ب 8 ارقام '
-        ],
-        'password' => [
-            'regex' => '  يجب أن تحتوي :attribute علي حرف و رقم واحد علي الأقل '
         ],
         'payment_receipt' => [
             'required_if' => 'حقل ( :attribute ) مطلوب'

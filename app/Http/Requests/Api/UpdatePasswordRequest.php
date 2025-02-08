@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Models\User;
-use App\Rules\PhoneNumber;
+use App\Rules\MatchOldPassword;
+use App\Rules\ValidateOldPassword;
 use App\Rules\PasswordNumberAndLetter;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,22 +25,11 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd(request()->all());
         return [
-            'phone' => [
-                'required',
-                new PhoneNumber(),
-                function ($attribute, $value, $fail) {
-                    $user = User::where('phone', 'LIKE', "%$value%")->first();
-                    if (!$user) {
-                        return $fail(__('The phone number does not exist'));
-                    }
-
-                    if ($user->status == 2) {
-                        return $fail(__('User is not active'));
-                    }
-                }
-            ],
+            'current_password' => ['required', Password::min(8)->max(16)->letters()->numbers(), 'current_password'],
             'password' => ['required', Password::min(8)->max(16)->letters()->numbers()],
+            'password_confirmation' => 'required|same:password',
         ];
     }
 }

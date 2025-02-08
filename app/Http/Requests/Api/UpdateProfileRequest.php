@@ -3,15 +3,12 @@
 namespace App\Http\Requests\Api;
 
 use App\Models\User;
-use App\Enums\Provider;
 use App\Rules\ExistPhone;
 use App\Rules\PhoneNumber;
 use App\Rules\NotNumbersOnly;
-use App\Rules\PasswordNumberAndLetter;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,11 +28,9 @@ class RegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'user_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            'phone' => ['required', new PhoneNumber(), new ExistPhone(new User(), null, false)],
+            'phone' => ['required', new PhoneNumber(), new ExistPhone(new User(), auth()->user()->id, false)],
             'email' => 'required|string|email|unique:users',
-            'provider' => ['required', 'in:' . implode(',', array_keys(Provider::values()))],
-            'password' => ['required', Password::min(8)->max(16)->letters()->numbers()],
-            'password_confirmation' => 'required|same:password',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }
