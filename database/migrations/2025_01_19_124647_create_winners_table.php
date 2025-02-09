@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bid_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('products_id');
+            $table->unsignedBigInteger('product_id');
             $table->boolean('is_bought');
             $table->double('paid_at');
             $table->foreign('bid_id')->references('id')->on('bids')->cascadeOnDelete();
