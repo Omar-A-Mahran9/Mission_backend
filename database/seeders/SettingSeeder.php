@@ -18,6 +18,7 @@ class SettingSeeder extends Seeder
             ['key' => 'address', 'value' => 'شارع أحمد بن حنبل، حي اليريان، الرياض، المملكة العربية السعودية'],
             ['key' => 'phone', 'value' => '+966551646971'],
             ['key' => 'email', 'value' => 'asdad@info.com'],
+            ['key' => 'time_left_to_pay', 'value' => '24'], // 24 hours
         ];
 
         foreach ($data as $setting) {

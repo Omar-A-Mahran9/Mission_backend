@@ -33,4 +33,19 @@ class Winners extends Model
     {
         static::addGlobalScope(new SortingScope);
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function bid()
+    {
+        return $this->belongsTo(Bid::class);
+    }
 }

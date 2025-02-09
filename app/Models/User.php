@@ -18,7 +18,7 @@ class User extends Authenticatable
     use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
 
     protected $guarded = ["password_confirmation"];
-
+    protected $appends = ['full_image_path'];
     /**
      * The attributes that should be hidden for serialization.
      *

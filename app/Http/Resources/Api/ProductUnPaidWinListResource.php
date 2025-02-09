@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,10 +18,8 @@ class ProductUnPaidWinListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'start_price' => $this->start_price,
-            // 'start_time' => Carbon::parse($this->start_time)->isToday() ? now()->diff($this->start_time)->format('%H:%I:%S') : Carbon::parse($this->start_time)->format('d/m/Y H:i:s'),
-            // 'has_ticket' => $user ? $this->tickets()->where('user_id', $user->id)->exists() : false,
-            // 'tickets_count' => $this->refunded_tickets_count,
+            'price' => $this->winner->bid->bid_amount,
+            'remaining' => Carbon::now()->diffForHumans(Carbon::parse($this->winner->created_at)->addHours((int) setting('time_left_to_pay'))),
             'full_image_path' => $this->images()->first()->full_image_path ?? null,
         ];
     }

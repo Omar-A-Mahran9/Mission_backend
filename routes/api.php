@@ -47,6 +47,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('profile', 'ProfileController@profile');
         Route::post('profile', 'ProfileController@updateProfile');
         Route::post('profile/password', 'ProfileController@updatePassword');
+        Route::post('products/bid/{product}', 'ProductController@bid');
+        // Route::post('logout', 'Auth\AuthController@logout');
         // // Authenticated Product Routes
 
         // 🔹 Add more authenticated routes here

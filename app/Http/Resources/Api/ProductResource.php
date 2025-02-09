@@ -29,13 +29,16 @@ class ProductResource extends JsonResource
                         ? now()->diff($this->end_time)->format('%H:%I:%S') // Countdown to end
                         : Carbon::parse($this->end_time)->format('d/m/Y H:i:s'))) // Show end time after session ends
                 : Carbon::parse($this->start_time)->format('d/m/Y H:i:s'),
-            'is_start' => now()->lessThan($this->start_time) ? 'yes' : 'no',
+            'is_start' => now()->lessThan($this->start_time) ? 'no' : 'yes',
             'start_time' => Carbon::parse($this->start_time)->format('H:i:s'),
             'end_time' => Carbon::parse($this->end_time)->format('H:i:s'),
             'session_duration' => $this->end_time
                 ? $this->formatDuration(Carbon::parse($this->start_time)->diff(Carbon::parse($this->end_time)))
                 : 0,
             'tickets_count' => $this->refunded_tickets_count,
+            'bid_count' => $this->bids_count,
+            'participants_count' => $this->participants_count,
+            'highest_rank' => HighestRankListResource::collection($this->highest_rank),
             'full_image_path' => $this->images()->first()->full_image_path ?? null,
         ];
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\Bid;
 use App\Models\Ticket;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -26,8 +27,8 @@ class ProductController extends Controller
         ]);
         $today = Carbon::today()->toDateString();
         $products = Product::with('tickets')->when($request->type === 'today', function ($query) use ($today) {
-            return $query->whereDate('start_time', $today)
-                ->whereTime('start_time', '>', Carbon::now());
+            return $query->whereDate('start_time', $today);
+            // ->whereTime('start_time', '>', Carbon::now());
         }, function ($query) use ($today) {
             return $query->whereDate('start_time', '>', $today);
         })->when(Auth::guard('api')->check(), function ($query) {
@@ -38,11 +39,24 @@ class ProductController extends Controller
             $query->whereDoesntHave('refunds'); // Only count tickets that have refunds
         }])->paginate(8);
         // $query = DB::getQueryLog();
-        return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
+        return $this->successWithPagination(" ",  ProductListResource::collection($products)->response()->getData(true));
     }
     public function show(Product $product)
     {
-        $product->loadCount('bids');
+        $product->loadCount([
+            'tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds'),
+            'bids'
+        ]);
+        $product->participants_count = $product->bids()
+            ->distinct()
+            ->count('user_id');
+        $product->highest_rank = $product->bids()->whereIn('id', function ($query) use ($product) {
+            $query->selectRaw('MAX(id)')
+                ->from('bids')
+                ->where('product_id', $product->id)
+                ->groupBy('user_id'); // Ensures unique user_id
+        })->with('user')
+            ->orderByDesc('bid_amount')->limit(5)->get();
         return $this->success("Successfully", new ProductResource($product));
     }
     public function buyTicket(Request $request, Product $product)
@@ -86,7 +100,6 @@ class ProductController extends Controller
         ]);
         return $this->success("Successfully", []);
     }
-
     public function floatingAuctions()
     {
         $today = Carbon::today()->toDateString(); // Get today's date (YYYY-MM-DD)
@@ -98,7 +111,6 @@ class ProductController extends Controller
             })->get();
         return $this->success("Successfully",  FloatingAuctionListResource::collection($products));
     }
-
     public function auctions(Request $request)
     {
         // DB::enableQueryLog();
@@ -114,27 +126,72 @@ class ProductController extends Controller
                     ->whereDate('start_time', $today) // Products that start today
                     ->whereTime('start_time', '<', $now) // Start time is earlier than now
                     ->whereTime('end_time', '>=', $now); // End time is still active
-            }, function ($query) use ($today) {
-                return $query->whereDate('start_time', '>', $today); // Future products
+            }, function ($query) use ($today, $now) {
+                return $query->whereTime('start_time', '>', $now); // End time is still active
             })
             ->whereHas('tickets', fn($subQuery) => $subQuery->where('user_id', $user->id)) // User must have tickets
             ->withCount(['tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')]) // Count non-refunded tickets
             ->paginate(8);
         // $query = DB::getQueryLog();
+        // dd($now,$today,$query);
         return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
     }
-
+    public function auction(Request $request)
+    {
+        // DB::enableQueryLog();
+        $request->validate([
+            'type' => ['required', Rule::in(['now', 'next'])],
+        ]);
+        $today = Carbon::today()->toDateString();
+        $now = Carbon::now()->toTimeString(); // Get current time (HH:MM:SS)
+        $user = auth()->user();
+        $products = Product::with('tickets')
+            ->when($request->type === 'now', function ($query) use ($today, $now) {
+                return $query
+                    ->whereDate('start_time', $today) // Products that start today
+                    ->whereTime('start_time', '<', $now) // Start time is earlier than now
+                    ->whereTime('end_time', '>=', $now); // End time is still active
+            }, function ($query) use ($today, $now) {
+                return $query->whereTime('start_time', '>', $now); // End time is still active
+            })
+            ->whereHas('tickets', fn($subQuery) => $subQuery->where('user_id', $user->id)) // User must have tickets
+            ->withCount(['tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')]) // Count non-refunded tickets
+            ->paginate(8);
+        // $query = DB::getQueryLog();
+        // dd($now,$today,$query);
+        return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
+    }
+    public function bid(Request $request, Product $product)
+    {
+        $user = auth()->user();
+        $product->loadCount('bids');
+        if (now()->greaterThan($product->end_time)) {
+            return $this->failure(__('The product has already ended'));
+        }
+        $ticket = $product->tickets()->where('user_id', $user->id);
+        if (!$ticket->exists()) {
+            return $this->failure(__('You do not have a ticket for this product'));
+        }
+        if ($product->bids()->latest()->first()->user_id === $user->id) {
+            return $this->failure(__('You have already placed a bid for this product'));
+        }
+        $product->bids()->create([
+            'user_id' => $user->id,
+            'bid_amount' => $product->bids()->latest() ? $product->bids()->latest()->first()->bid_amount + 100 : $product->start_price,
+        ]);
+        return $this->success("Successfully", new ProductResource($product));
+    }
     public function unpaidWinningProducts(Request $request)
     {
-        $user = Auth::guard('api')->user();
+        $user = auth()->user();
 
         $products = Product::whereHas('winner', function ($query) use ($user) {
             $query->where('user_id', $user->id)
                 ->where('is_bought', false); // Ensure payment is not completed
         })
-            ->with(['winner', 'tickets']) // Load related winner and ticket details
-            ->paginate(10);
-
+            ->with(['winner.bid', 'tickets']) // Load related winner and ticket details
+            ->paginate(8);
+   
         return $this->successWithPagination("",  ProductUnPaidWinListResource::collection($products)->response()->getData(true));
     }
 }
