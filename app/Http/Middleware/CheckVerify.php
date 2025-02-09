@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckOtpNotNull
+class CheckVerify
 {
     /**
      * Handle an incoming request.

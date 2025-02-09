@@ -111,76 +111,7 @@ class ProductController extends Controller
             })->get();
         return $this->success("Successfully",  FloatingAuctionListResource::collection($products));
     }
-    public function auctions(Request $request)
-    {
-        // DB::enableQueryLog();
-        $request->validate([
-            'type' => ['required', Rule::in(['now', 'next'])],
-        ]);
-        $today = Carbon::today()->toDateString();
-        $now = Carbon::now()->toTimeString(); // Get current time (HH:MM:SS)
-        $user = auth()->user();
-        $products = Product::with('tickets')
-            ->when($request->type === 'now', function ($query) use ($today, $now) {
-                return $query
-                    ->whereDate('start_time', $today) // Products that start today
-                    ->whereTime('start_time', '<', $now) // Start time is earlier than now
-                    ->whereTime('end_time', '>=', $now); // End time is still active
-            }, function ($query) use ($today, $now) {
-                return $query->whereTime('start_time', '>', $now); // End time is still active
-            })
-            ->whereHas('tickets', fn($subQuery) => $subQuery->where('user_id', $user->id)) // User must have tickets
-            ->withCount(['tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')]) // Count non-refunded tickets
-            ->paginate(8);
-        // $query = DB::getQueryLog();
-        // dd($now,$today,$query);
-        return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
-    }
-    public function auction(Request $request)
-    {
-        // DB::enableQueryLog();
-        $request->validate([
-            'type' => ['required', Rule::in(['now', 'next'])],
-        ]);
-        $today = Carbon::today()->toDateString();
-        $now = Carbon::now()->toTimeString(); // Get current time (HH:MM:SS)
-        $user = auth()->user();
-        $products = Product::with('tickets')
-            ->when($request->type === 'now', function ($query) use ($today, $now) {
-                return $query
-                    ->whereDate('start_time', $today) // Products that start today
-                    ->whereTime('start_time', '<', $now) // Start time is earlier than now
-                    ->whereTime('end_time', '>=', $now); // End time is still active
-            }, function ($query) use ($today, $now) {
-                return $query->whereTime('start_time', '>', $now); // End time is still active
-            })
-            ->whereHas('tickets', fn($subQuery) => $subQuery->where('user_id', $user->id)) // User must have tickets
-            ->withCount(['tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')]) // Count non-refunded tickets
-            ->paginate(8);
-        // $query = DB::getQueryLog();
-        // dd($now,$today,$query);
-        return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
-    }
-    public function bid(Request $request, Product $product)
-    {
-        $user = auth()->user();
-        $product->loadCount('bids');
-        if (now()->greaterThan($product->end_time)) {
-            return $this->failure(__('The product has already ended'));
-        }
-        $ticket = $product->tickets()->where('user_id', $user->id);
-        if (!$ticket->exists()) {
-            return $this->failure(__('You do not have a ticket for this product'));
-        }
-        if ($product->bids()->latest()->first()->user_id === $user->id) {
-            return $this->failure(__('You have already placed a bid for this product'));
-        }
-        $product->bids()->create([
-            'user_id' => $user->id,
-            'bid_amount' => $product->bids()->latest() ? $product->bids()->latest()->first()->bid_amount + 100 : $product->start_price,
-        ]);
-        return $this->success("Successfully", new ProductResource($product));
-    }
+
     public function unpaidWinningProducts(Request $request)
     {
         $user = auth()->user();
@@ -191,7 +122,7 @@ class ProductController extends Controller
         })
             ->with(['winner.bid', 'tickets']) // Load related winner and ticket details
             ->paginate(8);
-   
+
         return $this->successWithPagination("",  ProductUnPaidWinListResource::collection($products)->response()->getData(true));
     }
 }

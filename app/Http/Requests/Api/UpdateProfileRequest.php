@@ -28,7 +28,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'user_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            'phone' => ['required', new PhoneNumber(), new ExistPhone(new User(), auth()->user()->id, false)],
+            // 'phone' => ['required', new PhoneNumber(), new ExistPhone(new User(), auth()->user()->id, false)],
             'email' => 'required|string|email|unique:users',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];

@@ -28,9 +28,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('google/mobile', 'Auth\GoogleAuthController@googleLoginMobile');
 
     // 🔹 Forget Password Routes
-    Route::post('send-otp/{phone}', 'Auth\ForgetPasswordController@sendOtp');
-    Route::post('check-otp/{phone}', 'Auth\ForgetPasswordController@checkOTP');
-    Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
+    // Route::post('send-otp/{phone}', 'Auth\ForgetPasswordController@sendOtp');
+    // Route::post('check-otp/{phone}', 'Auth\ForgetPasswordController@checkOTP');
+    // Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
 
     // 🔹 Public Home Routes (Both No Auth Required, Require)
     Route::get('products', 'ProductController@index');
@@ -41,13 +41,14 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('refund/{product}', 'ProductController@refund');
         Route::post('ticket/{product}', 'ProductController@buyTicket');
-        Route::get('auctions', 'ProductController@floatingAuctions');
-        Route::get('auctions/products', 'ProductController@auctions');
+        Route::get('floating/auctions', 'ProductController@floatingAuctions');
+        Route::get('auctions', 'AuctionController@auctions');
         Route::get('unpaid-wins', 'ProductController@unpaidWinningProducts');
         Route::get('profile', 'ProfileController@profile');
         Route::post('profile', 'ProfileController@updateProfile');
         Route::post('profile/password', 'ProfileController@updatePassword');
-        Route::post('products/bid/{product}', 'ProductController@bid');
+        Route::post('bid/{product}', 'AuctionController@bid');
+        Route::get('auctions/ended', 'AuctionController@endedAuctions');
         // Route::post('logout', 'Auth\AuthController@logout');
         // // Authenticated Product Routes
 

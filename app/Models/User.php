@@ -50,11 +50,11 @@ class User extends Authenticatable
     protected static function booted(): void
     {
         static::addGlobalScope(new SortingScope);
-        // static::created(function ($user) {
-        //     $user->otp()->create([
-        //         'otp' => rand(1111, 9999), // Generate a random 4-digit OTP
-        //     ]);
-        // });
+        static::created(function ($user) {
+            $user->otp()->create([
+                'otp' => rand(1111, 9999), // Generate a random 4-digit OTP
+            ]);
+        });
     }
     public function setPasswordAttribute($value)
     {
@@ -73,7 +73,7 @@ class User extends Authenticatable
 
     public function otp()
     {
-        return $this->hasOne(UserOtp::class, 'user_id', 'id');
+        return $this->hasOne(UserOtp::class, 'user_id');
     }
     public function getFullImagePathAttribute()
     {

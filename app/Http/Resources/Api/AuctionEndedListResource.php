@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AuctionEndedListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,15 +15,14 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // dd($this->otp);
         return [
             'id' => $this->id,
-            'image' => $this->full_image_path,
             'name' => $this->name,
-            'user_name' => $this->user_name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'otp' => optional($this->otp()->first())->otp,
+            'price' => $this->winner->bid->bid_amount,
+            'user_name' => $this->winner->user->user_name,
+            'end_time' => Carbon::parse($this->end_time)->format('Y-m-d'),
+            'full_image_path' => $this->images()->first()->full_image_path ?? null,
+
         ];
     }
 }

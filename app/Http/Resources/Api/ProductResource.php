@@ -36,9 +36,9 @@ class ProductResource extends JsonResource
                 ? $this->formatDuration(Carbon::parse($this->start_time)->diff(Carbon::parse($this->end_time)))
                 : 0,
             'tickets_count' => $this->refunded_tickets_count,
-            'bid_count' => $this->bids_count,
-            'participants_count' => $this->participants_count,
-            'highest_rank' => HighestRankListResource::collection($this->highest_rank),
+            // 'bid_count' => $this->bids_count,
+            // 'participants_count' => $this->participants_count,
+            // 'highest_rank' => HighestRankListResource::collection($this->highest_rank),
             'full_image_path' => $this->images()->first()->full_image_path ?? null,
         ];
     }

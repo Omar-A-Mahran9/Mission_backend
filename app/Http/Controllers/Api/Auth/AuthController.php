@@ -22,9 +22,6 @@ class AuthController extends Controller
     {
         $data                 = $request->validated();
         $user = User::create($data);
-        // $user->otp()->create([
-        //     'otp' => rand(1111, 9999), // Generate a random 4-digit OTP
-        // ]);
         $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
         return $this->success(__("registered in successfully"), ['token' => $token, "customer" => new UserResource($user)]);
@@ -32,9 +29,8 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $data                 = $request->validated();
+        $request->validated();
         $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
-        // dd($user);
         if (Hash::check($request->password, $user->password)) {
             $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
@@ -59,13 +55,11 @@ class AuthController extends Controller
             ['user_id' => $user->id], // Condition to find or create the record
             ['otp' => rand(1111, 9999)] // Update the OTP value
         );
-        // $user->otp()->updateOrCreate(['otp' => rand(1111, 9999)]);
-        return $this->success("OTP resent successfully.", ["user" => new UserResource($user)]);
+        return $this->success("OTP resent sucessfully.", ["user" => new UserResource($user)]);
     }
     public function checkOTP(Request $request, $phone)
     {
-        $phoneNormalized = Str::startsWith($phone, '0') ? ltrim($phone, '0') : '0' . $request->phone;
-        $user = User::wherePhone($phoneNormalized)->orWhere('phone', $request->phone)->first();
+        $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
         if (!$user)
             return $this->failure(__("This user does not exist"));
 
