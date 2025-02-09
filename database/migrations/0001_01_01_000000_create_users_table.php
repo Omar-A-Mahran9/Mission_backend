@@ -24,7 +24,6 @@ return new class extends Migration
             $table->integer('provider')->comment('App\Enums\Provider')->default(Provider::Application->value);
             $table->integer('status')->comment('App\Enums\User')->default(UserStatus::Active->value);
             $table->string('password');
-            $table->longText('address')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->rememberToken();

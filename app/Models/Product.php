@@ -74,4 +74,9 @@ class Product extends Model
     {
         return $this->hasMany(Refund::class); // Correct one-to-many relationship
     }
+
+    public function winner()
+    {
+        return $this->hasOne(Winners::class);
+    }
 }

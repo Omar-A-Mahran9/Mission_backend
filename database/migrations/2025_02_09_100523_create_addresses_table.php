@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('city_id')->nullable()->after('address');
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('city_id');
+            $table->longText('address');
             $table->foreign('city_id')->references('id')->on('cities')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 
@@ -22,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('addresses');
     }
 };

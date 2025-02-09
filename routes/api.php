@@ -43,7 +43,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('ticket/{product}', 'ProductController@buyTicket');
         Route::get('auctions', 'ProductController@floatingAuctions');
         Route::get('auctions/products', 'ProductController@auctions');
-        Route::get('products/unpaid-wins', 'ProductController@unpaidWinningProducts');
+        Route::get('unpaid-wins', 'ProductController@unpaidWinningProducts');
         Route::get('profile', 'ProfileController@profile');
         Route::post('profile', 'ProfileController@updateProfile');
         Route::post('profile/password', 'ProfileController@updatePassword');

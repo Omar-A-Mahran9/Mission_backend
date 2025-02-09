@@ -14,6 +14,7 @@ use App\Http\Resources\Api\ProductResource;
 use App\Http\Requests\Api\StoreRefundRequest;
 use App\Http\Resources\Api\ProductListResource;
 use App\Http\Resources\Api\FloatingAuctionListResource;
+use App\Http\Resources\Api\ProductUnPaidWinListResource;
 
 class ProductController extends Controller
 {
@@ -128,12 +129,12 @@ class ProductController extends Controller
         $user = Auth::guard('api')->user();
 
         $products = Product::whereHas('winner', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
+            $query->where('user_id', $user->id)
+                ->where('is_bought', false); // Ensure payment is not completed
         })
-            ->where('is_paid', false) // Ensure payment is not completed
             ->with(['winner', 'tickets']) // Load related winner and ticket details
             ->paginate(10);
 
-        return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
+        return $this->successWithPagination("",  ProductUnPaidWinListResource::collection($products)->response()->getData(true));
     }
 }

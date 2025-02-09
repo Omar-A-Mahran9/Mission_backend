@@ -20,7 +20,7 @@ return new class extends Migration
             $table->double('paid_at');
             $table->foreign('bid_id')->references('id')->on('bids')->cascadeOnDelete();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreign('products_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
             $table->timestamps();
         });
     }

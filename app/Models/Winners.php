@@ -4,12 +4,11 @@ namespace App\Models;
 
 use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Winners extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = [];
 
@@ -23,6 +22,7 @@ class Winners extends Model
         return [
             'created_at' => 'date:Y-m-d',
             'updated_at' => 'date:Y-m-d',
+            'paid_at' => 'date:Y-m-d',
         ];
     }
 
