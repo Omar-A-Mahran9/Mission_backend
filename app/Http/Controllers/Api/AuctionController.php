@@ -3,13 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\City;
+use App\Models\Address;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\AuctionEndedListResource;
+use App\Http\Resources\Api\CityResource;
+use App\Http\Resources\Api\AuctionResource;
 use App\Http\Resources\Api\ProductResource;
+use App\Http\Requests\Api\StoreAddressRequest;
+use App\Http\Resources\Api\AddressResource;
+use App\Http\Resources\Api\AuctionListResource;
 use App\Http\Resources\Api\ProductListResource;
+use App\Http\Resources\Api\AuctionEndedListResource;
 
 class AuctionController extends Controller
 {
@@ -28,15 +35,28 @@ class AuctionController extends Controller
                     ->whereTime('start_time', '<', $now) // Start time is earlier than now
                     ->whereTime('end_time', '>=', $now); // End time is still active
             }, function ($query) use ($today, $now) {
-                return $query->whereTime('start_time', '>', $now); // End time is still active
+                return $query->whereTime('start_time', '>', $now)->whereDate('end_time', '>', $today); // End time is still active
             })
             ->whereHas('tickets', fn($subQuery) => $subQuery->where('user_id', $user->id)) // User must have tickets
             ->withCount(['tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')]) // Count non-refunded tickets
             ->paginate(8);
         return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
     }
-    public function bid(Request $request, Product $product)
+
+    public function auction(Product $product)
     {
+        $product->loadCount([
+            'bids',
+            'images'
+        ]);
+        $product->participants_count = $product->bids()
+            ->distinct()
+            ->count('user_id');
+        $product->highest_rank = $this->getHighestBids($product);
+        return $this->success("",  new AuctionResource($product));
+    }
+    public function bid(Request $request, Product $product)
+    { 
         $user = auth()->user();
         $product->loadCount('bids');
         if (now()->greaterThan($product->end_time)) {
@@ -69,5 +89,64 @@ class AuctionController extends Controller
             ->paginate(10);
         // dd($auctions);
         return $this->successWithPagination("",  AuctionEndedListResource::collection($auctions)->response()->getData(true));
+    }
+
+    public function cities()
+    {
+        $cities = City::paginate(perPage: 50);
+        return $this->successWithPagination("", CityResource::collection($cities)->response()->getData(true));
+    }
+
+    public function pay(Product $product)
+    {
+        $product->loadCount([
+            'bids',
+            'images'
+        ]);
+        $userId = auth()->id();
+        // Retrieve the winner record once
+        $winner = $product->winner()->where('user_id', $userId)->first();
+
+        // Validate if the user is actually the winner
+        if (!$winner) {
+            return $this->failure("You have not won this product");
+        }
+
+        // Check if the product is already purchased
+        if ($winner->is_bought) {
+            return $this->failure("You have already bought this product");
+        }
+        $winner->update([
+            'is_bought' => true,
+            'paid_at' => now(),
+        ]);
+
+        // Load required counts
+        $product->loadCount(['bids', 'images']);
+
+        // Count unique participants
+        $product->participants_count = $product->bids()->distinct()->count('user_id');
+
+        // Get highest bids per unique user
+        $product->highest_rank = $this->getHighestBids($product);
+        return $this->success("", new AuctionResource($product));
+    }
+
+    /**
+     * Get highest bids per unique user.
+     */
+    private function getHighestBids(Product $product)
+    {
+        return $product->bids()
+            ->whereIn('id', function ($query) use ($product) {
+                $query->selectRaw('MAX(id)')
+                    ->from('bids')
+                    ->where('product_id', $product->id)
+                    ->groupBy('user_id'); // Ensures unique user_id
+            })
+            ->with('user')
+            ->orderByDesc('bid_amount')
+            ->limit(5)
+            ->get();
     }
 }

@@ -28,30 +28,33 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('google/mobile', 'Auth\GoogleAuthController@googleLoginMobile');
 
     // 🔹 Forget Password Routes
-    // Route::post('send-otp/{phone}', 'Auth\ForgetPasswordController@sendOtp');
-    // Route::post('check-otp/{phone}', 'Auth\ForgetPasswordController@checkOTP');
-    // Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
+    Route::post('forget-password/{phone}', 'Auth\ForgetPasswordController@sendOtp');
+    Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
 
     // 🔹 Public Home Routes (Both No Auth Required, Require)
     Route::get('products', 'ProductController@index');
     Route::get('products/{product}', 'ProductController@show');
 
     Route::get('support', 'SupportController@supportData');
+    Route::get('cities', 'AuctionController@cities');
     // 🔒 Protected Routes (Require Auth)
     Route::group(['middleware' => ['auth:api']], function () {
+        Route::post('logout', 'Auth\AuthController@logout');
         Route::post('refund/{product}', 'ProductController@refund');
         Route::post('ticket/{product}', 'ProductController@buyTicket');
         Route::get('floating/auctions', 'ProductController@floatingAuctions');
         Route::get('auctions', 'AuctionController@auctions');
+        Route::get('auctions/{product}', 'AuctionController@auction');
         Route::get('unpaid-wins', 'ProductController@unpaidWinningProducts');
         Route::get('profile', 'ProfileController@profile');
         Route::post('profile', 'ProfileController@updateProfile');
         Route::post('profile/password', 'ProfileController@updatePassword');
         Route::post('bid/{product}', 'AuctionController@bid');
         Route::get('auctions/ended', 'AuctionController@endedAuctions');
-        // Route::post('logout', 'Auth\AuthController@logout');
-        // // Authenticated Product Routes
-
-        // 🔹 Add more authenticated routes here
+        Route::post('pay/{product}', 'AuctionController@pay');
+        Route::get('addresses', 'AddressController@addresses');
+        Route::post('addresses', 'AddressController@store');
+        Route::post('addresses/{address}', 'AddressController@update');
+        Route::delete('addresses/{address}', 'AddressController@destroy');
     });
 });

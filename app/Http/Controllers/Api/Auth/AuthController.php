@@ -26,7 +26,6 @@ class AuthController extends Controller
 
         return $this->success(__("registered in successfully"), ['token' => $token, "customer" => new UserResource($user)]);
     }
-
     public function login(LoginRequest $request)
     {
         $request->validated();
@@ -39,7 +38,6 @@ class AuthController extends Controller
             return $this->validationFailure(["password" => [__("Password mismatch")]]);
         }
     }
-
     public function resendOTP(Request $request, $mobile)
     {
         $phoneNormalized = Str::startsWith($request->phone, '0') ? ltrim($request->phone, '0') : '0' . $request->phone;
@@ -80,5 +78,10 @@ class AuthController extends Controller
             $user->otp()->delete();
         });
         return $this->success("verified successfully", new UserResource($user));
+    }
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return $this->success("logged out successfully");
     }
 }

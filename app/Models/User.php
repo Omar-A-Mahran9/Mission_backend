@@ -79,4 +79,9 @@ class User extends Authenticatable
     {
         return asset(getImagePathFromDirectory($this->image, 'Users', "default.svg"));
     }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
 }
