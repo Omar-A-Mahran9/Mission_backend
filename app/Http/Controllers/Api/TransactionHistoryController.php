@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\TransactionListResource;
 
@@ -13,22 +15,16 @@ class TransactionHistoryController extends Controller
      */
     public function __invoke(Request $request)
     {
+        DB::enableQueryLog();
         $userId = auth()->id();
 
-        // Retrieve tickets purchased by the user
-        $tickets = Ticket::where('users_id', $userId)
-            ->with(['product', 'refunds'])
-            ->orderByDesc('create_time')
-            ->get();
-
-        // Retrieve auctions the user won
-        $winnings = Winner::where('bids_users_id', $userId)
-            ->with(['product'])
-            ->orderByDesc('updated_at')
-            ->get();
-
+        $products = Product::whereHas('tickets', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->with('tickets.refund', 'winners')->get();
+        $query = DB::getQueryLog();
+        // dd($products);
         // Merge the two collections
-        $transactions = $tickets->merge($winnings);
-        return $this->success("", TransactionListResource::collection($transactions));
+        // $transactions = $tickets->merge($winnings);
+        return $this->success("", TransactionListResource::collection($products));
     }
 }

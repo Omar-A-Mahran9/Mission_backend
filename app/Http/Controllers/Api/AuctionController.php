@@ -56,9 +56,12 @@ class AuctionController extends Controller
         return $this->success("",  new AuctionResource($product));
     }
     public function bid(Request $request, Product $product)
-    { 
+    {
         $user = auth()->user();
         $product->loadCount('bids');
+        if (now()->lessThan($product->start_time)) {
+            return $this->failure(__('The product has not started yet'));
+        }
         if (now()->greaterThan($product->end_time)) {
             return $this->failure(__('The product has already ended'));
         }
@@ -69,25 +72,31 @@ class AuctionController extends Controller
         if (optional($product->bids()->latest()->first())->user_id === $user->id) {
             return $this->failure(__('You have already placed a bid for this product'));
         }
+
         $product->bids()->create([
             'user_id' => $user->id,
             'bid_amount' => optional($product->bids()->latest()->first())->bid_amount
                 ? optional($product->bids()->latest()->first())->bid_amount + 100
-                : $product->start_price,
+                : str_replace(',', '', $product->start_price),
         ]);
-        return $this->success("Successfully", new ProductResource($product));
+        // Count unique participants
+        $product->participants_count = $product->bids()->distinct()->count('user_id');
+        // Get highest bids per unique user
+        $product->highest_rank = $this->getHighestBids($product);
+        return $this->success("Successfully", new AuctionResource($product));
     }
 
     public function endedAuctions()
     {
         $user = auth()->user();
-        $auctions = Product::with(['winner.user', 'winner.bid'])->where('end_time', '<', now()) // Ensure auction has ended
+        $auctions = Product::with(['winners' => function ($query) {
+            $query->where('is_bought', true)->with('user', 'bid'); // Only load winners where is_bought = true
+        }])->where('end_time', '<', now()) // Ensure auction has ended
             ->whereDoesntHave('tickets', function ($query) use ($user) {
                 $query->where('user_id', $user->id)->whereDoesntHave('refunds'); // Exclude auctions where the user placed a bid
             })
             ->orderByDesc('end_time') // Show latest ended auctions first
             ->paginate(10);
-        // dd($auctions);
         return $this->successWithPagination("",  AuctionEndedListResource::collection($auctions)->response()->getData(true));
     }
 
@@ -105,7 +114,7 @@ class AuctionController extends Controller
         ]);
         $userId = auth()->id();
         // Retrieve the winner record once
-        $winner = $product->winner()->where('user_id', $userId)->first();
+        $winner = $product->winners()->where('user_id', $userId)->first();
 
         // Validate if the user is actually the winner
         if (!$winner) {

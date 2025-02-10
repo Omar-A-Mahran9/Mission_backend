@@ -77,6 +77,11 @@ class Product extends Model
 
     public function winner()
     {
-        return $this->hasOne(Winners::class);
+        return $this->hasOne(Winners::class)->where('is_bought', true);
+    }
+
+    public function winners()
+    {
+        return $this->hasMany(Winners::class,'product_id');
     }
 }

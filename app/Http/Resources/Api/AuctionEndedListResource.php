@@ -18,8 +18,8 @@ class AuctionEndedListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'price' => $this->winner?->bid?->bid_amount,
-            'user_name' => $this->winner?->user?->user_name,
+            'price' => $this->winners?->first()?->bid?->bid_amount,
+            'user_name' => $this->winners?->first()?->user?->user_name,
             'end_time' => Carbon::parse($this->end_time)->format('Y-m-d'),
             'full_image_path' => $this->images()->first()->full_image_path ?? null,
 

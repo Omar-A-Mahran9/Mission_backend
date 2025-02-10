@@ -18,8 +18,8 @@ class ProductUnPaidWinListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'price' => $this->winner->bid->bid_amount,
-            'remaining' => Carbon::now()->diffForHumans(Carbon::parse($this->winner->created_at)->addHours((int) setting('time_left_to_pay'))),
+            'price' => $this->winners->first()->bid->bid_amount,
+            'remaining' => Carbon::now()->diffForHumans(Carbon::parse($this->winners->first()->created_at)->addHours((int) setting('time_left_to_pay'))),
             'full_image_path' => $this->images()->first()->full_image_path ?? null,
         ];
     }

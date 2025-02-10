@@ -116,11 +116,11 @@ class ProductController extends Controller
     {
         $user = auth()->user();
 
-        $products = Product::whereHas('winner', function ($query) use ($user) {
-            $query->where('user_id', $user->id)
-                ->where('is_bought', false); // Ensure payment is not completed
+        $products = Product::whereHas('winners', function ($query) use ($user) {
+            $query->with('bid')->where('user_id', $user->id)
+                ->where('is_bought', false);
         })
-            ->with(['winner.bid', 'tickets']) // Load related winner and ticket details
+            // ->with(['winners.bid']) // Ensure 'bid' is a relationship in the 'Winner' model
             ->paginate(8);
 
         return $this->successWithPagination("",  ProductUnPaidWinListResource::collection($products)->response()->getData(true));
