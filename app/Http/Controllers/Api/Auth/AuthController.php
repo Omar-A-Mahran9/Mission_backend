@@ -30,6 +30,17 @@ class AuthController extends Controller
     {
         $request->validated();
         $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
+        if (!$user->verified_at) {
+            UserOtp::updateOrCreate(
+                ['user_id' => $user->id], // Condition to find or create the record
+                ['otp' => rand(1111, 9999)] // Update the OTP value
+            );
+            return response([
+                'success' => false,
+                'message' => __('Your account is not verified.'),
+                'data' => ['otp' => optional($user->otp()->first())->otp]
+            ], 422);
+        }
         if (Hash::check($request->password, $user->password)) {
             $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
@@ -73,7 +84,6 @@ class AuthController extends Controller
             $user->update([
                 'verified_at' => now(),
             ]);
-
             // Delete the OTP entry
             $user->otp()->delete();
         });
