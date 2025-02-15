@@ -194,6 +194,8 @@
     </div>
     <!--end::Root-->
     <!--begin::Javascript-->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <script>
         var hostUrl = "assets/";
     </script>
@@ -206,8 +208,39 @@
     <script src="{{ asset('assets/js/global/scripts.js') }}"></script>
     <script src="{{ asset('assets/js/global/translations.js') }}"></script>
     <script src="{{ asset('assets/shared/js/global.js') }}"></script>
+    {{--  <script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.11.2/echo.iife.js"></script>  --}}
 
+    <script type='module'>
+        {{--  window.Echo = new Echo({
+            broadcaster: "reverb",
+            host: window.location.hostname + ":8080"
+        });  --}}
+
+        console.log(window.Echo);
+
+        setTimeout(() => {
+            if (window.Echo) {
+                console.log("Trying to subscribe to channel...");
+                window.Echo.channel("auction-channel")
+                    .listen("AucationEvent", (data) => {
+                        console.log("Auction Updated:", data);
+                    });
+                window.Echo.channel("auction-today")
+                    .listen("AucationTodayEvent", (data) => {
+                        console.log("Auction today:", data);
+                    });
+            } else {
+                console.error("Echo is still undefined!");
+            }
+        }, 400); // Adjust delay if needed
+    </script>
     <script>
+        {{--  setTimeout(() => {
+            window.Echo.channel('auction-channel')
+                .listen('auction.updated', (e) => {
+                    console.log(e);
+                })
+        }, 200);  --}}
         let locale = "{{ app()->getLocale() }}";
         $(document).ready(function() {
             $("#submit-btn").prop('disabled', false);

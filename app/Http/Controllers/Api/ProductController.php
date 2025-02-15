@@ -7,7 +7,9 @@ use App\Models\Bid;
 use App\Models\Ticket;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Events\AucationEvent;
 use Illuminate\Validation\Rule;
+use App\Events\AucationTodayEvent;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +41,7 @@ class ProductController extends Controller
             $query->whereDoesntHave('refunds'); // Only count tickets that have refunds
         }])->paginate(8);
         // $query = DB::getQueryLog();
+        // event(new AucationEvent(ProductListResource::collection($products)->response()->getData(true)));
         return $this->successWithPagination(" ",  ProductListResource::collection($products)->response()->getData(true));
     }
     public function show(Product $product)
@@ -62,17 +65,18 @@ class ProductController extends Controller
     public function buyTicket(Request $request, Product $product)
     {
         $user = auth()->user();
-        $product->loadCount('bids');
-        if (now()->greaterThan($product->start_time)) {
-            return $this->failure(__('The product has already started'));
-        }
-        $ticket = $product->tickets()->where('user_id', $user->id);
-        if ($ticket->exists()) {
-            return $this->failure(__('You already have a ticket for this product'));
-        }
-        $product->tickets()->create([
-            'user_id' => $user->id,
-        ]);
+        // $product->loadCount('bids');
+        // if (now()->greaterThan($product->start_time)) {
+        //     return $this->failure(__('The product has already started'));
+        // }
+        // $ticket = $product->tickets()->where('user_id', $user->id);
+        // if ($ticket->exists()) {
+        //     return $this->failure(__('You already have a ticket for this product'));
+        // }
+        // $product->tickets()->create([
+        //     'user_id' => $user->id,
+        // ]);
+        $this->auctionEvent($product);
         return $this->success("Successfully", new ProductResource($product));
     }
     public function refund(StoreRefundRequest $request, Product $product)
@@ -124,5 +128,15 @@ class ProductController extends Controller
             ->paginate(8);
 
         return $this->successWithPagination("",  ProductUnPaidWinListResource::collection($products)->response()->getData(true));
+    }
+
+    public function auctionEvent($product)
+    {
+        if (Carbon::parse($product->start_time)->isToday()) {
+            broadcast(new AucationTodayEvent(new ProductResource($product)));
+            broadcast(new AucationEvent(new ProductResource($product)));
+        } else {
+            broadcast(new AucationTodayEvent($product));
+        }
     }
 }
