@@ -229,6 +229,10 @@
                     .listen("AucationTodayEvent", (data) => {
                         console.log("Auction today:", data);
                     });
+                window.Echo.channel("auction-not-today")
+                    .listen("AucationNotTodayEvent", (data) => {
+                        console.log("Auction not today:", data);
+                    });
             } else {
                 console.error("Echo is still undefined!");
             }

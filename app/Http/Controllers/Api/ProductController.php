@@ -8,11 +8,13 @@ use App\Models\Ticket;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Events\AucationEvent;
+use App\Events\FloatingEvent;
 use Illuminate\Validation\Rule;
 use App\Events\AucationTodayEvent;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Events\AucationNotTodayEvent;
 use App\Http\Resources\Api\ProductResource;
 use App\Http\Requests\Api\StoreRefundRequest;
 use App\Http\Resources\Api\ProductListResource;
@@ -39,10 +41,11 @@ class ProductController extends Controller
             });
         })->withCount(['tickets as refunded_tickets_count' => function ($query) {
             $query->whereDoesntHave('refunds'); // Only count tickets that have refunds
-        }])->paginate(8);
+        }]);
+        // dd($products->count());
         // $query = DB::getQueryLog();
         // event(new AucationEvent(ProductListResource::collection($products)->response()->getData(true)));
-        return $this->successWithPagination(" ",  ProductListResource::collection($products)->response()->getData(true));
+        return $this->successWithPagination("",  ProductListResource::collection($products->paginate(8))->response()->getData(true));
     }
     public function show(Product $product)
     {
@@ -113,6 +116,7 @@ class ProductController extends Controller
             ->whereTime('start_time', '<', $now)->whereTime('end_time', '>=', $now)->whereHas('tickets', function ($query) use ($user) {
                 $query->where('user_id', $user->id); // Only tickets that belong to this user
             })->get();
+        broadcast(new FloatingEvent($products, auth()->id()));
         return $this->success("Successfully",  FloatingAuctionListResource::collection($products));
     }
 
@@ -132,11 +136,13 @@ class ProductController extends Controller
 
     public function auctionEvent($product)
     {
+        $countProduct = Product::query();
         if (Carbon::parse($product->start_time)->isToday()) {
-            broadcast(new AucationTodayEvent(new ProductResource($product)));
-            broadcast(new AucationEvent(new ProductResource($product)));
+            $countToday = $countProduct->whereDate('start_time', Carbon::today())->count();
+            broadcast(new AucationTodayEvent($product, $countToday));
         } else {
-            broadcast(new AucationTodayEvent($product));
+            $countNotToday = $countProduct->whereDate('start_time', '>', Carbon::today())->count();
+            broadcast(new AucationNotTodayEvent($product, $countNotToday));
         }
     }
 }

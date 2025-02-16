@@ -4,27 +4,28 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use App\Http\Resources\Api\ProductResource;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Http\Resources\Api\FloatingAuctionListResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class AucationTodayEvent implements ShouldBroadcastNow
+class FloatingEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     public $product;
-    public $countProduct;
+    public $userId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($product, $countProduct)
+    public function __construct($product, $userId)
     {
-        $this->product = (new ProductResource($product))->toArray(request());
-        $this->countProduct = $countProduct;
+        $this->product = (FloatingAuctionListResource::collection($product));
+        $this->userId = $userId;
     }
 
     /**
@@ -35,7 +36,7 @@ class AucationTodayEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('auction-today'),
+            new PrivateChannel('floating.user.' . $this->userId),
         ];
     }
 
@@ -43,7 +44,7 @@ class AucationTodayEvent implements ShouldBroadcastNow
     {
         return [
             'success' => true,
-            'data' => ["count" => $this->countProduct, "product" => $this->product],
+            'data' =>  $this->product,
             'message' => '',
         ];
     }

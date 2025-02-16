@@ -10,7 +10,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class AucationTodayEvent implements ShouldBroadcastNow
+class AucationNotTodayEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -35,7 +35,7 @@ class AucationTodayEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('auction-today'),
+            new Channel('auction-not-today'),
         ];
     }
 
