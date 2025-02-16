@@ -36,8 +36,9 @@ class BroadcastFloatingAuctions extends Command
             ->whereTime('start_time', '<', $now)->whereTime('end_time', '>=', $now)->whereHas('tickets', function ($query) use ($user) {
                 $query->where('user_id', $user->id); // Only tickets that belong to this user
             })->get();
-        broadcast(new FloatingEvent($products, auth()->id()));
-        Log::info('Completed BroadcastFloatingAuctions Cron Job.');
-
+        if ($products) {
+            broadcast(new FloatingEvent($products, auth()->id()));
+            Log::info('Completed BroadcastFloatingAuctions Cron Job.');
+        }
     }
 }
