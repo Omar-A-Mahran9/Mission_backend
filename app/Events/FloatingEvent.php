@@ -36,7 +36,7 @@ class FloatingEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('floating.user.' . $this->userId),
+            new PrivateChannel('floating.' . $this->userId),
         ];
     }
 

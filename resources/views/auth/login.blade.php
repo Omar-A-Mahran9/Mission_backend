@@ -239,8 +239,20 @@
                     });
 
                 window.Echo.channel("auction-live.1")
-                    .listen("AuctionDetailEvent", (data) => {
-                        console.log("Auction detail:", data);
+                    .listen("AuctionLiveEvent", (data) => {
+                        console.log("Auction live 1:", data);
+                    });
+                window.Echo.channel("auction-live.2")
+                    .listen("AuctionLiveEvent", (data) => {
+                        console.log("Auction live 2:", data);
+                    });
+                window.Echo.channel("auction-live.3")
+                    .listen("AuctionLiveEvent", (data) => {
+                        console.log("Auction live 3:", data);
+                    });
+                window.Echo.channel("auction-not-live.1")
+                    .listen("AuctionNotLiveEvent", (data) => {
+                        console.log("Auction live 1:", data);
                     });
                 {{--  window.Echo.private(`floating.user.${userId}`)
                     .listen(".FloatingEvent", (data) => {

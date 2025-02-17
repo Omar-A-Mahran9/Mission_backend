@@ -40,22 +40,4 @@ class BroadcastingService
         })
             ->paginate(8);
     }
-
-    public function auctionsLive($product)
-    {
-        $today = Carbon::today()->toDateString();
-        $now = Carbon::now()->toTimeString(); // Get current time (HH:MM:SS)
-        $user = auth()->user();
-        $isLive  = Product::with('tickets')->where('id', $product->id)->where(function ($query) use ($today, $now) {
-            $query
-                ->whereDate('start_time', $today) // Products that start today
-                ->whereTime('start_time', '<', $now) // Start time is earlier than now
-                ->whereTime('end_time', '>=', $now); // End time is still active
-        })->whereHas('tickets', fn($subQuery) => $subQuery->where('user_id', $user->id)) // User must have tickets
-            ->withCount(['tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')]) // Count non-refunded tickets
-            ->exists();
-        if ($isLive) {
-            broadcast(new AuctionLiveEvent($product->id, $product));
-        }
-    }
 }
