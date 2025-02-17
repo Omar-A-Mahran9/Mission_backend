@@ -4,38 +4,41 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use App\Http\Resources\Api\ProductResource;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
-use App\Http\Resources\Api\ProductListResource;
+use App\Http\Resources\Api\AuctionListResource;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class AucationEvent implements ShouldBroadcastNow
+class AuctionNotLiveEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $productId;
     public $product;
-
     /**
      * Create a new event instance.
      */
-    public function __construct($product)
+    public function __construct($productId, $product)
     {
-        $this->product = (new ProductListResource($product))->toArray(request());
+        $this->productId = $productId;
+        $this->product = (new AuctionListResource($product))->toArray(request());
     }
+
 
     /**
      * Get the channels the event should broadcast on.
+     *
+     * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
-        return new Channel('auction-channel'); // Public channel
-        // return new PrivateChannel('auction-channel'); // Use for authenticated users only
+        return [
+            new PrivateChannel('auction-not-live.' . $this->productId),
+        ];
     }
-
     public function broadcastWith()
     {
         return [

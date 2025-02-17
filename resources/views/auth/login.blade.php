@@ -217,7 +217,7 @@
         });  --}}
 
         console.log(window.Echo);
-
+        const userId = 1;
         setTimeout(() => {
             if (window.Echo) {
                 console.log("Trying to subscribe to channel...");
@@ -233,18 +233,25 @@
                     .listen("AucationNotTodayEvent", (data) => {
                         console.log("Auction not today:", data);
                     });
+                window.Echo.channel("auction-detail.1")
+                    .listen("AuctionDetailEvent", (data) => {
+                        console.log("Auction detail:", data);
+                    });
+
+                window.Echo.channel("auction-live.1")
+                    .listen("AuctionDetailEvent", (data) => {
+                        console.log("Auction detail:", data);
+                    });
+                {{--  window.Echo.private(`floating.user.${userId}`)
+                    .listen(".FloatingEvent", (data) => {
+                        console.log("Auction floating:", data);
+                    });  --}}
             } else {
                 console.error("Echo is still undefined!");
             }
         }, 400); // Adjust delay if needed
     </script>
     <script>
-        {{--  setTimeout(() => {
-            window.Echo.channel('auction-channel')
-                .listen('auction.updated', (e) => {
-                    console.log(e);
-                })
-        }, 200);  --}}
         let locale = "{{ app()->getLocale() }}";
         $(document).ready(function() {
             $("#submit-btn").prop('disabled', false);

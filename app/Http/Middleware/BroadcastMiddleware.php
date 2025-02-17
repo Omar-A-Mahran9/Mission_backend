@@ -4,10 +4,19 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Services\BroadcastingService;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckVerify
+class BroadcastMiddleware
 {
+    protected $broadcastingService;
+
+
+    public function __construct(BroadcastingService $broadcastingService)
+    {
+        $this->broadcastingService = $broadcastingService;
+    }
     /**
      * Handle an incoming request.
      *
@@ -15,14 +24,9 @@ class CheckVerify
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user() && auth()->user()->verified_at == null) {
-            // Redirect or return an error if OTP is not null
-            return response([
-                'success' => false,
-                'message' => __('Your account is not verified.'),
-            ], 422);
+        if (Auth::guard('api')->check()) {
+            $this->broadcastingService->broadcastFloatingAuctions();
         }
-
         return $next($request);
     }
 }
