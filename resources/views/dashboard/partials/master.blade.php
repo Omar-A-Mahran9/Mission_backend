@@ -32,7 +32,7 @@
                 themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
             }
             document.documentElement.setAttribute("data-bs-theme", themeMode);
-           
+
         }
     </script>
     <!--end::Theme mode setup on page load-->
@@ -109,9 +109,9 @@
     <div class="position-fixed bottom-0 start-0 p-3 " style="z-index: 1090">
         <div id="kt_docs_toast_toggle" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <img src="{{ asset('placeholder_images/favicon_platine.svg') }}" class="me-2 theme-light-show"
+                <img src="{{ asset('placeholder_images/favicon-light.svg') }}" class="me-2 theme-light-show"
                     width="20" srcset="">
-                <img src="{{ asset('placeholder_images/favicon_platine.svg') }}" class="me-2 theme-dark-show"
+                <img src="{{ asset('placeholder_images/favicon-dark.svg') }}" class="me-2 theme-dark-show"
                     width="20" srcset="">
                 <strong class="me-auto">{{ __('' . setting('website_name')) }}</strong>
                 <small>{{ __('Now') }}</small>

@@ -13,7 +13,8 @@
 <meta property="og:url" content="https://keenthemes.com/metronic" />
 <meta property="og:site_name" content="Keenthemes | Metronic" />
 <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+<link rel="shortcut icon"
+    href="{{ isDarkMode() ? asset('placeholder_images/favicon-dark.svg') : asset('placeholder_images/favicon-light.svg') }}" />
 <!--begin::Fonts-->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">
@@ -29,7 +30,7 @@
 <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
 @if (isArabic())
     <link href="{{ asset('assets/plugins/global/plugins.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
-    < k href="{{ asset('assets/css/custom.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet" type="text/css" />
 @else
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />

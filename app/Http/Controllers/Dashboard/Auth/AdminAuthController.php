@@ -31,7 +31,7 @@ class AdminAuthController extends Controller implements HasMiddleware
             'password' => 'required'
         ]);
         if (Auth::guard('admin')->attempt($credentials, $request->has('remember_me'))) {
-
+         
             $request->session()->regenerate();
             return response(['url' => redirect()->intended('/dashboard')->getTargetUrl()]);
         } else {

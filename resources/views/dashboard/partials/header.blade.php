@@ -98,10 +98,12 @@
                                 data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
                                 class="menu-item menu-lg-down-accordion me-0 me-lg-2">
                                 <!--begin:Menu link-->
-                                <span class="menu-link">
-                                    <span class="menu-title">{{ __('Products') }}</span>
+                                <a
+                                    class="menu-link {{ isTabHere('dashboard.products.*') }}"href="{{ route('dashboard.products.index') }}">
+                                    {{--  <span class="menu-link">  --}} <span class="menu-title">{{ __('Products') }}</span>
                                     <span class="menu-arrow d-lg-none"></span>
-                                </span>
+                                    {{--  </span>  --}}
+                                </a>
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
@@ -241,7 +243,7 @@
                         <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                             data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
                             <a href="#" class="menu-link px-5">
-                                <span class="menu-title position-relative">Mode
+                                <span class="menu-title position-relative">{{ __('Mode') }}
                                     <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
                                         <i class="ki-outline ki-night-day theme-light-show fs-2"></i>
                                         <i class="ki-outline ki-moon theme-dark-show fs-2"></i>
@@ -257,7 +259,7 @@
                                         <span class="menu-icon" data-kt-element="icon">
                                             <i class="ki-outline ki-night-day fs-2"></i>
                                         </span>
-                                        <span class="menu-title">Light</span>
+                                        <span class="menu-title">{{ __('Light') }}</span>
                                     </a>
                                 </div>
                                 <!--end::Menu item-->
@@ -268,7 +270,7 @@
                                         <span class="menu-icon" data-kt-element="icon">
                                             <i class="ki-outline ki-moon fs-2"></i>
                                         </span>
-                                        <span class="menu-title">Dark</span>
+                                        <span class="menu-title">{{ __('Dark') }}</span>
                                     </a>
                                 </div>
                                 <!--end::Menu item-->
@@ -279,7 +281,7 @@
                                         <span class="menu-icon" data-kt-element="icon">
                                             <i class="ki-outline ki-screen fs-2"></i>
                                         </span>
-                                        <span class="menu-title">System</span>
+                                        <span class="menu-title">{{ __('System') }}</span>
                                     </a>
                                 </div>
                                 <!--end::Menu item-->
@@ -289,59 +291,55 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                            data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
-                            <a href="#" class="menu-link px-5">
-                                <span class="menu-title position-relative">Language
-                                    <span
-                                        class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">English
-                                        <img class="w-15px h-15px rounded-1 ms-2"
-                                            src="assets/media/flags/united-states.svg" alt="" /></span></span>
+                            data-kt-menu-placement="right-end" data-kt-menu-offset="-15px, 0">
+                            <a href="{{ route('dashboard.change-language', 'en') }}" class="menu-link px-5">
+                                <span class="menu-title position-relative">
+                                    {{ __('Language') }}
+                                    @if (isArabic())
+                                        <span
+                                            class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
+                                            {{ __('Arabic') }}
+                                            <img class="w-15px h-15px rounded-1 ms-2"
+                                                src="{{ asset('assets/media/flags/saudi-arabia.svg') }}"
+                                                alt="" />
+                                        </span>
+                                    @else
+                                        <span
+                                            class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
+                                            {{ __('English') }}
+                                            <img class="w-15px h-15px rounded-1 ms-2"
+                                                src="{{ asset('assets/media/flags/united-states.svg') }}"
+                                                alt="" />
+                                        </span>
+                                    @endif
+                                </span>
                             </a>
                             <!--begin::Menu sub-->
                             <div class="menu-sub menu-sub-dropdown w-175px py-4">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="account/settings.html" class="menu-link d-flex px-5 active">
+                                    <a href="{{ route('dashboard.change-language', 'en') }}"
+                                        class="menu-link d-flex px-5 @if (!isArabic()) active @endif">
                                         <span class="symbol symbol-20px me-4">
-                                            <img class="rounded-1" src="assets/media/flags/united-states.svg"
+                                            <img class="rounded-1"
+                                                src="{{ asset('assets/media/flags/united-states.svg') }}"
                                                 alt="" />
-                                        </span>English</a>
+                                        </span>
+                                        {{ __('English') }}
+                                    </a>
                                 </div>
                                 <!--end::Menu item-->
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="account/settings.html" class="menu-link d-flex px-5">
+                                    <a href="{{ route('dashboard.change-language', 'ar') }}"
+                                        class="menu-link d-flex px-5 @if (isArabic()) active @endif">
                                         <span class="symbol symbol-20px me-4">
-                                            <img class="rounded-1" src="assets/media/flags/spain.svg"
+                                            <img class="rounded-1"
+                                                src="{{ asset('assets/media/flags/saudi-arabia.svg') }}"
                                                 alt="" />
-                                        </span>Spanish</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="account/settings.html" class="menu-link d-flex px-5">
-                                        <span class="symbol symbol-20px me-4">
-                                            <img class="rounded-1" src="assets/media/flags/germany.svg"
-                                                alt="" />
-                                        </span>German</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="account/settings.html" class="menu-link d-flex px-5">
-                                        <span class="symbol symbol-20px me-4">
-                                            <img class="rounded-1" src="assets/media/flags/japan.svg"
-                                                alt="" />
-                                        </span>Japanese</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="account/settings.html" class="menu-link d-flex px-5">
-                                        <span class="symbol symbol-20px me-4">
-                                            <img class="rounded-1" src="assets/media/flags/france.svg"
-                                                alt="" />
-                                        </span>French</a>
+                                        </span>
+                                        {{ __('Arabic') }}
+                                    </a>
                                 </div>
                                 <!--end::Menu item-->
                             </div>
@@ -353,10 +351,13 @@
                             <a href="account/settings.html" class="menu-link px-5">Account Settings</a>
                         </div>
                         <!--end::Menu item-->
+                        <form class="logout-form" method="post" action="{{ route('admin.logout') }}">
+                            @csrf
+                        </form>
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="authentication/layouts/corporate/sign-in.html" class="menu-link px-5">Sign
-                                Out</a>
+                            <a href="javascript:" onclick="$('.logout-form').submit()"
+                                class="menu-link px-5">{{ 'Logout' }}</a>
                         </div>
                         <!--end::Menu item-->
                     </div>

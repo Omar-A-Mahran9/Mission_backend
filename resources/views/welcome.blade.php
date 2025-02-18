@@ -1,4 +1,5 @@
 @extends('dashboard.partials.master')
+{{--  @dd(isArabic())  --}}
 @section('content')
     <!--begin::Content-->
     <div id="kt_app_content" class="app-content pt-4">
@@ -2268,6 +2269,5 @@
     </div>
 @endsection
 @push('scripts')
-
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 @endpush
