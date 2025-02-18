@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Rules\ExistPhone;
 use App\Rules\PhoneNumber;
 use App\Rules\NotNumbersOnly;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProfileRequest extends FormRequest
@@ -29,7 +30,7 @@ class UpdateProfileRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'user_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             // 'phone' => ['required', new PhoneNumber(), new ExistPhone(new User(), auth()->user()->id, false)],
-            'email' => 'required|string|email|unique:users',
+            'email' => ['required', 'string', 'email', Rule::unique('users')->ignore(auth()->user()->id)],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
