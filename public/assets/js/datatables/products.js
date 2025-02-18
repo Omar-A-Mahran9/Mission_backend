@@ -7,7 +7,7 @@ var KTDatatablesServerSide = function () {
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
-            language: language,
+            // language: language,
             searchDelay: searchDelay,
             processing: processing,
             serverSide: serverSide,
@@ -23,9 +23,12 @@ var KTDatatablesServerSide = function () {
             },
             columns: [
                 { data: 'id' },
-                { data: 'name' },
-                { data: 'price' },
+                { data: 'name_' + locale },
+                { data: 'minimum_bid' },
+                { data: 'product_price' },
+                { data: 'start_price' },
                 { data: 'status' },
+                // { data: 'status' },
                 { data: 'created_at' },
                 { data: null },
             ],
@@ -36,7 +39,7 @@ var KTDatatablesServerSide = function () {
                     render: function (data) {
                         return `
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" value="${data}" data-item="${__('Product')}" />
+                                <input class="form-check-input" type="checkbox" value="${data}" />
                             </div>`;
                     }
                 },
@@ -50,36 +53,36 @@ var KTDatatablesServerSide = function () {
                             </div>`;
                     }
                 },
-                {
-                    targets: 2,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.price}</span>
-                            </div>`;
-                    }
-                },
-                {
-                    targets: 3,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${__('' + row.status)}</span>
-                            </div>`;
-                    }
-                },
-                {
-                    targets: 4,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</span>
-                            </div>`;
-                    }
-                },
+                // {
+                //     targets: 2,
+                //     orderable: false,
+                //     render: function (data, type, row) {
+                //         return `
+                //             <div class="d-flex align-items-center">
+                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.price}</span>
+                //             </div>`;
+                //     }
+                // },
+                // {
+                //     targets: 3,
+                //     orderable: false,
+                //     render: function (data, type, row) {
+                //         return `
+                //             <div class="d-flex align-items-center">
+                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${__('' + row.status)}</span>
+                //             </div>`;
+                //     }
+                // },
+                // {
+                //     targets: 4,
+                //     orderable: false,
+                //     render: function (data, type, row) {
+                //         return `
+                //             <div class="d-flex align-items-center">
+                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</span>
+                //             </div>`;
+                //     }
+                // },
                 {
                     targets: -1,
                     data: null,
@@ -150,7 +153,7 @@ var KTDatatablesServerSide = function () {
     return {
         init: function () {
             initDatatable();
-            handleSearchDatatable();
+            // handleSearchDatatable();
             initToggleToolbar();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({

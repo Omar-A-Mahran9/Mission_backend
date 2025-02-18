@@ -55,27 +55,27 @@
                         <!--begin::Content wrapper-->
                         <div class="d-flex flex-column flex-column-fluid">
                             <!--begin::Toolbar-->
-                            <div id="kt_app_toolbar" class="app-toolbar pt-7 pt-lg-10">
+                            {{--  <div id="kt_app_toolbar" class="app-toolbar pt-7 pt-lg-10">  --}}
                                 <!--begin::Toolbar container-->
                                 {{--  <div id="kt_app_toolbar_container"
                                     class="app-container container-fluid d-flex align-items-stretch">  --}}
                                 <!--begin::Toolbar wrapper-->
-                                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+                                {{--  <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
                                     <!--begin::Page title-->
                                     <div class="page-title d-flex flex-column justify-content-center gap-1 me-3 ms-1">
                                         @yield('breadcrumbs')
                                     </div>
                                     <!--end::Page title-->
-                                </div>
+                                </div>  --}}
                                 <!--end::Toolbar wrapper-->
                                 {{--  </div>  --}}
                                 <!--end::Toolbar container-->
-                            </div>
+                            {{--  </div>  --}}
                             <!--end::Toolbar-->
                             <!--begin::Content-->
                             <div id="kt_app_content" class="app-content pt-4">
                                 <!--begin::Content container-->
-                                <div id="kt_app_content_container" class="app-container container-fluid">
+                                <div id="kt_app_content_container" class="container-fluid">
                                     @yield('content')
                                 </div>
                                 <!--end::Content container-->

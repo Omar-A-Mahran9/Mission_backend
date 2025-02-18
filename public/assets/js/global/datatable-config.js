@@ -3,7 +3,7 @@ const processing = true;
 const serverSide = true;
 const saveState = false;
 const language = {
-    url: `/assets/dashboard/js/datatable-translations/${locale}.json`
+    url: `/assets/js/datatable-translations/${locale}.json`
 }
 const tableActions = `
 <a href="#" class="btn btn-light btn-active-light-primary btn-sm " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
@@ -136,7 +136,7 @@ var toggleToolbars = function () {
     } else if (checkedState == true && toolbarBase == null) {
         selectedCount.innerHTML = count;
         toolbarSelected.classList.remove('d-none');
-    }else{
+    } else {
         toolbarSelected.classList.add('d-none');
 
     }
