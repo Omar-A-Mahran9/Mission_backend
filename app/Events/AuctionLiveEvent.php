@@ -2,38 +2,45 @@
 
 namespace App\Events;
 
+use App\Models\Ticket;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use App\Http\Resources\Api\ProductResource;
+use App\Http\Resources\Api\AuctionResource;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
-use App\Http\Resources\Api\ProductListResource;
+use App\Http\Resources\Api\AuctionListResource;
+use App\Http\Resources\Api\ProductResource;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class AucationEvent implements ShouldBroadcastNow
+class AuctionLiveEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $product;
+    public $auctionHolders;
 
     /**
      * Create a new event instance.
      */
     public function __construct($product)
     {
-        $this->product = (new ProductListResource($product))->toArray(request());
+        $this->product = (new ProductResource($product))->toArray(request());
+        $this->auctionHolders = Ticket::where('product_id', $product->id)->pluck('user_id');
     }
 
     /**
      * Get the channels the event should broadcast on.
+     *
+     * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
-        return new Channel('auction-channel'); // Public channel
-        // return new PrivateChannel('auction-channel'); // Use for authenticated users only
+        return collect($this->auctionHolders)->map(function ($userId) {
+            return new PrivateChannel('auction-live.' . $userId);
+        })->toArray();
     }
 
     public function broadcastWith()

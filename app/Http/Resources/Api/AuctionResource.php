@@ -23,6 +23,8 @@ class AuctionResource extends JsonResource
             'bid_count' => $this->bids_count,
             'participants_count' => $this->participants_count,
             'full_image_path' => $this->images,
+            'bid_amount' => $this->bidAmount ?? 0,
+            // 'has_bid' => $this->hasBid,
             'highest_rank' => HighestRankListResource::collection($this->highest_rank),
         ];
     }

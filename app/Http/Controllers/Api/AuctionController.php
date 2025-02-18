@@ -7,13 +7,15 @@ use App\Models\City;
 use App\Models\Address;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Events\BidPlacedEvent;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Events\AuctionLiveDetailEvent;
 use App\Http\Resources\Api\CityResource;
+use App\Http\Resources\Api\AddressResource;
 use App\Http\Resources\Api\AuctionResource;
 use App\Http\Resources\Api\ProductResource;
 use App\Http\Requests\Api\StoreAddressRequest;
-use App\Http\Resources\Api\AddressResource;
 use App\Http\Resources\Api\AuctionListResource;
 use App\Http\Resources\Api\ProductListResource;
 use App\Http\Resources\Api\AuctionEndedListResource;
@@ -83,6 +85,7 @@ class AuctionController extends Controller
         $product->participants_count = $product->bids()->distinct()->count('user_id');
         // Get highest bids per unique user
         $product->highest_rank = $this->getHighestBids($product);
+        broadcast(new BidPlacedEvent($product));
         return $this->success("Successfully", new AuctionResource($product));
     }
 

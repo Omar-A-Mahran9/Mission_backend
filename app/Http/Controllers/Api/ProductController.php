@@ -7,14 +7,15 @@ use App\Models\Bid;
 use App\Models\Ticket;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Events\AucationEvent;
-use App\Events\FloatingEvent;
 use Illuminate\Validation\Rule;
+use App\Events\AuctionLiveEvent;
 use App\Events\AucationTodayEvent;
-use Illuminate\Support\Facades\DB;
+use App\Events\AuctionDetailEvent;
+use App\Events\AuctionNotLiveEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Events\AucationNotTodayEvent;
+use App\Services\BroadcastingService;
 use App\Http\Resources\Api\ProductResource;
 use App\Http\Requests\Api\StoreRefundRequest;
 use App\Http\Resources\Api\ProductListResource;
@@ -23,6 +24,12 @@ use App\Http\Resources\Api\ProductUnPaidWinListResource;
 
 class ProductController extends Controller
 {
+    protected $broadcastingService;
+
+    public function __construct(BroadcastingService $broadcastingService)
+    {
+        $this->broadcastingService = $broadcastingService;
+    }
     public function index(Request $request)
     {
         // DB::enableQueryLog();
@@ -42,9 +49,6 @@ class ProductController extends Controller
         })->withCount(['tickets as refunded_tickets_count' => function ($query) {
             $query->whereDoesntHave('refunds'); // Only count tickets that have refunds
         }]);
-        // dd($products->count());
-        // $query = DB::getQueryLog();
-        // event(new AucationEvent(ProductListResource::collection($products)->response()->getData(true)));
         return $this->successWithPagination("",  ProductListResource::collection($products->paginate(8))->response()->getData(true));
     }
     public function show(Product $product)
@@ -68,7 +72,7 @@ class ProductController extends Controller
     public function buyTicket(Request $request, Product $product)
     {
         $user = auth()->user();
-        // $product->loadCount('bids');
+        $product->loadCount('bids',);
         // if (now()->greaterThan($product->start_time)) {
         //     return $this->failure(__('The product has already started'));
         // }
@@ -116,7 +120,6 @@ class ProductController extends Controller
             ->whereTime('start_time', '<', $now)->whereTime('end_time', '>=', $now)->whereHas('tickets', function ($query) use ($user) {
                 $query->where('user_id', $user->id); // Only tickets that belong to this user
             })->get();
-        broadcast(new FloatingEvent($products, auth()->id()));
         return $this->success("Successfully",  FloatingAuctionListResource::collection($products));
     }
 
@@ -128,20 +131,47 @@ class ProductController extends Controller
             $query->with('bid')->where('user_id', $user->id)
                 ->where('is_bought', false);
         })
-            // ->with(['winners.bid']) // Ensure 'bid' is a relationship in the 'Winner' model
             ->paginate(8);
 
         return $this->successWithPagination("",  ProductUnPaidWinListResource::collection($products)->response()->getData(true));
     }
 
-    public function auctionEvent($product)
+    public function auctionEvent(Product $product)
     {
-        $countProduct = Product::query();
-        if (Carbon::parse($product->start_time)->isToday()) {
-            $countToday = $countProduct->whereDate('start_time', Carbon::today())->count();
+        $today = Carbon::today();
+        $now = Carbon::now();
+        $startTime = Carbon::parse($product->start_time);
+        $user = auth()->user();
+
+        // Load all necessary relationships and counts in one query
+        $product->load([
+            'tickets' => fn($query) => $query->where('user_id', $user->id)->whereDoesntHave('refunds'),
+        ])->loadCount([
+            'bids',
+            'tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')
+        ]);
+
+        // Broadcast auction details (always)
+        broadcast(new AuctionDetailEvent($product->id, $product));
+
+        // Check if the user has a valid ticket (No need for multiple `whereHas` calls)
+        $hasValidTicket = $product->tickets->isNotEmpty();
+
+        // Determine auction status and broadcast accordingly
+        if ($hasValidTicket) {
+            if ($startTime->isToday() && $startTime->lessThan($now) && Carbon::parse($product->end_time)->greaterThanOrEqualTo($now)) {
+                broadcast(new AuctionLiveEvent($product));
+            } elseif ($startTime->greaterThan($now)) {
+                broadcast(new AuctionNotLiveEvent($product));
+            }
+        }
+
+        // Broadcast auction date-related events
+        if ($startTime->isToday()) {
+            $countToday = Product::whereDate('start_time', $today)->count();
             broadcast(new AucationTodayEvent($product, $countToday));
-        } else {
-            $countNotToday = $countProduct->whereDate('start_time', '>', Carbon::today())->count();
+        } elseif ($startTime->greaterThan($today)) {
+            $countNotToday = Product::whereDate('start_time', '>', $today)->count();
             broadcast(new AucationNotTodayEvent($product, $countNotToday));
         }
     }
