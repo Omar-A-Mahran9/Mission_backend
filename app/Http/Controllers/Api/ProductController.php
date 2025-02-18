@@ -11,14 +11,15 @@ use Illuminate\Validation\Rule;
 use App\Events\AuctionLiveEvent;
 use App\Events\AucationTodayEvent;
 use App\Events\AuctionDetailEvent;
+use App\Events\AuctionNotLiveEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Events\AucationNotTodayEvent;
-use App\Events\AuctionNotLiveEvent;
 use App\Services\BroadcastingService;
 use App\Http\Resources\Api\ProductResource;
 use App\Http\Requests\Api\StoreRefundRequest;
 use App\Http\Resources\Api\ProductListResource;
+use App\Http\Resources\Api\FloatingAuctionListResource;
 use App\Http\Resources\Api\ProductUnPaidWinListResource;
 
 class ProductController extends Controller
@@ -110,18 +111,17 @@ class ProductController extends Controller
         ]);
         return $this->success("Successfully", []);
     }
-    // public function floatingAuctions()
-    // {
-    //     $today = Carbon::today()->toDateString(); // Get today's date (YYYY-MM-DD)
-    //     $now = Carbon::now()->toTimeString(); // Get current time (HH:MM:SS)
-    //     $user = auth()->user();
-    //     $products = Product::whereDate('start_time', $today) // Check if date matches today
-    //         ->whereTime('start_time', '<', $now)->whereTime('end_time', '>=', $now)->whereHas('tickets', function ($query) use ($user) {
-    //             $query->where('user_id', $user->id); // Only tickets that belong to this user
-    //         })->get();
-    //     broadcast(new FloatingEvent($products, auth()->id()));
-    //     return $this->success("Successfully",  FloatingAuctionListResource::collection($products));
-    // }
+    public function floatingAuctions()
+    {
+        $today = Carbon::today()->toDateString(); // Get today's date (YYYY-MM-DD)
+        $now = Carbon::now()->toTimeString(); // Get current time (HH:MM:SS)
+        $user = auth()->user();
+        $products = Product::whereDate('start_time', $today) // Check if date matches today
+            ->whereTime('start_time', '<', $now)->whereTime('end_time', '>=', $now)->whereHas('tickets', function ($query) use ($user) {
+                $query->where('user_id', $user->id); // Only tickets that belong to this user
+            })->get();
+        return $this->success("Successfully",  FloatingAuctionListResource::collection($products));
+    }
 
     public function unpaidWinningProducts(Request $request)
     {
