@@ -29,6 +29,9 @@
 <!--end::Vendors Javascript-->
 <!--begin::Custom Javascript(used for this page only)-->
 @stack('pre_scripts')
+<script>
+    window.isArabic = '{{ isArabic() }}';
+</script>
 <!--begin::Custom Javascript(used for this page only)-->
 <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
 <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>

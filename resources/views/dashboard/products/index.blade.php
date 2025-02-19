@@ -12,7 +12,8 @@
         <div class="card card-flush">
             <!--begin::Card header-->
             <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                aria-controls="kt_account_profile_details">
                 <!--begin::Card title-->
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">{{ __('Products list') }}</h3>
@@ -51,7 +52,8 @@
                         <!--end::Select2-->
                     </div>
                     <!--begin::Add product-->
-                    <a href="apps/ecommerce/catalog/add-product.html" class="btn btn-primary">{{ __('Create Product') }}</a>
+                    <a href="{{ route('dashboard.products.create') }}"
+                        class="btn btn-primary">{{ __('Create Product') }}</a>
                     <!--end::Add product-->
                     <!--begin::Group actions-->
                     <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
@@ -102,7 +104,6 @@
 @push('scripts')
     <script>
         window.isArabic = '{{ isArabic() }}';
-        console.log({{ isArabic() }})
     </script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>

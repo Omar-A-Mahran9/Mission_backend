@@ -20,4 +20,11 @@ class ProductController extends Controller
 
         return view('dashboard.products.index');
     }
+
+    public function create()
+    {
+        $this->authorize('create_products');
+
+        return view('dashboard.products.create');
+    }
 }

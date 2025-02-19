@@ -1,5 +1,4 @@
 @extends('dashboard.partials.master')
-{{--  @dd(isArabic())  --}}
 @section('content')
     <!--begin::Content-->
     <div id="kt_app_content" class="app-content pt-4">

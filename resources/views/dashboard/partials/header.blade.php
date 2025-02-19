@@ -187,8 +187,8 @@
                                 data-kt-menu="true" data-kt-element="theme-mode-menu">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3 my-0">
-                                    <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                        data-kt-value="light">
+                                    <a href="{{ route('dashboard.change-mode','light') }}" class="menu-link px-3 py-2"
+                                        data-kt-element="mode" data-kt-value="light">
                                         <span class="menu-icon" data-kt-element="icon">
                                             <i class="ki-outline ki-night-day fs-2"></i>
                                         </span>
