@@ -493,7 +493,12 @@ $(document).ready(function () {
         dateFormat: "Y-m-d",
         "locale": locale
     });
-
+    $(".datetimepicker").flatpickr({
+        dateFormat: "Y-m-d H:i:s",
+        enableTime: true,
+        enableSeconds: true,
+        "locale": locale
+    });
     $(".timepicker").flatpickr({
         enableTime: true,
         noCalendar: true,

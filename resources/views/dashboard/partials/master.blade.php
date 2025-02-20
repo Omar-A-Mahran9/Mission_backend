@@ -54,7 +54,6 @@
                 .catch(error => console.error("Error updating theme mode:", error));  --}}
             {{--  });
             });  --}}
-            console.log(themeMode);
         }
     </script>
     <!--end::Theme mode setup on page load-->
