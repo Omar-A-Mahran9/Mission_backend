@@ -1,8 +1,8 @@
 {
-    "loadingRecords": __("جارٍ التحميل..."),
-    "zeroRecords": __("لم يعثر على أية سجلات"),
-    "info": __("إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل"),
-    "search": __("ابحث:"),
+    "loadingRecords": "جارٍ التحميل...",
+    "zeroRecords": "لم يعثر على أية سجلات",
+    "info": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+    "search": "ابحث:",
     "aria": {
         "sortAscending": ": تفعيل لترتيب العمود تصاعدياً",
         "sortDescending": ": تفعيل لترتيب العمود تنازلياً"

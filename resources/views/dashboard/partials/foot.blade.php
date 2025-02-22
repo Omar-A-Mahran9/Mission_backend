@@ -41,7 +41,34 @@
 <script src="{{ asset('assets/js/global/scripts.js') }}"></script>
 <!--end::Custom Javascript-->
 <!--end::Javascript-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const priceInputs = document.querySelectorAll("input.numeric-input");
 
+        priceInputs.forEach(input => {
+            input.addEventListener("input", function(event) {
+                let value = event.target.value.replace(/,/g, ''); // Remove existing commas
+                if (!isNaN(value) && value !== "") {
+                    event.target.value = Number(value).toLocaleString(
+                        "en-US"); // Format with commas
+                } else {
+                    event.target.value = "";
+                }
+            });
+
+            input.addEventListener("blur", function(event) {
+                let value = event.target.value.replace(/,/g, '');
+                if (value !== "") {
+                    let num = parseFloat(value);
+                    event.target.value = num % 1 === 0 ? num.toLocaleString("en-US") : num
+                        .toLocaleString("en-US", {
+                            minimumFractionDigits: 2
+                        });
+                }
+            });
+        });
+    });
+</script>
 @stack('scripts')
 <!--end::Custom Javascript-->
 <!--end::Javascript-->

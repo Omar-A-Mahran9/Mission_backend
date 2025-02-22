@@ -456,7 +456,7 @@ return [
         'affiliate_discount_percentage' => 'نسبة الخصم التسويقية',
         'design_type_id' => 'نوع التصميم',
         'vendor_id' => 'التجار',
-        'variations.*.bidding_discount_percentage' => 'اكتب نسبة تخفيض المزايدة',
+        'variations.*.bidding_discount_percentage' => 'نسبة تخفيض المزايدة',
         'variations.*.final_bidding_percentage' => 'نسبة المزايدة بعد التخفيض',
         'return_policy_en' => 'سياسة الإسترجاع بالانجليزية',
         'return_policy_ar' => 'سياسة الإسترجاع بالعربية',

@@ -29,7 +29,7 @@
                     <!--begin::Search-->
                     <div class="d-flex align-items-center position-relative my-1">
                         <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4"></i>
-                        <input type="text" data-kt-ecommerce-product-filter="search"
+                        <input type="text" data-kt-docs-table-filter="search"
                             class="form-control form-control-solid w-250px ps-12"
                             placeholder="{{ __('Search Product') }}" />
                     </div>
@@ -83,7 +83,7 @@
                             <th class="min-w-200px">{{ __('Name') }}</th>
                             <th class="text-end min-w-70px">{{ __('Minimum bid') }}</th>
                             <th class="text-end min-w-100px">{{ __('Product price') }}</th>
-                            <th class="text-end min-w-100px">{{ __('Start price') }}</th>
+                            <th class="text-end min-w-100px">{{ __('Opening Price') }}</th>
                             <th class="text-end min-w-100px">{{ __('Status') }}</th>
                             <th class="text-end min-w-100px">{{ __('Created at') }}</th>
                             <th class="text-end min-w-70px">{{ __('Actions') }}</th>

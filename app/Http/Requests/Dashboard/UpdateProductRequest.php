@@ -3,9 +3,10 @@
 namespace App\Http\Requests\Dashboard;
 
 use App\Rules\NotNumbersOnly;
+use App\Rules\ValidateMaxImages;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class UpdateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,6 +23,11 @@ class StoreProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        $deleted_images = json_decode(request()->deleted_images);
+        $product        = request()->route('product');
+        $product->loadCount('images');
+        $oldImagesDeleted = $product->images_count == count($deleted_images);
+        $imagesStatus     = $oldImagesDeleted && !request()->images ? 'required' : 'nullable';
         return [
             'name_ar' => ['required', 'max:100', new NotNumbersOnly()],
             'name_en' => ['required', 'max:100', new NotNumbersOnly()],
@@ -35,10 +41,11 @@ class StoreProductRequest extends FormRequest
             'start_time' => ['required', 'date', 'after_or_equal:now'],
             'end_time' => ['required', 'date', 'after:start_time'],
             'variations' => ['required', 'array', 'min:1'],
-            'variations.*.id' => ['required', 'numeric', 'gt:0'],
+            'variations.*.id' => ['nullable', 'numeric', 'gt:0'],
             'variations.*.bidding_discount_percentage' => ['required', 'numeric', 'gt:0'],
             'variations.*.final_bidding_percentage' => ['required', 'numeric', 'gt:0'],
-            'images' => 'required|array|min:1|max:10',
+            'deletedVariations' => ['nullable', 'array'],
+            'images' => [$imagesStatus, 'array', 'min:1', 'max:10', new ValidateMaxImages($product, $deleted_images)],
             'images.*' => 'required|mimes:jpeg,jpg,png,gif,svg|max:512',
         ];
     }

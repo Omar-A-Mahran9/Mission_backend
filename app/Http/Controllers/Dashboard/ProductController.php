@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Image;
+use App\Models\Refund;
+use App\Models\Winner;
 use App\Models\Product;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\Models\ProductBidding;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreProductRequest;
+use App\Http\Requests\Dashboard\UpdateProductRequest;
 
 class ProductController extends Controller
 {
@@ -15,8 +20,7 @@ class ProductController extends Controller
         $this->authorize('view_products');
 
         if ($request->ajax()) {
-            $data = getModelData(model: new Product());
-
+            $data = getModelData(model: new Product(), relations: ['images' => ['id', 'product_id', 'name']]);
             return response()->json($data);
         }
 
@@ -34,11 +38,115 @@ class ProductController extends Controller
         $this->authorize('create_products');
 
         $data          = $request->validated();
-dd($data);
-        $product = Product::create($data);
-        // $product->
+        $productData = Arr::except($data, ['variations', 'images']);
+        $productData['admin_id'] = auth()->id();
+        $product = Product::create($productData);
+        foreach ($data['variations'] as $bidding) {
+            $product->productBiddings()->create($bidding);
+        }
         Image::handleProductImages($product->id);
 
         return response(["Product created successfully"]);
+    }
+    public function edit(Product $product)
+    {
+        $this->authorize('update_products');
+        abort_if($product->tickets()->exists(), 404, __("This product cannot be updated because it has associated tickets"));
+        $product->load('productBiddings');
+        return view('dashboard.products.edit', compact('product'));
+    }
+
+    public function update(UpdateProductRequest $request, Product $product)
+    {
+        $this->authorize('update_products');
+        abort_if($product->tickets()->exists(), 404, __("This product cannot be updated because it has associated tickets"));
+        $data          = $request->validated();
+        $productData = Arr::except($data, ['variations', 'images', 'deletedVariations', 'deleted_images']);
+        $product->update($productData);
+        foreach ($data['variations'] as $bidding) {
+            $product->productBiddings()->updateOrCreate(
+                ['id' => $bidding['id'] ?? null], // Check if the ID exists
+                $bidding // Update existing or create new
+            );
+        }
+        // Handle deleted variations
+        if ($request->deletedVariations) {
+            ProductBidding::whereIn('id', $request->deletedVariations)->delete(); // Bulk delete
+        }
+        Image::handleProductImages($product->id);
+        return response(["Product update successfully"]);
+    }
+    public function show(Request $request, Product $product)
+    {
+        $this->authorize('show_products');
+        $params = request()->all();
+
+        $product->load([
+            'images',
+            'productBiddings',
+            'winners.user',
+            'winners.address.city',
+            'winners.bid',
+            'refunds.user',
+        ])->loadCount(['bids', 'refunds']);
+        if ($request->ajax()) {
+            $model = Refund::with('user')->where('product_id', $product->id);
+
+            $response = [
+                "recordsTotal" => $model->count(),
+                "recordsFiltered" => $model->count(),
+                'data' => $model->skip($params['start'])->take($params['length'])->get()
+            ];
+
+            return response($response);
+        }
+        // dd($product);
+        return view('dashboard.products.show', compact('product'));
+    }
+    public function destroy(Product $product)
+    {
+        $this->authorize('delete_products');
+        abort_if($product->tickets()->exists(), 404, __("This product cannot be deleted because it has associated tickets"));
+        $product->delete();
+
+        return response(["Product deleted successfully"]);
+    }
+
+    public function deleteSelected(Request $request)
+    {
+        $this->authorize('delete_products');
+        $productsWithTickets = Product::whereIn('id', $request->selected_items_ids)
+            ->whereHas('tickets')
+            ->exists();
+        abort_if($productsWithTickets, 404, __("Some products cannot be deleted because they have associated tickets"));
+        Product::whereIn('id', $request->selected_items_ids)->delete();
+
+        return response(["selected product deleted successfully"]);
+    }
+
+    public function images(Product $product)
+    {
+        $productImages = $product->images->toArray();
+        $images        = scandir(public_path('/storage/Images/ProductImages'));
+
+        foreach ($productImages as $imageName) {
+            $imageName = $imageName['name'];
+
+            if (in_array($imageName, $images)) {
+                $image['name'] = $imageName;
+                $filePath      = public_path("/storage/Images/ProductImages/$imageName");
+                $image['size'] = filesize($filePath);
+                $image['path'] = asset("/storage/Images/ProductImages/$imageName");
+                $data[]        = $image;
+            }
+        }
+
+        return response()->json($data);
+    }
+    public function updateDelivery(Request $request, Winner $Winner)
+    {
+        $Winner->update(['is_deliverd' => true, 'deliverd_at' => now()]); // Update status
+
+        return back()->with('success', 'Delivery status updated successfully!');
     }
 }

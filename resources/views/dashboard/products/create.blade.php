@@ -61,7 +61,7 @@
                                     <label class="required form-label">{{ __('Name In English') }}</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="product_name" class="form-control form-control-solid mb-2"
+                                    <input type="text" class="form-control form-control-solid mb-2"
                                         placeholder="{{ __('Write the product name in English') }}"name="name_en"
                                         id="name_en_inp" value="" />
                                     <!--end::Input-->
@@ -144,6 +144,25 @@
                                 <!--end::Input group-->
                             </div>
                             <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="d-flex flex-wrap gap-5">
+                                <!--begin::Input group-->
+                                <div class="fv-row w-100 flex-md-root">
+                                    <!--begin::Label-->
+                                    <label class="required form-label">{{ __('Minimum bid') }}</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <input type="text" name="minimum_bid" step="0.1" min="1"
+                                        id="minimum_bid_inp"
+                                        class="form-control form-control-solid mb-2 no-arrow numeric-input"
+                                        placeholder="{{ __('Write the minimum bidders') }}" value="" />
+                                    <!--end::Input-->
+                                    <div class="fv-plugins-message-container invalid-feedback" id="minimum_bid">
+                                    </div>
+                                </div>
+                                <!--end::Input group-->
+                            </div>
+                            <!--end::Input group-->
                         </div>
                         <!--end::Card header-->
                     </div>
@@ -207,8 +226,8 @@
                                     <label class="required form-label">{{ __('Base Price') }}</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="product_price"
-                                        class="form-control form-control-solid mb-2"
+                                    <input type="text" step="0.1" name="product_price"
+                                        class="form-control form-control-solid mb-2 no-arrow numeric-input"
                                         placeholder="{{ __('Write the basic product price') }}" value="" />
                                     <!--end::Input-->
                                     <div class="fv-plugins-message-container invalid-feedback" id="product_price">
@@ -221,7 +240,8 @@
                                     <label class="required form-label">{{ __('Opening Price') }}</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="start_price" class="form-control form-control-solid mb-2"
+                                    <input type="text" step="0.1" name="start_price"
+                                        class="form-control form-control-solid mb-2 no-arrow numeric-input"
                                         placeholder="{{ __('Write the opening product price') }}" value="" />
                                     <!--end::Input-->
                                     <div class="fv-plugins-message-container invalid-feedback" id="start_price">
@@ -234,7 +254,8 @@
                                     <label class="required form-label">{{ __('Bidding Price') }}</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="bid_price" class="form-control form-control-solid mb-2"
+                                    <input type="text" step="0.1" name="bid_price"
+                                        class="form-control form-control-solid mb-2 no-arrows numeric-input"
                                         placeholder="{{ __('Write the bidding price for the product') }}"
                                         value="" />
                                     <!--end::Input-->
@@ -248,8 +269,8 @@
                                     <label class="required form-label">{{ __('Ticket price') }}</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="ticket_price"
-                                        class="form-control form-control-solid mb-2"
+                                    <input type="text" step="0.1" name="ticket_price"
+                                        class="form-control form-control-solid mb-2 no-arrow numeric-input"
                                         placeholder="{{ __('Write the ticket price for the product') }}"
                                         value="" />
                                     <!--end::Input-->
@@ -258,23 +279,24 @@
                                 </div>
                                 <!--end::Input group-->
                             </div>
-                            <div class="d-flex flex-wrap gap-5">
+                            <div class="d-flex flex-wrap gap-5" style="margin-top: 27px;">
                                 <div class="fv-row w-100 flex-md-root">
                                     <!--begin::Repeater-->
                                     <div id="variations">
                                         <!--begin::Form group-->
                                         <div class="form-group">
                                             <!--begin::Label-->
-                                            <label class="form-label">Add Product Variations</label>
+                                            <label class="form-label">{{ __('Bidding Layers') }}</label>
                                             <!--end::Label-->
-                                            <div data-repeater-list="variations" class="d-flex flex-column gap-3">
+                                            <div data-repeater-list="variations"
+                                                class="d-flex flex-column gap-3"style="margin-top: 10px;">
                                                 <div data-repeater-item>
                                                     <div class="form-group row">
                                                         <div class="d-flex flex-column flex-md-row gap-5">
                                                             <div class="fv-row flex-row-fluid">
                                                                 <!--begin::Label-->
                                                                 <label
-                                                                    class="required form-label">{{ __('Bidding Discount') }}
+                                                                    class="required form-label">{{ __('Bidding Discount Percentage') }}
                                                                     %</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
@@ -283,6 +305,7 @@
                                                                     type="number" step="0.1"
                                                                     name="bidding_discount_percentage" min="1"
                                                                     id="bidding_discount_percentage_inp"
+                                                                    @if (isArabic()) style="direction: rtl" @endif
                                                                     placeholder="{{ __('Write the bidding discount percentage') }}" />
                                                                 <!--end::Input-->
                                                                 <div class="fv-plugins-message-container invalid-feedback"
@@ -300,6 +323,7 @@
                                                                     type="number" step="0.1" min="1"
                                                                     name="final_bidding_percentage"
                                                                     id="final_bidding_percentage_inp"
+                                                                    @if (isArabic()) style="direction: rtl" @endif
                                                                     placeholder="{{ __('Write the bidding percentage after the discount') }}" />
                                                                 <!--end::Input-->
                                                                 <div class="fv-plugins-message-container invalid-feedback"
@@ -362,7 +386,7 @@
                 <!--end::Content-->
                 <div class="d-flex justify-content-end">
                     <!--begin::Button-->
-                    <a href="apps/ecommerce/catalog/products.html" id="kt_ecommerce_add_product_cancel"
+                    <a href="{{ route('dashboard.products.index') }}" id="kt_ecommerce_add_product_cancel"
                         class="btn btn-light me-5">{{ __('Cancel') }}</a>
                     <!--end::Button-->
                     <!--begin::Button-->
@@ -388,8 +412,8 @@
     <script>
         window.isArabic = '{{ isArabic() }}';
     </script>
-
-    <script src={{ asset('assets/js/components/dropzone.js') }}"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ar.js"></script>
+    <script src="{{ asset('assets/js/components/dropzone.js') }}"></script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>

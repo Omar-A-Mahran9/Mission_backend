@@ -7,7 +7,7 @@ var KTDatatablesServerSide = function () {
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
-            // language: language,
+            language: language,
             searchDelay: searchDelay,
             processing: processing,
             serverSide: serverSide,
@@ -47,9 +47,19 @@ var KTDatatablesServerSide = function () {
                     targets: 1,
                     orderable: false,
                     render: function (data, type, row) {
+                        let imageUrl = (row.images && row.images.length > 0 && row.images[0].name)
+                            ? getImagePathFromDirectory(row.images[0].name, 'ProductImages')
+                            : '/placeholder_images/default.svg';
+                        // return `
+                        //     <div class="d-flex align-items-center">
+                        //         <span class="symbol-label" style="background-image: url('${imageUrl}');></span>
+                        //         <div class="ms-5">
+                        //         <span href="javascript:;" class="mb-1 text-gray-600">${row.name}</span>
+                        //         </div>
+                        //     </div>`;
                         return `
                             <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.name}</span>
+                                <span href="javascript:;" class="mb-1 text-gray-600">${row.name}</span>
                             </div>`;
                     }
                 },
@@ -153,7 +163,7 @@ var KTDatatablesServerSide = function () {
     return {
         init: function () {
             initDatatable();
-            // handleSearchDatatable();
+            handleSearchDatatable();
             initToggleToolbar();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({

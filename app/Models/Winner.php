@@ -6,7 +6,7 @@ use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Winners extends Model
+class Winner extends Model
 {
     use HasFactory;
 
@@ -47,5 +47,9 @@ class Winners extends Model
     public function bid()
     {
         return $this->belongsTo(Bid::class);
+    }
+    public function address()
+    {
+        return $this->belongsTo(Address::class,'address_id');
     }
 }

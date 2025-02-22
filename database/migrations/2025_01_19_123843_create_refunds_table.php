@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enums\RefundStatus;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ticket_id');
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('user_id');
+            $table->integer('status')->comment('App\Enums\RefundStatus')->default(RefundStatus::Pending->value);
             $table->foreign('ticket_id')->references('id')->on('tickets')->cascadeOnDelete();
             $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();

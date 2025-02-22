@@ -12,6 +12,8 @@ class Bid extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $appends = ['amount'];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -32,7 +34,10 @@ class Bid extends Model
     {
         static::addGlobalScope(new SortingScope);
     }
-
+    public function getAmountAttribute()
+    {
+        return number_format($this->attributes['bid_amount'], 0, '.', ',');
+    }
     public function product()
     {
         return $this->belongsTo(Product::class);

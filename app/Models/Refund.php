@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RefundStatus;
 use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +13,7 @@ class Refund extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $appends = ['status_text'];
 
     /**
      * Get the attributes that should be cast.
@@ -31,5 +33,14 @@ class Refund extends Model
     protected static function booted(): void
     {
         static::addGlobalScope(new SortingScope);
+    }
+    public function getStatusTextAttribute()
+    {
+
+        return __(RefundStatus::tryFrom($this->attributes['status'])->name);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,);
     }
 }

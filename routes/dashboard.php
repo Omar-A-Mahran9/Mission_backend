@@ -8,7 +8,16 @@ Route::get('/', function () {
     return view('welcome');
 })->name('index');
 
+/* begin Delete And restore */
+Route::delete("products/delete-selected", "ProductController@deleteSelected");
+Route::get("products/restore-selected", "ProductController@restoreSelected");
+/* end Delete And restore */
+
+
+
 Route::resource('products', 'ProductController');
+Route::get("products/{product}/images", "ProductController@images");
+Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');
 
 /** ajax routes **/
 Route::post('dropzone/validate-image', 'DropzoneController@validateImage')->name('dropzone.validate-image');
