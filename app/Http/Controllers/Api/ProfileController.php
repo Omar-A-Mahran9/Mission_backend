@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\UserOtp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -24,6 +25,10 @@ class ProfileController extends Controller
         DB::transaction(function () use ($user, $data) {
             $user->update($data);
         });
+        UserOtp::updateOrCreate(
+            ['user_id' => $user->id], // Condition to find or create the record
+            ['otp' => rand(1111, 9999)] // Update the OTP value
+        );
         return $this->success("Successfully", new UserResource($user));
     }
     public function updatePassword(UpdatePasswordRequest $request)
