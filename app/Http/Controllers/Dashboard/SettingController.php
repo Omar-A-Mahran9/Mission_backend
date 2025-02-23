@@ -13,6 +13,7 @@ class SettingController extends Controller
 {
     public function changeThemeMode(Request $request)
     {
+        dd($request->mode);
         session()->put('theme_mode', $request->mode);
         return redirect()->back();
     }

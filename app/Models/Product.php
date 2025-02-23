@@ -24,6 +24,8 @@ class Product extends Model
         return [
             'created_at' => 'date:Y-m-d',
             'updated_at' => 'date:Y-m-d',
+            'start_time' => 'date:Y-m-d',
+            'end_time' => 'date:Y-m-d',
         ];
     }
     /**
@@ -77,11 +79,16 @@ class Product extends Model
 
     public function winner()
     {
-        return $this->hasOne(Winners::class)->where('is_bought', true);
+        return $this->hasOne(Winner::class)->where('is_bought', true);
     }
 
     public function winners()
     {
-        return $this->hasMany(Winners::class,'product_id');
+        return $this->hasMany(Winner::class, 'product_id');
+    }
+
+    public function productBiddings()
+    {
+        return $this->hasMany(ProductBidding::class);
     }
 }

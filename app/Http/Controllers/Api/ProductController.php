@@ -73,16 +73,16 @@ class ProductController extends Controller
     {
         $user = auth()->user();
         $product->loadCount('bids',);
-        // if (now()->greaterThan($product->start_time)) {
-        //     return $this->failure(__('The product has already started'));
-        // }
-        // $ticket = $product->tickets()->where('user_id', $user->id);
-        // if ($ticket->exists()) {
-        //     return $this->failure(__('You already have a ticket for this product'));
-        // }
-        // $product->tickets()->create([
-        //     'user_id' => $user->id,
-        // ]);
+        if (now()->greaterThan($product->start_time)) {
+            return $this->failure(__('The product has already started'));
+        }
+        $ticket = $product->tickets()->where('user_id', $user->id);
+        if ($ticket->exists()) {
+            return $this->failure(__('You already have a ticket for this product'));
+        }
+        $product->tickets()->create([
+            'user_id' => $user->id,
+        ]);
         $this->auctionEvent($product);
         return $this->success("Successfully", new ProductResource($product));
     }

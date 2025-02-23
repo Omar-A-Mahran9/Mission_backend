@@ -1,640 +1,544 @@
 @extends('dashboard.partials.master')
 @push('styles')
-    <link href="{{ asset('assets/dashboard/css/datatables' . (isDarkMode() ? '.dark' : '') . '.bundle.css') }}"
-        rel="stylesheet" type="text/css" />
-    <link
-        href="{{ asset('assets/dashboard/plugins/custom/datatables/datatables.bundle' . (isArabic() ? '.rtl' : '') . '.css') }}"
+    <link href="{{ asset('assets/css/datatables' . (isDarkMode() ? '.dark' : '') . '.bundle.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('assets/js/custom/datatables/datatables.bundle' . (isArabic() ? '.rtl' : '') . '.css') }}"
         rel="stylesheet" type="text/css" />
 @endpush
 @section('content')
-    <!--begin::Navbar-->
-    <div class="card mb-5 mb-xl-10">
-        <div class="card-body pt-9">
-            <!--begin::Details-->
-            <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
-                <!--begin: Pic-->
-                <div class="me-7 mb-4">
-                    <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                        <div class="symbol symbol-50px">
-                            <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                <div class="symbol-label fs-2 fw-semibold text-success">{{ $product->name_trimmed }}</div>
-                            </div>
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content">
+        <!--begin::Layout-->
+        <div class="d-flex flex-column flex-lg-row">
+            <!--begin::Content-->
+            <div class="flex-lg-row-fluid me-lg-15 order-2 order-lg-1 mb-10 mb-lg-0">
+                <!--begin::Card-->
+                <div class="card card-flush pt-3 mb-5 mb-xl-10">
+                    <!--begin::Card header-->
+                    <div class="card-header">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2 class="fw-bold">{{ __('Product Details') }}</h2>
                         </div>
+                        <!--begin::Card title-->
                     </div>
-                </div>
-                <!--end::Pic-->
-                <!--begin::Info-->
-                <div class="flex-grow-1">
-                    <!--begin::Title-->
-                    <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                        <!--begin::User-->
-                        <div class="d-flex flex-column">
-                            <!--begin::Name-->
-                            <div class="d-flex align-items-center mb-2">
-                                <a href="javascript:;"
-                                    class="text-gray-900 fs-2 fw-bold me-1 cursor-default disabled">{{ $product->name }}</a>
+                    <!--end::Card header-->
+                    <!--begin::Card body-->
+                    <div class="card-body pt-3">
+                        <!--begin::Section-->
+                        <div class="mb-10">
+                            <!--begin::Details-->
+                            <div class="d-flex flex-wrap py-5">
+                                <!--begin::Row-->
+                                <div class="flex-equal me-5">
+                                    <!--begin::Details-->
+                                    <table class="table fs-6 fw-semibold gs-0 gy-2 gx-2 m-0">
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500 min-w-175px w-175px">{{ __('Name') }}:</td>
+                                            <td class="text-gray-800">
+                                                {{ $product->name }}
+                                            </td>
+                                        </tr>
+                                        <!--end::Row-->
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500">{{ __('Base Price') }}:</td>
+                                            <td class="text-gray-800">{{ $product->product_price }}</td>
+                                        </tr>
+                                        <!--end::Row-->
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500">{{ __('Bidding Price') }}:</td>
+                                            <td class="text-gray-800">{{ $product->bid_price }}</td>
+                                        </tr>
+                                        <!--end::Row-->
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500">{{ __('Opening Price') }}:</td>
+                                            <td class="text-gray-800">{{ $product->start_price }}</td>
+                                        </tr>
+                                        <!--end::Row-->
+                                    </table>
+                                    <!--end::Details-->
+                                </div>
+                                <!--end::Row-->
+                                <!--begin::Row-->
+                                <div class="flex-equal">
+                                    <!--begin::Details-->
+                                    <table class="table fs-6 fw-semibold gs-0 gy-2 gx-2 m-0">
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500 min-w-175px w-175px">
+                                                {{ __('Description') }}:</td>
+                                            <td class="text-gray-800 min-w-200px">
+                                                {{ $product->description }}
+                                            </td>
+                                        </tr>
+                                        <!--end::Row-->
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500">{{ __('Minimum bid') }}:</td>
+                                            <td class="text-gray-800">{{ $product->minimum_bid }}</td>
+                                        </tr>
+                                        <!--end::Row-->
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500">{{ __('Start Time') }}:</td>
+                                            <td class="text-gray-800">
+                                                {{ $product->start_time->toDateString() . ' ' . $product->start_time->format('h:i:s') . ' ' . ($product->start_time->format('A') == 'PM' ? __('PM') : __('AM')) }}
+                                            </td>
+                                        </tr>
+                                        <!--end::Row-->
+                                        <!--begin::Row-->
+                                        <tr>
+                                            <td class="text-gray-500">{{ __('End Time') }}:</td>
+                                            <td class="text-gray-800">
+                                                {{ $product->end_time->toDateString() . ' ' . $product->end_time->format('h:i:s') . ' ' . ($product->end_time->format('A') == 'PM' ? __('PM') : __('AM')) }}
+                                            </td>
+                                        </tr>
+                                        <!--end::Row-->
+                                    </table>
+                                    <!--end::Details-->
+                                </div>
+                                <!--end::Row-->
                             </div>
-                            <!--end::Name-->
-                            <!--begin::Info-->
-                            <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
-                                <a href="#" class="d-flex align-items-center text-gray-400 me-5 mb-2 cursor-default">
-                                    <span class="svg-icon svg-icon-muted svg-icon-2">
-                                        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="currentColor"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M13.2252 6.36449L12.653 8.50002H14.6867L15.363 5.97626L16.8118 6.36449L16.2396 8.50002H17.5V10H15.8377L15.3018 12H17V13.5H14.8999L14.2237 16.0237L12.7748 15.6355L13.347 13.5H11.3132L10.637 16.0237L9.1881 15.6355L9.7603 13.5H8.5V12H10.1622L10.6981 10H9V8.50002H11.1L11.7763 5.97626L13.2252 6.36449ZM11.7151 12H13.7489L14.2848 10H12.251L11.7151 12Z"
-                                                fill="currentColor" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M5 3H21V19H5V3ZM6.5 4.5H19.5V17.5H6.5V4.5Z" fill="currentColor" />
-                                            <path d="M2 6V22H18V20.5H3.5V6H2Z" fill="currentColor" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->{{ $product->serial_no ?? '--' }}
-                                </a>
-                                <a href="#" class="d-flex align-items-center text-gray-400 me-5 mb-2 cursor-default">
-                                    <span class="svg-icon svg-icon-muted svg-icon-2">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24"
-                                            fill="currentColor" width="800px" height="800px">
-                                            <path
-                                                d="M23.271,9.419C21.72,6.893,18.192,2.655,12,2.655S2.28,6.893.729,9.419a4.908,4.908,0,0,0,0,5.162C2.28,17.107,5.808,21.345,12,21.345s9.72-4.238,11.271-6.764A4.908,4.908,0,0,0,23.271,9.419Zm-1.705,4.115C20.234,15.7,17.219,19.345,12,19.345S3.766,15.7,2.434,13.534a2.918,2.918,0,0,1,0-3.068C3.766,8.3,6.781,4.655,12,4.655s8.234,3.641,9.566,5.811A2.918,2.918,0,0,1,21.566,13.534Z" />
-                                            <path
-                                                d="M12,7a5,5,0,1,0,5,5A5.006,5.006,0,0,0,12,7Zm0,8a3,3,0,1,1,3-3A3,3,0,0,1,12,15Z" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->{{ $product->hidden_flag == 1 ? __('Visible') : __('Invisible') }}
-                                </a>
-                                <a href="#" class="d-flex align-items-center text-gray-400 me-5 mb-2 cursor-default">
-                                    <span class="svg-icon svg-icon-muted svg-icon-2">
-
-                                        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="currentColor"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M5 6.2C5 5.07989 5 4.51984 5.21799 4.09202C5.40973 3.71569 5.71569 3.40973 6.09202 3.21799C6.51984 3 7.07989 3 8.2 3H15.8C16.9201 3 17.4802 3 17.908 3.21799C18.2843 3.40973 18.5903 3.71569 18.782 4.09202C19 4.51984 19 5.07989 19 6.2V21L12 16L5 21V6.2Z"
-                                                stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->{{ __('' . $product->type) }}
-                                </a>
-                            </div>
-                            <!--end::Info-->
+                            <!--end::Row-->
                         </div>
-                        <!--end::User-->
-                        <!--begin::Actions-->
-                        <div class="d-flex my-4">
-                            <div class="me-0">
-                                <button class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary"
-                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                    <i class="ki-outline ki-setting-2 fs-3"></i>
-                                </button>
-                                <!--begin::Menu 3-->
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3"
-                                    data-kt-menu="true">
-                                    <!--begin::Heading-->
-                                    <div class="menu-item px-3">
-                                        <div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">
-                                            {{ __('Actions') }}</div>
-                                    </div>
-                                    <!--end::Heading-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="{{ route('dashboard.products.edit', $product) }}"
-                                            class="menu-link flex-stack px-3">{{ __('Edit') }}
-                                            <i class="fonticon-content-marketing fs-6"></i></a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                </div>
-                                <!--end::Menu 3-->
-                            </div>
-                            <!--end::Menu-->
-                        </div>
-                        <!--end::Actions-->
-                    </div>
-                    <!--end::Title-->
-                    <!--begin::Stats-->
-                    <div class="d-flex flex-wrap flex-stack">
-                        <!--begin::Wrapper-->
-                        <div class="d-flex flex-column flex-grow-1 pe-8">
-                            <!--begin::Stats-->
-                            <div class="d-flex flex-wrap">
-                                <!--begin::Stat-->
-                                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                    <!--begin::Number-->
-                                    <div class="d-flex align-items-center">
-                                        <i class="fonticon-cash-payment me-2 text-primary fs-3"></i>
-                                        <!--end::Svg Icon-->
-                                        <div class="fs-2 fw-bold">{{ $product->created_at->format('Y-m-d') }}</div>
-                                    </div>
-                                    <!--end::Number-->
-                                    <!--begin::Label-->
-                                    <div class="fw-semibold fs-6 text-gray-400">{{ __('Created at') }}</div>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Stat-->
-                                <!--begin::Stat-->
-                                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                    <!--begin::Number-->
-                                    <div class="d-flex align-items-center">
-                                        <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-12-26-231111/core/html/src/media/icons/duotune/medicine/med001.svg-->
-
-                                        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                                        <svg height="24px" width="24px" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.882 511.882"
-                                            xml:space="preserve">
-                                            <polygon style="fill:#F6BB42;"
-                                                points="350.216,176.572 278.374,158.615 37.038,264.123 0,338.207 125.753,374.324 386.13,258.531
-                                        " />
-                                            <polygon style="fill:#FFCE54;"
-                                                points="350.216,176.572 107.756,284.345 125.753,374.324 386.13,258.531 " />
-                                            <polygon style="fill:#E8AA3D;"
-                                                points="107.756,284.345 37.038,264.123 0.015,338.207 125.753,374.324 " />
-                                            <polygon style="fill:#F6BB42;"
-                                                points="475.969,212.682 404.127,194.717 162.791,300.232 125.753,374.324 251.504,410.41
-                                        511.882,294.625 " />
-                                            <polygon style="fill:#FFCE54;"
-                                                points="475.969,212.682 233.508,320.431 251.504,410.41 511.882,294.625 " />
-                                            <polygon style="fill:#E8AA3D;"
-                                                points="233.508,320.431 162.791,300.232 125.753,374.324 251.504,410.41 " />
-                                            <polygon style="fill:#F6BB42;"
-                                                points="396.316,119.429 324.488,101.473 103.867,198.435 66.843,272.519 192.596,308.621
-                                        432.245,201.379 " />
-                                            <polygon style="fill:#FFCE54;"
-                                                points="396.316,119.429 174.6,218.641 192.596,308.621 432.245,201.379 " />
-                                            <polygon style="fill:#E8AA3D;"
-                                                points="174.6,218.641 103.867,198.435 66.843,272.519 192.596,308.621 " />
-                                        </svg>
-                                        <!--end::Svg Icon-->
-                                        <div class="fs-2 fw-bold">{{ $product->caliber }}</div>
-                                    </div>
-                                    <!--end::Number-->
-                                    <!--begin::Label-->
-                                    <div class="fw-semibold fs-6 text-gray-400">{{ __('Caliber') }}</div>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Stat-->
-                                <!--begin::Stat-->
-                                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                    <!--begin::Number-->
-                                    <div class="d-flex align-items-center">
-                                        <i class="ki-outline ki-arrows-circle me-2 text-primary fs-3"></i>
-                                        <!--end::Svg Icon-->
-                                        <div class="fs-2 fw-bold">{{ $product->price_change ? __('Yes') : __('No') }}
-                                        </div>
-                                    </div>
-                                    <!--end::Number-->
-                                    <!--begin::Label-->
-                                    <div class="fw-semibold fs-6 text-gray-400">{{ __('Auto update price') }}
-                                    </div>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Stat-->
-                            </div>
-                            <!--end::Stats-->
-                        </div>
-                        <!--end::Wrapper-->
-                    </div>
-                    <!--end::Stats-->
-                </div>
-                <!--end::Info-->
-            </div>
-            <!--end::Details-->
-        </div>
-    </div>
-    <!--end::Navbar-->
-    <div class="row g-6 g-xl-9 mb-5 mb-xl-10">
-        <div class="col-lg-12">
-            <!--begin::Card-->
-            <div class="card h-100">
-                <!--begin::Card head-->
-                <div class="card-header card-header-stretch">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex align-items-center">
-                        <h3 class="fw-bold m-0 text-gray-800">{{ __('Product Images') }}</h3>
-                    </div>
-                    <!--end::Title-->
-                    <!--begin::Toolbar-->
-                    <div class="card-toolbar m-0">
-                        <!--begin::Tab nav-->
-                        <ul class="nav nav-tabs nav-line-tabs nav-stretch fs-6 border-0 fw-bold" role="tablist">
-
-                            <li class="nav-item" role="presentation">
-                                <a id="image-tab" class="nav-link justify-content-center text-active-gray-800 active"
-                                    data-bs-toggle="tab" role="tab" href="#image"
-                                    aria-selected="true">{{ __('Images') }}</a>
-                            </li>
-
-                        </ul>
-                        <!--end::Tab nav-->
-                    </div>
-                    <!--end::Toolbar-->
-                </div>
-                <!--end::Card head-->
-                <!--begin::Card body-->
-                <div class="card-body">
-                    <!--begin::Tab Content-->
-                    <div class="tab-content">
-                        <!--begin::Tab panel-->
-                        <div id="image" class="card-body p-0 tab-pane fade active show" role="tabpanel"
-                            aria-labelledby="image">
-                            <!--begin::Card body-->
-                            <div class="card-body p-9 pt-4">
-
-
-                                <div class="tns" style="direction: ltr">
-                                    <div data-tns="true" data-tns-nav-position="bottom" data-tns-mouse-drag="true"
-                                        data-tns-controls="false">
-                                        <!--begin::Item-->
-                                        @foreach ($product->images as $image)
-                                            <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                                href="{{ $image->full_image_path }}" target="_blank">
-                                                <!--begin::Image-->
-                                                <div class="text-center px-5 pt-5 pt-lg-10 px-lg-10">
-                                                    <img src="{{ $image->full_image_path }}"
-                                                        class="card-rounded shadow mw-25" alt="" />
-                                                </div>
-                                                <!--end::Image-->
-
-                                                <!--begin::Action-->
-                                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                                </div>
-                                                <!--end::Action-->
-                                            </a>
-                                            <!--end::Item-->
-                                        @endforeach
-                                        ...
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end::Card body-->
-                        </div>
-                        <!--end::Tab panel-->
-                    </div>
-                    <!--end::Tab Content-->
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card-->
-        </div>
-        <div class="col-lg-12">
-            <!--begin::Card-->
-            <div class="card h-100">
-                <!--begin::Card head-->
-                <div class="card-header card-header-stretch">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex align-items-center">
-                        <h3 class="fw-bold m-0 text-gray-800">{{ __('Product Details') }}</h3>
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Card head-->
-                <!--begin::Card body-->
-                <div class="card-body">
-                    <!--begin::Tab Content-->
-                    <div class="tab-content">
-                        <!--begin::Tab panel-->
-                        <div class="card-body pt-0">
+                        <!--end::Section-->
+                        <!--begin::Section-->
+                        <div class="mb-0">
+                            <!--begin::Title-->
+                            <h5 class="mb-4">{{ __('Bidding Layers') }}:</h5>
+                            <!--end::Title-->
+                            <!--begin::Product table-->
                             <div class="table-responsive">
                                 <!--begin::Table-->
-                                <table class="table align-middle table-row-bordered mb-0 fs-6 gy-5 min-w-300px">
-                                    <tbody class="fw-semibold text-gray-600">
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="ki-outline ki-category fs-2 me-2"></i>{{ __('Categories') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">
-                                                <div class="d-flex align-items-center justify-content-end">
-                                                    @foreach ($product->categories as $category)
-                                                        <!--begin::Name-->
-                                                        <span
-                                                            class="badge badge-light-info fs-7 m-1">{{ __($category->name) }}</span>
-                                                        <!--end::Name-->
-                                                    @endforeach
-                                                </div>
-                                            </td>
+                                <table class="table align-middle table-row-dashed fs-6 gy-4 mb-0">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                        <!--begin::Table row-->
+                                        <tr
+                                            class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                            <th class="min-w-150px">{{ __('Bidding Discount Percentage') }}</th>
+                                            <th class="min-w-125px">{{ __('Bidding Percentage After Discount') }}</th>
+                                            <th class="min-w-125px">{{ __('Created at') }}</th>
                                         </tr>
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i
-                                                        class="ki-outline ki-category fs-2 me-2"></i>{{ __('Subcategories') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">
-                                                <div class="d-flex align-items-center justify-content-end">
-                                                    @if (!empty($product->subcategoriesNew) && isset($product->subcategoriesNew[0]))
-                                                        <!--begin::Name-->
-                                                        <span
-                                                            class="badge badge-light-info fs-7 m-1">{{ __($product->subcategoriesNew[0]->name) }}</span>
-                                                        <!--end::Name-->
-                                                    @else
-                                                        <!-- Optional: Placeholder when no subcategories are available -->
-                                                        <span class="badge badge-light-secondary fs-7 m-1">--</span>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @if ($product->brand)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-text-bold fs-2 me-2"></i>{{ __('Brand') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">
-                                                    <div class="d-flex align-items-center justify-content-end">
-                                                        <!--begin:: Avatar -->
-                                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                                            <div class="symbol-label fs-2 fw-semibold text-success">
-                                                                {{ strtoupper(substr($product->brand->name, 0, 2)) }}</div>
-                                                        </div>
-                                                        <!--end::Avatar-->
-                                                        <!--begin::Name-->
-                                                        <span
-                                                            class="text-gray-600 text-hover-primary">{{ $product->brand->name }}</span>
-                                                        <!--end::Name-->
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endif
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="ki-outline ki-key fs-2 me-2"></i>{{ __('Tags') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">
-                                                <div class="d-flex align-items-center justify-content-end">
-                                                    @foreach ($product->tags as $tag)
-                                                        <!--begin::Name-->
-                                                        <span
-                                                            class="badge badge-light-info fs-7 m-1">{{ __($tag->name) }}</span>
-                                                        <!--end::Name-->
-                                                    @endforeach
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="ki-outline ki-data fs-2 me-2"></i>{{ __('Description') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">
-                                                <span
-                                                    class="text-gray-600 text-hover-primary">{{ $product->description }}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i
-                                                        class="ki-outline ki-finance-calculator fs-2 me-2"></i>{{ __('Caliber') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">
-                                                <span
-                                                    class="text-gray-600 text-hover-primary">{{ $product->caliber . ' ' . __('Carat') }}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="ki-outline ki-flag fs-2 me-2"></i>{{ __('Video link') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">{{ $product->video_link ?? 'ــ' }}</td>
-                                        </tr>
-                                        @if ($product->maintenance_and_care)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-discount fs-2 me-2"></i>{{ __('Maintenance and care') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->maintenance_and_care }}</td>
-                                            </tr>
-                                        @endif
-                                        @if ($product->packaging)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-discount fs-2 me-2"></i>{{ __('Packaging') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->packaging }}</td>
-                                            </tr>
-                                        @endif
-                                        @if ($product->sustainable_assets)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-discount fs-2 me-2"></i>{{ __('Sustainable assets') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->sustainable_assets }}</td>
-                                            </tr>
-                                        @endif
-                                        @if ($product->main_stone)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-discount fs-2 me-2"></i>{{ __('Main stone') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->main_stone }}</td>
-                                            </tr>
-                                        @endif
-                                        @if ($product->guarantee)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-discount fs-2 me-2"></i>{{ __('Guarantee') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->guarantee }}</td>
-                                            </tr>
-                                        @endif
-                                        @if ($product->color)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-discount fs-2 me-2"></i>{{ __('Color') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->color }}</td>
-                                            </tr>
-                                        @endif
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="ki-outline ki-setting-4 fs-2 me-2"></i>{{ __('Type') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">
-                                                <span
-                                                    class="badge @if ($product->type == 'New') badge-light-success @else badge-light-danger @endif fs-7 m-1">{{ __('' . $product->type) }}</span>
-                                            </td>
-                                        </tr>
-                                        @if ($product->rejection_reason)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-information-4 fs-2 me-2"></i>{{ __('Rejection Reason') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->rejection_reason }}</td>
-                                            </tr>
-                                        @endif
-
-                                        @if (count($product->meta_tag_key_words) > 0)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-information-4 fs-2 me-2"></i>{{ __('Meta tag keywords') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">
-                                                    <div class="d-flex align-items-center justify-content-end">
-                                                        @foreach ($product->meta_tag_key_words as $metaTagKeyWords)
-                                                            <!--begin::Name-->
-                                                            <span
-                                                                class="badge badge-light-info fs-7 m-1">{{ __($metaTagKeyWords) }}</span>
-                                                            <!--end::Name-->
-                                                        @endforeach
-                                                    </div>
-
-                                            </tr>
-                                        @endif
-                                        @if ($product->meta_tag_key_description)
-                                            <tr>
-                                                <td class="text-muted">
-                                                    <div class="d-flex align-items-center">
-                                                        <i
-                                                            class="ki-outline ki-information-4 fs-2 me-2"></i>{{ __('Meta tag key description') }}
-                                                    </div>
-                                                </td>
-                                                <td class="fw-bold text-end">{{ $product->meta_tag_key_description }}</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
-                                <!--end::Table-->
-                            </div>
-                        </div>
-                        <!--end::Tab panel-->
-                    </div>
-                    <!--end::Tab Content-->
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card-->
-        </div>
-        <div class="col-lg-12">
-            <!--begin::Card-->
-            <div class="card h-100">
-                <!--begin::Card head-->
-                <div class="card-header card-header-stretch">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex align-items-center">
-                        <h3 class="fw-bold m-0 text-gray-800">{{ __('Product Variations') }}</h3>
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Card head-->
-                <!--begin::Card body-->
-                <div class="card-body">
-                    <!--begin::Tab Content-->
-                    <div class="tab-content">
-                        <!--begin::Tab panel-->
-                        <div class="card-body pt-0">
-                            <div class="table-responsive">
-                                <!--begin::Table-->
-                                <table class="table align-middle table-row-bordered mb-0 fs-6 gy-5 min-w-300px"
-                                    id="kt_table_customers_payment">
-                                    <thead class="border-bottom border-gray-200 fs-7 fw-bold">
-                                        <tr class="text-start text-muted text-uppercase gs-0"
-                                            style="text-align: center !important;">
-                                            <th class="min-w-100px">{{ __('Size') . ' ' . __('( Arabic )') }}</th>
-                                            <th>{{ __('weight') }}</th>
-                                            <th>{{ __('Price') }}</th>
-                                            <th>{{ __('Manufacturing and profit amount') }}</th>
-                                            <th>{{ __('Total including profit and tax') }}</th>
-                                            <th>{{ __('Stock') }}</th>
-                                            <th class="min-w-100px">{{ __('Price after discount') }}</th>
-                                            <th class="min-w-100px">{{ __('Price after discount including tax') }}</th>
-                                            <th class="min-w-100px">{{ __('Discount From') }}</th>
-                                            <th class="min-w-100px">{{ __('Discount To') }}</th>
-                                        </tr>
+                                        <!--end::Table row-->
                                     </thead>
-                                    <tbody class="fs-6 fw-semibold text-gray-600">
-                                        @forelse ($product->specifications as $specification)
-                                            @php
-                                                $result =
-                                                    $product->categories[0]->tax_applicable == 1
-                                                        ? ($specification->price +
-                                                                ($specification->manufacturing_profit_price ?? 0)) *
-                                                            (1 + setting('tax') / 100)
-                                                        : $specification->price +
-                                                            ($specification->manufacturing_profit_price ?? 0);
-                                            @endphp
-                                            <tr
-                                                style="
-                                            text-align: center;
-                                        ">
-                                                <td>{{ $specification->size ?? 'ــ' }}</td>
-                                                <td>{{ $specification->weight . ' ' . __('Gram') }}</td>
-                                                <td>{{ $specification->price .' '. __('SAR') }}</td>
-                                                <td>{{ $specification->manufacturing_profit_price .' '. __('SAR') }}
-                                                </td>
-                                                <td>{{ round($result, 2) .' '. __('SAR') }}
-                                                </td>
-                                                <td>{{ $specification->stock ?? 'ــ' }}</td>
-                                                <td>{{ $specification->discount_price ? $specification->discount_price .' '. __('SAR') : 'ــ' }}
-                                                <td>{{ $specification->discount_price ? $specification->discount_price * (1 + setting('tax') / 100) .' '. __('SAR') : 'ــ' }}
-                                                </td>
-                                                <td>{{ $specification->discount_from ? $specification->discount_from->format('Y-m-d') : 'ــ' }}
-                                                </td>
-                                                <td>{{ $specification->discount_to ? $specification->discount_to->format('Y-m-d') : 'ــ' }}
-                                                </td>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody class="fw-semibold text-gray-800">
+                                        @forelse  ($product->productBiddings as $bidding)
+                                            <tr>
+                                                <td>{{ $bidding->bidding_discount_percentage }} %</td>
+                                                <td>{{ $bidding->final_bidding_percentage }} %</td>
+                                                <td>{{ $bidding->created_at->toDateString() }}</td>
                                             </tr>
                                         @empty
-                                            <tr class="odd">
-                                                <td valign="top" colspan="6" style="text-align: center;">
-                                                    {{ __('No data available in table') }}
-                                                </td>
+                                            <tr>
+                                                <td colspan="3">{{ __('No Bidding Layers') }}</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
+                                    <!--end::Table body-->
                                 </table>
                                 <!--end::Table-->
                             </div>
+                            <!--end::Product table-->
                         </div>
-                        <!--end::Tab panel-->
+                        <!--end::Section-->
                     </div>
-                    <!--end::Tab Content-->
+                    <!--end::Card body-->
                 </div>
-                <!--end::Card body-->
+                <!--end::Card-->
+                <!--begin::Card-->
+                <div class="card card-flush pt-3 mb-5 mb-xl-10">
+                    <!--begin::Card header-->
+                    <div class="card-header">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2>{{ __('Images') }}</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0">
+                        <!--begin::Table wrapper-->
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div id="kt_carousel_1_carousel" class="carousel carousel-custom slide" data-bs-ride="carousel"
+                                data-bs-interval="8000">
+                                <!-- Debugging (Remove this in production) -->
+                                <!--begin::Carousel-->
+                                <div class="carousel-inner pt-8">
+                                    @foreach ($product->images as $index => $image)
+                                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                            <div class="d-flex justify-content-center align-items-center"
+                                                style="height: 400px;">
+                                                <img src="{{ asset($image->full_image_path) }}" class="img-fluid"
+                                                    style="max-width: 70%; max-height: 100%; object-fit: contain;"
+                                                    alt="Product Image">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                    <!--begin::Carousel Indicators-->
+                                    <ol
+                                        class="p-0 m-0 carousel-indicators carousel-indicators-dots d-flex justify-content-center">
+                                        @foreach ($product->images as $index => $image)
+                                            <li data-bs-target="#kt_carousel_1_carousel"
+                                                data-bs-slide-to="{{ $index }}"
+                                                class="ms-1 {{ $loop->first ? 'active' : '' }}">
+                                            </li>
+                                        @endforeach
+                                    </ol>
+                                    <!--end::Carousel Indicators-->
+                                </div>
+
+                                <!--end::Heading-->
+                                <!--end::Carousel-->
+                                <!--begin::Carousel Controls (Optional)-->
+                                <a class="carousel-control-prev" href="#kt_carousel_1_carousel" role="button"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#kt_carousel_1_carousel" role="button"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </a>
+                                <!--end::Carousel Controls-->
+                            </div>
+                            <!--end::Table-->
+                        </div>
+                        <!--end::Table wrapper-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card-->
+                {{--  @dd($product)  --}}
+                <!--begin::Card-->
+                <div class="card card-flush pt-3 mb-5 mb-xl-10">
+                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6 justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_4"
+                                data-type="tickets">{{ __('Tickets') }}
+                                ({{ $product->tickets_count }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_5"
+                                data-type="refunds">{{ __('Refunded Tickets') }}
+                                ({{ $product->refunds_count }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_6"
+                                data-type="bids">{{ __('Bidding') }}
+                                ({{ $product->bids_count }})</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="kt_tab_pane_4" role="tabpanel">
+                            ...
+                        </div>
+                        <div class="tab-pane fade" id="kt_tab_pane_5" role="tabpanel">
+                            <div class="card-body pt-0">
+                                <!--begin::Table wrapper-->
+                                <div class="table-responsive">
+                                    <!--begin::Table-->
+                                    <table id="kt_datatable_refunds"
+                                        class="table align-middle table-row-dashed fs-6 text-gray-600 fw-semibold gy-5">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <!--begin::Table row-->
+                                            <tr
+                                                class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                <th class="min-w-150px">{{ __('User Name') }}</th>
+                                                <th class="min-w-125px">{{ __('Reason') }}</th>
+                                                <th class="min-w-125px">{{ __('Status') }}</th>
+                                                <th class="min-w-125px">{{ __('Created at') }}</th>
+                                            </tr>
+                                            <!--end::Table row-->
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <!--begin::Table body-->
+                                        <tbody class="fw-bold text-gray-600" id="table-body">
+                                        </tbody>
+                                        <!--end::Table body-->
+                                    </table>
+                                    <!--end::Table-->
+                                </div>
+                                <!--end::Table wrapper-->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="kt_tab_pane_6" role="tabpanel">
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0">
+                                <!--begin::Table wrapper-->
+                                <div class="table-responsive">
+                                    <!--begin::Table-->
+                                    <table id="kt_datatable_bids"
+                                        class="table align-middle table-row-dashed fs-6 text-gray-600 fw-semibold gy-5">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <!--begin::Table row-->
+                                            <tr
+                                                class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                <th class="min-w-150px">{{ __('User Name') }}</th>
+                                                <th class="min-w-125px">{{ __('Bidding Amount') }}</th>
+                                                <th class="min-w-125px">{{ __('Created at') }}</th>
+                                            </tr>
+                                            <!--end::Table row-->
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <!--begin::Table body-->
+                                        <tbody class="fw-bold text-gray-600" id="table-body">
+                                        </tbody>
+                                        <!--end::Table body-->
+                                    </table>
+                                    <!--end::Table-->
+                                </div>
+                                <!--end::Table wrapper-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                    </div>
+                </div>
+                <!--end::Card-->
             </div>
-            <!--end::Card-->
+            <!--end::Content-->
+            <!--begin::Sidebar-->
+            @if ($product->winners->first())
+                <div class="flex-column flex-lg-row-auto w-lg-250px w-xl-300px mb-10 order-1 order-lg-2">
+                    <!--begin::Card-->
+                    <div class="card card-flush mb-0" data-kt-sticky="true" data-kt-sticky-name="subscription-summary"
+                        data-kt-sticky-offset="{default: false, lg: '200px'}"
+                        data-kt-sticky-width="{lg: '250px', xl: '300px'}" data-kt-sticky-left="auto"
+                        data-kt-sticky-top="150px" data-kt-sticky-animation="false" data-kt-sticky-zindex="95">
+                        <!--begin::Card header-->
+
+                        <div class="card-header">
+                            <!--begin::Card title-->
+                            <div class="card-title">
+                                <i class="ki-outline ki-medal-star fs-1"></i>
+                                <h2>{{ __('Winner') }}</h2>
+                            </div>
+                            <!--end::Card title-->
+                        </div>
+                        <!--end::Card header-->
+                        <!--begin::Card body-->
+                        <div class="card-body pt-0 fs-6">
+                            <!--begin::Section-->
+                            <div class="mb-7">
+                                <!--begin::Details-->
+                                <div class="d-flex align-items-center">
+                                    <!--begin::Avatar-->
+                                    <div class="symbol symbol-60px symbol-circle me-3">
+                                        <img alt="Pic"
+                                            src="{{ $product->winners->first()->user->full_image_path }}" />
+                                    </div>
+                                    <!--end::Avatar-->
+                                    <!--begin::Info-->
+                                    <div class="d-flex flex-column">
+                                        <!--begin::Name-->
+                                        <a href="#"
+                                            class="fs-4 fw-bold text-gray-900 text-hover-primary me-2">{{ $product->winners->first()->user->name }}</a>
+                                        <!--end::Name-->
+                                        <!--begin::Email-->
+                                        <a href="#"
+                                            class="fw-semibold text-gray-600 text-hover-primary">{{ $product->winners->first()->user->email }}</a>
+                                        <!--end::Email-->
+                                        <!--begin::Phone-->
+                                        <a href="#"
+                                            class="fw-semibold text-gray-600 text-hover-primary">{{ $product->winners->first()->user->phone }}</a>
+                                        <!--end::Phone-->
+                                    </div>
+                                    <!--end::Info-->
+                                </div>
+                                <!--end::Details-->
+                            </div>
+                            <!--end::Section-->
+                            <!--begin::Seperator-->
+                            <div class="separator separator-dashed mb-7"></div>
+                            <!--end::Seperator-->
+                            <!--begin::Section-->
+                            <div class="mb-7">
+                                <!--begin::Title-->
+                                <h5 class="mb-4">{{ __('Bidding Details') }}</h5>
+                                <!--end::Title-->
+                                <!--begin::Details-->
+                                <div class="mb-0">
+                                    <!--begin::Plan-->
+                                    <span class="fw-semibold text-gray-600">{{ __('Bidding Amount') }}:</span>
+                                    <!--end::Plan-->
+                                    <!--begin::Price-->
+                                    <span
+                                        class="fw-semibold text-gray-800">{{ $product->winners->first()->bid->amount . ' ' . __('SAR') }}</span>
+                                    <!--end::Price-->
+                                </div>
+                                <!--end::Details-->
+                                <!--begin::Details-->
+                                <div class="mb-0">
+                                    <!--begin::Plan-->
+                                    <span class="fw-semibold text-gray-600">{{ __('Created at') }}:</span>
+                                    <!--end::Plan-->
+                                    <!--begin::Price-->
+                                    <span
+                                        class="fw-semibold text-gray-800">{{ $product->winners->first()->bid->created_at->toDateString() }}</span>
+                                    <!--end::Price-->
+                                </div>
+                                <!--end::Details-->
+                            </div>
+                            <!--end::Section-->
+                            <!--begin::Seperator-->
+                            <div class="separator separator-dashed mb-7"></div>
+                            <!--end::Seperator-->
+                            <!--begin::Section-->
+                            <div class="mb-10">
+                                <!--begin::Title-->
+                                <h5 class="mb-4">{{ __('Payment Details') }}</h5>
+                                <!--end::Title-->
+                                <!--begin::Details-->
+                                <div class="mb-0">
+                                    <!--begin::Card info-->
+                                    <div class="fw-semibold text-gray-600 d-flex align-items-center">
+                                        {{ $product->winners->first()->is_bought ? __('Paid') : __('Unpaid') }}
+                                    </div>
+                                    <!--end::Card info-->
+                                    <!--begin::Card expiry-->
+                                    @if ($product->winners->first()->is_bought)
+                                        <div class="fw-semibold text-gray-600">
+                                            {{ $product->winners->first()->paid_at->toDateString() . ' ' . $product->winner->paid_at->format('h:i:s') . ' ' . ($product->winner->paid_at->format('A') == 'PM' ? __('PM') : __('AM')) }}
+                                        </div>
+                                    @endif
+                                    <!--end::Card expiry-->
+                                </div>
+                                <!--end::Details-->
+                            </div>
+                            <!--end::Section-->
+                            <!--begin::Seperator-->
+                            <div class="separator separator-dashed mb-7"></div>
+                            <!--end::Seperator-->
+                            <!--begin::Section-->
+                            <div class="mb-10">
+                                <!--begin::Title-->
+                                <h5 class="mb-4">{{ __('Address Details') }}</h5>
+                                <!--end::Title-->
+                                <!--begin::Details-->
+                                <table class="table fs-6 fw-semibold gs-0 gy-2 gx-2">
+                                    <!--begin::Row-->
+                                    <tr class="">
+                                        <td class="text-gray-500">{{ __('Address') }}:</td>
+                                        <td class="text-gray-800">
+                                            {{ optional(optional($product->winners->first())->address)->city->name ?? 'N/A' }},
+                                            {{ optional($product->winners->first())->address->address ?? 'N/A' }}
+                                        </td>
+                                    </tr>
+                                    <!--end::Row-->
+                                    <!--begin::Row-->
+                                    <tr class="">
+                                        <td class="text-gray-500">{{ __('Delivery') }}:</td>
+                                        <td class="text-gray-800"><span
+                                                class="badge badge-{{ $product->winners->first()->is_deliverd ? 'light-success' : 'light-danger' }}">{{ $product->winners->first()->is_deliverd ? __('Yes') : __('No') }}</span>
+                                        </td>
+                                    </tr>
+                                    <!--end::Row-->
+                                    <!--begin::Row-->
+                                    <tr class="">
+                                        <td class="text-gray-500">{{ __('Delivered Date') }}:</td>
+                                        <td class="text-gray-800">
+                                            {{ optional($product->winners->first())->deliverd_at ? $product->winners->first()->deliverd_at : '--' }}
+                                        </td>
+                                    </tr>
+                                    <!--end::Row-->
+                                </table>
+                                <!--end::Details-->
+                            </div>
+                            <!--end::Section-->
+                            <!--begin::Actions-->
+                            @if (!$product->winners->first()->is_deliverd)
+                                <div class="mb-0">
+                                    <form action="{{ route('dashboard.delivery', $product->winners->first()) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-primary"
+                                            id="kt_subscriptions_create_button">{{ __('Update Delivery Status') }}</button>
+                                    </form>
+
+                                </div>
+                            @endif
+                            <!--end::Actions-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+            @endif
+
+            <!--end::Sidebar-->
         </div>
+        <!--end::Layout-->
     </div>
+    <!--end::Content-->
 @endsection
 @push('scripts')
     <script>
-        var productId = "{{ $product->id }}";
+        window.isArabic = '{{ isArabic() }}';
     </script>
-    <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
+    <script>
+        let productId = {{ $product->id }};
+    </script>
+    <script>
+        var type = "tickets"; // Declare globally
+
+        {{--  document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".nav-link").forEach(function(tab) {
+                tab.addEventListener("click", function() {
+                    var type = this.getAttribute("data-type"); // Override global `type`
+                    console.log("Updated Type:", type); // Now logs the correct updated value
+                });
+            });
+        });
+
+        console.log("First Type:", type); // Logs before any click happens  --}}
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".nav-link").forEach(function(tab) {
+                tab.addEventListener("click", function() {
+                    let type = this.getAttribute("data-type"); // Read the selected type
+                    console.log("Clicked Tab Type:", type); // Verify in console
+
+                    // Call the function to reload DataTable based on the selected tab
+                    loadDataTable(type);
+                });
+            });
+        });
+
+        // Function to reload DataTable based on the selected tab type
+        function loadDataTable(type) {
+            if (type === "refunds") {
+                if ($.fn.DataTable.isDataTable("#kt_datatable_refunds")) {
+                    $("#kt_datatable_refunds").DataTable().ajax.reload(); // Reload Refunds Table
+                } else {
+                    initRefundsTable(); // Initialize Refunds Table if not initialized
+                }
+            } else if (type === "bids") {
+                if ($.fn.DataTable.isDataTable("#kt_datatable_bids")) {
+                    $("#kt_datatable_bids").DataTable().ajax.reload(); // Reload Bids Table
+                } else {
+                    initBidsTable(); // Initialize Bids Table if not initialized
+                }
+            }
+        }
+    </script>
+    <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    {{--  <script src="{{ asset('assets/js/datatables/datatables.bundle.js') }}"></script>  --}}
+    <script src="{{ asset('assets/js/datatables/product-show.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables/product-auctions-show.js') }}"></script>
+    <script src="{{ asset('assets/js/global/crud-operations.js') }}"></script>
 @endpush

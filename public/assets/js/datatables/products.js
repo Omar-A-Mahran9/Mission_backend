@@ -23,9 +23,12 @@ var KTDatatablesServerSide = function () {
             },
             columns: [
                 { data: 'id' },
-                { data: 'name' },
-                { data: 'price' },
+                { data: 'name_' + locale },
+                { data: 'minimum_bid' },
+                { data: 'product_price' },
+                { data: 'start_price' },
                 { data: 'status' },
+                // { data: 'status' },
                 { data: 'created_at' },
                 { data: null },
             ],
@@ -36,7 +39,7 @@ var KTDatatablesServerSide = function () {
                     render: function (data) {
                         return `
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" value="${data}" data-item="${__('Product')}" />
+                                <input class="form-check-input" type="checkbox" value="${data}" />
                             </div>`;
                     }
                 },
@@ -44,42 +47,52 @@ var KTDatatablesServerSide = function () {
                     targets: 1,
                     orderable: false,
                     render: function (data, type, row) {
+                        let imageUrl = (row.images && row.images.length > 0 && row.images[0].name)
+                            ? getImagePathFromDirectory(row.images[0].name, 'ProductImages')
+                            : '/placeholder_images/default.svg';
+                        // return `
+                        //     <div class="d-flex align-items-center">
+                        //         <span class="symbol-label" style="background-image: url('${imageUrl}');></span>
+                        //         <div class="ms-5">
+                        //         <span href="javascript:;" class="mb-1 text-gray-600">${row.name}</span>
+                        //         </div>
+                        //     </div>`;
                         return `
                             <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.name}</span>
+                                <span href="javascript:;" class="mb-1 text-gray-600">${row.name}</span>
                             </div>`;
                     }
                 },
-                {
-                    targets: 2,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.price}</span>
-                            </div>`;
-                    }
-                },
-                {
-                    targets: 3,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${__('' + row.status)}</span>
-                            </div>`;
-                    }
-                },
-                {
-                    targets: 4,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</span>
-                            </div>`;
-                    }
-                },
+                // {
+                //     targets: 2,
+                //     orderable: false,
+                //     render: function (data, type, row) {
+                //         return `
+                //             <div class="d-flex align-items-center">
+                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.price}</span>
+                //             </div>`;
+                //     }
+                // },
+                // {
+                //     targets: 3,
+                //     orderable: false,
+                //     render: function (data, type, row) {
+                //         return `
+                //             <div class="d-flex align-items-center">
+                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${__('' + row.status)}</span>
+                //             </div>`;
+                //     }
+                // },
+                // {
+                //     targets: 4,
+                //     orderable: false,
+                //     render: function (data, type, row) {
+                //         return `
+                //             <div class="d-flex align-items-center">
+                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</span>
+                //             </div>`;
+                //     }
+                // },
                 {
                     targets: -1,
                     data: null,

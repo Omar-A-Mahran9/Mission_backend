@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('product_price');
             $table->double('minimum_bid');
             $table->double('start_price');
+            $table->double('bid_price')->nullable();
             $table->double('ticket_price');
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();

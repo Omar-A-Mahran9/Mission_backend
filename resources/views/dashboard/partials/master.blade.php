@@ -32,7 +32,28 @@
                 themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
             }
             document.documentElement.setAttribute("data-bs-theme", themeMode);
-           
+            {{--  document.querySelectorAll("theme-mode-menu").forEach(item => {
+                item.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    let selectedMode = this.getAttribute("data-kt-value");  --}}
+
+            // Send the mode to the server
+            {{--  fetch(`/change-theme-mode/${themeMode}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector(
+                                'meta[name="csrf-token"]')
+                            .getAttribute("content")
+                    },
+                    body: JSON.stringify({
+                        mode: selectedMode
+                    })
+                }).then(response => response.json())
+                .then(data => console.log("Theme mode updated:", data))
+                .catch(error => console.error("Error updating theme mode:", error));  --}}
+            {{--  });
+            });  --}}
         }
     </script>
     <!--end::Theme mode setup on page load-->
@@ -55,27 +76,27 @@
                         <!--begin::Content wrapper-->
                         <div class="d-flex flex-column flex-column-fluid">
                             <!--begin::Toolbar-->
-                            <div id="kt_app_toolbar" class="app-toolbar pt-7 pt-lg-10">
-                                <!--begin::Toolbar container-->
-                                {{--  <div id="kt_app_toolbar_container"
+                            {{--  <div id="kt_app_toolbar" class="app-toolbar pt-7 pt-lg-10">  --}}
+                            <!--begin::Toolbar container-->
+                            {{--  <div id="kt_app_toolbar_container"
                                     class="app-container container-fluid d-flex align-items-stretch">  --}}
-                                <!--begin::Toolbar wrapper-->
-                                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+                            <!--begin::Toolbar wrapper-->
+                            {{--  <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
                                     <!--begin::Page title-->
                                     <div class="page-title d-flex flex-column justify-content-center gap-1 me-3 ms-1">
                                         @yield('breadcrumbs')
                                     </div>
                                     <!--end::Page title-->
-                                </div>
-                                <!--end::Toolbar wrapper-->
-                                {{--  </div>  --}}
-                                <!--end::Toolbar container-->
-                            </div>
+                                </div>  --}}
+                            <!--end::Toolbar wrapper-->
+                            {{--  </div>  --}}
+                            <!--end::Toolbar container-->
+                            {{--  </div>  --}}
                             <!--end::Toolbar-->
                             <!--begin::Content-->
                             <div id="kt_app_content" class="app-content pt-4">
                                 <!--begin::Content container-->
-                                <div id="kt_app_content_container" class="app-container container-fluid">
+                                <div id="kt_app_content_container" class="container-fluid">
                                     @yield('content')
                                 </div>
                                 <!--end::Content container-->
@@ -109,9 +130,9 @@
     <div class="position-fixed bottom-0 start-0 p-3 " style="z-index: 1090">
         <div id="kt_docs_toast_toggle" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <img src="{{ asset('placeholder_images/favicon_platine.svg') }}" class="me-2 theme-light-show"
+                <img src="{{ asset('placeholder_images/favicon-light.svg') }}" class="me-2 theme-light-show"
                     width="20" srcset="">
-                <img src="{{ asset('placeholder_images/favicon_platine.svg') }}" class="me-2 theme-dark-show"
+                <img src="{{ asset('placeholder_images/favicon-dark.svg') }}" class="me-2 theme-dark-show"
                     width="20" srcset="">
                 <strong class="me-auto">{{ __('' . setting('website_name')) }}</strong>
                 <small>{{ __('Now') }}</small>
@@ -134,6 +155,30 @@
             localStorage.setItem("data-theme", mode);
             localStorage.setItem("data-theme-mode", mode);
         });
+        {{--  document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll("theme-mode-menu").forEach(item => {
+                item.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    let selectedMode = this.getAttribute("data-kt-value");
+
+                    // Send the mode to the server
+                    fetch(`/change-theme-mode/${selectedMode}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector(
+                                        'meta[name="csrf-token"]')
+                                    .getAttribute("content")
+                            },
+                            body: JSON.stringify({
+                                mode: selectedMode
+                            })
+                        }).then(response => response.json())
+                        .then(data => console.log("Theme mode updated:", data))
+                        .catch(error => console.error("Error updating theme mode:", error));
+                });
+            });
+        });  --}}
         {{--  var favIconCounter = {{ $unreadNotifications->count() }};
         var favicon;
 

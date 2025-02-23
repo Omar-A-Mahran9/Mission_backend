@@ -261,12 +261,15 @@ let loadingAlert = function (message = __("Loading...")) {
     });
 }
 
-let getImagePathFromDirectory = function (imageName, directory, defaultImage = 'default.jpg') {
+let getImagePathFromDirectory = function (imageName, directory, defaultImage = 'default.svg') {
     let path = `/storage/Images/${directory}/${imageName}`;
-
-    if (imageName && directory && isFileExists(path))
-
+    let callbackImagePath = `/placeholder_images/${defaultImage}`;
+    if (imageName && directory && isFileExists(path)) {
         return path;
+    } else {
+        return callbackImagePath;
+    }
+
 
 }
 
@@ -494,6 +497,23 @@ $(document).ready(function () {
         "locale": locale
     });
 
+    $(".datetimepicker").flatpickr({
+        dateFormat: "Y-m-d H:i:s",
+        enableTime: true,
+        enableSeconds: true,
+        "locale": locale,
+        minDate: "today",
+        minTime: new Date().getHours() + ":" + new Date().getMinutes(), // Set min time dynamically if today
+        onChange: function (selectedDates, dateStr, instance) {
+            let selectedDate = new Date(dateStr);
+            let now = new Date();
+            if (selectedDate.toDateString() === now.toDateString()) {
+                instance.set("minTime", now.getHours() + ":" + now.getMinutes());
+            } else {
+                instance.set("minTime", "00:00"); // Reset time limit for future dates
+            }
+        }
+    });
     $(".timepicker").flatpickr({
         enableTime: true,
         noCalendar: true,

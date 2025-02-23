@@ -19,6 +19,7 @@ var myDropzone = new Dropzone("#dropzone_input", {
             done();
         }
     },
+
     init: function () {
         // Get images
         if (window.setDropzoneImages)

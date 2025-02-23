@@ -1,185 +1,113 @@
 @extends('dashboard.partials.master')
 @push('styles')
-    <link href="{{ asset('assets/dashboard/css/datatables' . (isDarkMode() ? '.dark' : '') . '.bundle.css') }}"
-        rel="stylesheet" type="text/css" />
-    <link
-        href="{{ asset('assets/dashboard/plugins/custom/datatables/datatables.bundle' . (isArabic() ? '.rtl' : '') . '.css') }}"
+    <link href="{{ asset('assets/css/datatables' . (isDarkMode() ? '.dark' : '') . '.bundle.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('assets/js/custom/datatables/datatables.bundle' . (isArabic() ? '.rtl' : '') . '.css') }}"
         rel="stylesheet" type="text/css" />
 @endpush
 @section('content')
-    <!--begin::Form-->
-    <form id="filter-form" action="{{ route('dashboard.products.index') }}" method="get">
-        @csrf
-        <input type="hidden" name="advanced_search">
-        <!--begin::Card-->
-        <div class="card mb-7">
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content">
+        <!--begin::Products-->
+        <div class="card card-flush">
+            <!--begin::Card header-->
+            <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                aria-controls="kt_account_profile_details">
+                <!--begin::Card title-->
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">{{ __('Products list') }}</h3>
+                </div>
+                <!--end::Card title-->
+            </div>
+            <!--begin::Card header-->
+            <!--begin::Card header-->
+            <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+
+                <!--begin::Card title-->
+                <div class="card-title">
+                    <!--begin::Search-->
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4"></i>
+                        <input type="text" data-kt-docs-table-filter="search"
+                            class="form-control form-control-solid w-250px ps-12"
+                            placeholder="{{ __('Search Product') }}" />
+                    </div>
+                    <!--end::Search-->
+                </div>
+                <!--end::Card title-->
+                <!--begin::Card toolbar-->
+                <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
+                    <div class="w-100 mw-150px">
+                        <!--begin::Select2-->
+                        <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
+                            data-placeholder="{{ __('Status') }}"
+                            data-kt-ecommerce-product-filter="status"data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                            <option></option>
+                            <option value="all">All</option>
+                            <option value="published">Published</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <!--end::Select2-->
+                    </div>
+                    <!--begin::Add product-->
+                    <a href="{{ route('dashboard.products.create') }}"
+                        class="btn btn-primary">{{ __('Create Product') }}</a>
+                    <!--end::Add product-->
+                    <!--begin::Group actions-->
+                    <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
+                        <div class="fw-bold me-5">
+                            <span class="me-2" data-kt-docs-table-select="selected_count"></span>{{ __('Selected item') }}
+                        </div>
+                        <button type="button" class="btn btn-danger"
+                            data-kt-docs-table-select="delete_selected">{{ __('delete') }}</button>
+                    </div>
+                    <!--end::Group actions-->
+                </div>
+                <!--end::Card toolbar-->
+            </div>
+            <!--end::Card header-->
             <!--begin::Card body-->
-            <div class="card-body">
-                <!--begin::Compact form-->
-                <div class="d-flex align-items-center justify-content-between">
-                    <!--begin::Input group-->
-                    <div class="position-relative w-md-400px me-md-2">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                        <span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ms-6">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
-                                    transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                                <path
-                                    d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                    fill="currentColor" />
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->
-                        <input type="text" class="form-control form-control-solid ps-10" name="name"
-                            placeholder="{{ __('write product name') }}" />
-                    </div>
-                    <!--end::Input group-->
-
-                    <!--begin:Action-->
-                    <div class="d-flex align-items-center">
-                        <div class="d-flex align-items-center collapsible py-3 toggle mb-0 active" data-bs-toggle="collapse"
-                            data-bs-target="#kt_advanced_search_form" aria-expanded="true">
-                            <!--begin::Icon-->
-                            <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary ms-5">
-                                <i class="ki-outline ki-setting-4 fs-1"></i>
-                            </div>
-                            <!--end::Icon-->
-                        </div>
-                    </div>
-                    <!--end:Action-->
-                </div>
-                <!--end::Compact form-->
-                <!--begin::Advance form-->
-                <div class="collapse" id="kt_advanced_search_form">
-                    <!--begin::Separator-->
-                    <div class="separator separator-dashed mt-9 mb-6"></div>
-                    <!--end::Separator-->
-                    <!--begin::Row-->
-                    <div class="row g-12 mb-5">
-                        <!--begin::Col-->
-                        <div class="col-lg-4">
-                            <label class="fs-6 form-label fw-bold text-dark">{{ __('Sort by') }}</label>
-                            <!--begin::Select-->
-                            <select class="form-select form-select-solid" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}"
-                                name="arrange_by" id="arrange_by" data-control="select2"
-                                data-placeholder="{{ __('Select sort method') }}" data-allow-clear="true">
-                                <option value=""></option>
-                                <option value="oldest">{{ __('Oldest') }}</option>
-                                <option value="latest">{{ __('Newest') }}</option>
-                            </select>
-                            <!--end::Select-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-lg-4">
-                            <label class="fs-6 form-label fw-bold text-dark">{{ __('Sort by status') }}</label>
-                            <!--begin::Select-->
-                            <select class="form-select form-select-solid" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}"
-                                name="status" id="status" data-control="select2"
-                                data-placeholder="{{ __('Select sort method') }}" data-allow-clear="true">
-                                <option value=""></option>
-                                <option value="In Stock">{{ __('In Stock') }}</option>
-                                <option value="Out Stock">{{ __('Out Stock') }}</option>
-                            </select>
-                            <!--end::Select-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-lg-4">
-                            <label class="fs-6 form-label fw-bold text-dark">{{ __('Sort by tags') }}</label>
-                            <!--begin::Select-->
-                            <select class="form-select form-select-solid" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}"
-                                name="tag" id="tag" data-control="select2"
-                                data-placeholder="{{ __('Select sort method') }}" data-allow-clear="true">
-                                <option value=""></option>
-                                @foreach ($tags as $tag)
-                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                                @endforeach
-                            </select>
-                            <!--end::Select-->
-                        </div>
-                        <!--end::Col-->
-                    </div>
-                    <div class="row d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary w-25">
-                            <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-12-26-231111/core/html/src/media/icons/duotune/general/gen021.svg-->
-                            <span class="svg-icon svg-icon-muted svg-icon-2"><svg width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2"
-                                        rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                                    <path
-                                        d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                        fill="currentColor" />
-                                </svg>
-                            </span>
-                            <!--end::Svg Icon-->
-                            {{ __('Search...') }}
-                        </button>
-
-                    </div>
-                </div>
-                <!--end::Advance form-->
+            <div class="card-body pt-0">
+                <!--begin::Table-->
+                <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_datatable">
+                    <thead>
+                        <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                            <th class="w-10px pe-2">
+                                <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                    <input class="form-check-input" type="checkbox" data-kt-check="true"
+                                        data-kt-check-target="#kt_datatable .form-check-input" value="1" />
+                                </div>
+                            </th>
+                            <th class="min-w-200px">{{ __('Name') }}</th>
+                            <th class="text-end min-w-70px">{{ __('Minimum bid') }}</th>
+                            <th class="text-end min-w-100px">{{ __('Product price') }}</th>
+                            <th class="text-end min-w-100px">{{ __('Opening Price') }}</th>
+                            <th class="text-end min-w-100px">{{ __('Status') }}</th>
+                            <th class="text-end min-w-100px">{{ __('Created at') }}</th>
+                            <th class="text-end min-w-70px">{{ __('Actions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="fw-semibold text-gray-600">
+                    </tbody>
+                </table>
+                <!--end::Table-->
             </div>
             <!--end::Card body-->
         </div>
-        <!--end::Card-->
-    </form>
-    <!--end::Form-->
-
-    <!--begin::Tab Content-->
-    <!--begin::Row-->
-
-    <div class="row  ">
-        <h3 class="text-dark mb-7" style="width:fit-content;">{{ __('Product list') }}</h3>
-
-        <div class="spinner-border d-none" id="loading-alert" role="status">
-            <span class="sr-only">{{ __('Loading...') }}</span>
-        </div>
+        <!--end::Products-->
     </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="row g-6 g-xl-9 products-container">
-
-    </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="row g-6 g-xl-9">
-        <!--begin::Col-->
-        <div class="col-md-12 col-xxl-12" style="display: none" id="no-results-alert">
-            <!--begin::Button-->
-            <div class=" d-flex flex-column flex-center">
-                <!--begin::Illustration-->
-                <img src="/assets/vendor-dashboard/media/illustrations/unitedpalms-1/no_results.png" alt=""
-                    class="mw-100 mh-250px">
-                <!--end::Illustration-->
-                <!--begin::Label-->
-                <div class="fs-4 text-gray-800 fw-bold mb-0">
-                    {{ __('There is no result try another search method') }}
-                </div>
-                <!--end::Label-->
-            </div>
-            <!--begin::Button-->
-        </div>
-        <!--end::Col-->
-    </div>
-    <!--end::Row-->
-
-    <!--begin::Pagination-->
-    <div class="d-flex flex-stack flex-wrap pt-10 mt-5" id="pagination-container">
-        <div class="fs-6 fw-semibold pagination-info" style="color: #2D3A4A"></div>
-        <!--begin::Pages-->
-        <ul class="pagination">
-
-        </ul>
-        <!--end::Pages-->
-    </div>
-    <!--end::Pagination-->
-    <!--end::Tab Content-->
-    <div class="row attachments">
-    </div>
+    <!--end::Content-->
 @endsection
+
 @push('scripts')
-    <script src="{{ asset('assets/dashboard/js/forms/products/index.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+    <script>
+        window.isArabic = '{{ isArabic() }}';
+    </script>
+    <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    {{--  <script src="{{ asset('assets/js/datatables/datatables.bundle.js') }}"></script>  --}}
+    <script src="{{ asset('assets/js/datatables/products.js') }}"></script>
+    <script src="{{ asset('assets/js/global/crud-operations.js') }}"></script>
 @endpush

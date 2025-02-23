@@ -6,10 +6,9 @@ use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Winners extends Model
+class ProductBidding extends Model
 {
     use HasFactory;
-
     protected $guarded = [];
 
     /**
@@ -22,7 +21,6 @@ class Winners extends Model
         return [
             'created_at' => 'date:Y-m-d',
             'updated_at' => 'date:Y-m-d',
-            'paid_at' => 'date:Y-m-d',
         ];
     }
 
@@ -32,20 +30,5 @@ class Winners extends Model
     protected static function booted(): void
     {
         static::addGlobalScope(new SortingScope);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function bid()
-    {
-        return $this->belongsTo(Bid::class);
     }
 }
