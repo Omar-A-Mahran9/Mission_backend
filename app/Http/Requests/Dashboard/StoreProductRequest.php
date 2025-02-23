@@ -35,7 +35,7 @@ class StoreProductRequest extends FormRequest
             'start_time' => ['required', 'date', 'after_or_equal:now'],
             'end_time' => ['required', 'date', 'after:start_time'],
             'variations' => ['required', 'array', 'min:1'],
-            'variations.*.id' => ['required', 'numeric', 'gt:0'],
+            'variations.*.id' => ['nullable', 'numeric', 'gt:0'],
             'variations.*.bidding_discount_percentage' => ['required', 'numeric', 'gt:0'],
             'variations.*.final_bidding_percentage' => ['required', 'numeric', 'gt:0'],
             'images' => 'required|array|min:1|max:10',

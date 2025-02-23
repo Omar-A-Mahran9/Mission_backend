@@ -129,13 +129,17 @@
                                     <!--end::Table head-->
                                     <!--begin::Table body-->
                                     <tbody class="fw-semibold text-gray-800">
-                                        @foreach ($product->productBiddings as $bidding)
+                                        @forelse  ($product->productBiddings as $bidding)
                                             <tr>
                                                 <td>{{ $bidding->bidding_discount_percentage }} %</td>
                                                 <td>{{ $bidding->final_bidding_percentage }} %</td>
                                                 <td>{{ $bidding->created_at->toDateString() }}</td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="3">{{ __('No Bidding Layers') }}</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                     <!--end::Table body-->
                                 </table>
@@ -154,14 +158,9 @@
                     <div class="card-header">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2>{{ __('Refunded Tickets') }} ({{ $product->refunds_count }})</h2>
+                            <h2>{{ __('Images') }}</h2>
                         </div>
                         <!--end::Card title-->
-                        <!--begin::Card toolbar-->
-                        <div class="card-toolbar">
-                            <a href="#" class="btn btn-light-primary">{{ __('View All Refunded Tickets') }}</a>
-                        </div>
-                        <!--end::Card toolbar-->
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
@@ -169,27 +168,52 @@
                         <!--begin::Table wrapper-->
                         <div class="table-responsive">
                             <!--begin::Table-->
-                            <table id="kt_datatable"
-                                class="table align-middle table-row-dashed fs-6 text-gray-600 fw-semibold gy-5"
-                                id="kt_table_customers_events">
-                                <!--begin::Table head-->
-                                <thead>
-                                    <!--begin::Table row-->
-                                    <tr
-                                        class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
-                                        <th class="min-w-150px">{{ __('User Name') }}</th>
-                                        <th class="min-w-125px">{{ __('Reason') }}</th>
-                                        <th class="min-w-125px">{{ __('Status') }}</th>
-                                        <th class="min-w-125px">{{ __('Created at') }}</th>
-                                    </tr>
-                                    <!--end::Table row-->
-                                </thead>
-                                <!--end::Table head-->
-                                <!--begin::Table body-->
-                                <tbody class="fw-bold text-gray-600" id="table-body">
-                                </tbody>
-                                <!--end::Table body-->
-                            </table>
+                            <div id="kt_carousel_1_carousel" class="carousel carousel-custom slide" data-bs-ride="carousel"
+                                data-bs-interval="8000">
+                                <!-- Debugging (Remove this in production) -->
+                                <!--begin::Carousel-->
+                                <div class="carousel-inner pt-8">
+                                    @foreach ($product->images as $index => $image)
+                                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                            <div class="d-flex justify-content-center align-items-center"
+                                                style="height: 400px;">
+                                                <img src="{{ asset($image->full_image_path) }}" class="img-fluid"
+                                                    style="max-width: 70%; max-height: 100%; object-fit: contain;"
+                                                    alt="Product Image">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                    <!--begin::Carousel Indicators-->
+                                    <ol
+                                        class="p-0 m-0 carousel-indicators carousel-indicators-dots d-flex justify-content-center">
+                                        @foreach ($product->images as $index => $image)
+                                            <li data-bs-target="#kt_carousel_1_carousel"
+                                                data-bs-slide-to="{{ $index }}"
+                                                class="ms-1 {{ $loop->first ? 'active' : '' }}">
+                                            </li>
+                                        @endforeach
+                                    </ol>
+                                    <!--end::Carousel Indicators-->
+                                </div>
+
+                                <!--end::Heading-->
+                                <!--end::Carousel-->
+                                <!--begin::Carousel Controls (Optional)-->
+                                <a class="carousel-control-prev" href="#kt_carousel_1_carousel" role="button"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#kt_carousel_1_carousel" role="button"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </a>
+                                <!--end::Carousel Controls-->
+                            </div>
                             <!--end::Table-->
                         </div>
                         <!--end::Table wrapper-->
@@ -197,7 +221,94 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card-->
-
+                {{--  @dd($product)  --}}
+                <!--begin::Card-->
+                <div class="card card-flush pt-3 mb-5 mb-xl-10">
+                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6 justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_4"
+                                data-type="tickets">{{ __('Tickets') }}
+                                ({{ $product->tickets_count }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_5"
+                                data-type="refunds">{{ __('Refunded Tickets') }}
+                                ({{ $product->refunds_count }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_6"
+                                data-type="bids">{{ __('Bidding') }}
+                                ({{ $product->bids_count }})</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="kt_tab_pane_4" role="tabpanel">
+                            ...
+                        </div>
+                        <div class="tab-pane fade" id="kt_tab_pane_5" role="tabpanel">
+                            <div class="card-body pt-0">
+                                <!--begin::Table wrapper-->
+                                <div class="table-responsive">
+                                    <!--begin::Table-->
+                                    <table id="kt_datatable_refunds"
+                                        class="table align-middle table-row-dashed fs-6 text-gray-600 fw-semibold gy-5">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <!--begin::Table row-->
+                                            <tr
+                                                class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                <th class="min-w-150px">{{ __('User Name') }}</th>
+                                                <th class="min-w-125px">{{ __('Reason') }}</th>
+                                                <th class="min-w-125px">{{ __('Status') }}</th>
+                                                <th class="min-w-125px">{{ __('Created at') }}</th>
+                                            </tr>
+                                            <!--end::Table row-->
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <!--begin::Table body-->
+                                        <tbody class="fw-bold text-gray-600" id="table-body">
+                                        </tbody>
+                                        <!--end::Table body-->
+                                    </table>
+                                    <!--end::Table-->
+                                </div>
+                                <!--end::Table wrapper-->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="kt_tab_pane_6" role="tabpanel">
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0">
+                                <!--begin::Table wrapper-->
+                                <div class="table-responsive">
+                                    <!--begin::Table-->
+                                    <table id="kt_datatable_bids"
+                                        class="table align-middle table-row-dashed fs-6 text-gray-600 fw-semibold gy-5">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <!--begin::Table row-->
+                                            <tr
+                                                class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                <th class="min-w-150px">{{ __('User Name') }}</th>
+                                                <th class="min-w-125px">{{ __('Bidding Amount') }}</th>
+                                                <th class="min-w-125px">{{ __('Created at') }}</th>
+                                            </tr>
+                                            <!--end::Table row-->
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <!--begin::Table body-->
+                                        <tbody class="fw-bold text-gray-600" id="table-body">
+                                        </tbody>
+                                        <!--end::Table body-->
+                                    </table>
+                                    <!--end::Table-->
+                                </div>
+                                <!--end::Table wrapper-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                    </div>
+                </div>
+                <!--end::Card-->
             </div>
             <!--end::Content-->
             <!--begin::Sidebar-->
@@ -323,7 +434,8 @@
                                     <tr class="">
                                         <td class="text-gray-500">{{ __('Address') }}:</td>
                                         <td class="text-gray-800">
-                                            {{ $product->winners->first()->address->city->name . ',' . $product->winners->first()->address->address }}
+                                            {{ optional(optional($product->winners->first())->address)->city->name ?? 'N/A' }},
+                                            {{ optional($product->winners->first())->address->address ?? 'N/A' }}
                                         </td>
                                     </tr>
                                     <!--end::Row-->
@@ -381,9 +493,52 @@
     <script>
         let productId = {{ $product->id }};
     </script>
+    <script>
+        var type = "tickets"; // Declare globally
+
+        {{--  document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".nav-link").forEach(function(tab) {
+                tab.addEventListener("click", function() {
+                    var type = this.getAttribute("data-type"); // Override global `type`
+                    console.log("Updated Type:", type); // Now logs the correct updated value
+                });
+            });
+        });
+
+        console.log("First Type:", type); // Logs before any click happens  --}}
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".nav-link").forEach(function(tab) {
+                tab.addEventListener("click", function() {
+                    let type = this.getAttribute("data-type"); // Read the selected type
+                    console.log("Clicked Tab Type:", type); // Verify in console
+
+                    // Call the function to reload DataTable based on the selected tab
+                    loadDataTable(type);
+                });
+            });
+        });
+
+        // Function to reload DataTable based on the selected tab type
+        function loadDataTable(type) {
+            if (type === "refunds") {
+                if ($.fn.DataTable.isDataTable("#kt_datatable_refunds")) {
+                    $("#kt_datatable_refunds").DataTable().ajax.reload(); // Reload Refunds Table
+                } else {
+                    initRefundsTable(); // Initialize Refunds Table if not initialized
+                }
+            } else if (type === "bids") {
+                if ($.fn.DataTable.isDataTable("#kt_datatable_bids")) {
+                    $("#kt_datatable_bids").DataTable().ajax.reload(); // Reload Bids Table
+                } else {
+                    initBidsTable(); // Initialize Bids Table if not initialized
+                }
+            }
+        }
+    </script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     {{--  <script src="{{ asset('assets/js/datatables/datatables.bundle.js') }}"></script>  --}}
     <script src="{{ asset('assets/js/datatables/product-show.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables/product-auctions-show.js') }}"></script>
     <script src="{{ asset('assets/js/global/crud-operations.js') }}"></script>
 @endpush

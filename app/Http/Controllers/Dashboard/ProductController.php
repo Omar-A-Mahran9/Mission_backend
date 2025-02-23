@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\Bid;
 use App\Models\Image;
 use App\Models\Refund;
 use App\Models\Winner;
@@ -88,9 +89,25 @@ class ProductController extends Controller
             'winners.address.city',
             'winners.bid',
             'refunds.user',
-        ])->loadCount(['bids', 'refunds']);
+        ])->loadCount(['bids', 'refunds', 'tickets' => fn($query) => $query->whereDoesntHave('refunds'),]);
         if ($request->ajax()) {
-            $model = Refund::with('user')->where('product_id', $product->id);
+            // $model = Refund::with('user')->where('product_id', $product->id);
+            $type = $params['type'] ?? 'refunds'; // Default to refunds
+            if ($type === 'refunds') {
+                $model = Refund::with('user')->where('product_id', $product->id);
+            } elseif ($type === 'bids') {
+                $model = Bid::with('user')->where('product_id', $product->id);
+            }
+            $response = [
+                "recordsTotal" => $model->count(),
+                "recordsFiltered" => $model->count(),
+                'data' => $model->skip($params['start'])->take($params['length'])->get()
+            ];
+
+            return response($response);
+        }
+        if ($request->ajax()) {
+            $model = Bid::with('user')->where('product_id', $product->id);
 
             $response = [
                 "recordsTotal" => $model->count(),
@@ -100,7 +117,6 @@ class ProductController extends Controller
 
             return response($response);
         }
-        // dd($product);
         return view('dashboard.products.show', compact('product'));
     }
     public function destroy(Product $product)
