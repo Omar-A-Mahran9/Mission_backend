@@ -243,7 +243,32 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_4" role="tabpanel">
-                            ...
+                            <div class="card-body pt-0">
+                                <!--begin::Table wrapper-->
+                                <div class="table-responsive">
+                                    <!--begin::Table-->
+                                    <table id="kt_datatable_tickets"
+                                        class="table align-middle table-row-dashed fs-6 text-gray-600 fw-semibold gy-5">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <!--begin::Table row-->
+                                            <tr
+                                                class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                <th class="min-w-150px">{{ __('User Name') }}</th>
+                                                <th class="min-w-125px">{{ __('Created at') }}</th>
+                                            </tr>
+                                            <!--end::Table row-->
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <!--begin::Table body-->
+                                        <tbody class="fw-bold text-gray-600" id="table-body">
+                                        </tbody>
+                                        <!--end::Table body-->
+                                    </table>
+                                    <!--end::Table-->
+                                </div>
+                                <!--end::Table wrapper-->
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_5" role="tabpanel">
                             <div class="card-body pt-0">
@@ -289,7 +314,7 @@
                                             <tr
                                                 class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
                                                 <th class="min-w-150px">{{ __('User Name') }}</th>
-                                                <th class="min-w-125px">{{ __('Bidding Amount') }}</th>
+                                                <th class="min-w-125px text-center">{{ __('Bidding Amount') }}</th>
                                                 <th class="min-w-125px">{{ __('Created at') }}</th>
                                             </tr>
                                             <!--end::Table row-->
@@ -495,50 +520,39 @@
     </script>
     <script>
         var type = "tickets"; // Declare globally
-
-        {{--  document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll(".nav-link").forEach(function(tab) {
-                tab.addEventListener("click", function() {
-                    var type = this.getAttribute("data-type"); // Override global `type`
-                    console.log("Updated Type:", type); // Now logs the correct updated value
-                });
-            });
-        });
-
-        console.log("First Type:", type); // Logs before any click happens  --}}
         document.addEventListener("DOMContentLoaded", function() {
+            loadScriptForType(type); // Load the default script
             document.querySelectorAll(".nav-link").forEach(function(tab) {
                 tab.addEventListener("click", function() {
-                    let type = this.getAttribute("data-type"); // Read the selected type
+                    type = this.getAttribute("data-type"); // Read the selected type
                     console.log("Clicked Tab Type:", type); // Verify in console
 
                     // Call the function to reload DataTable based on the selected tab
-                    loadDataTable(type);
+                    loadScriptForType(type);
                 });
             });
         });
 
-        // Function to reload DataTable based on the selected tab type
-        function loadDataTable(type) {
-            if (type === "refunds") {
-                if ($.fn.DataTable.isDataTable("#kt_datatable_refunds")) {
-                    $("#kt_datatable_refunds").DataTable().ajax.reload(); // Reload Refunds Table
-                } else {
-                    initRefundsTable(); // Initialize Refunds Table if not initialized
-                }
-            } else if (type === "bids") {
-                if ($.fn.DataTable.isDataTable("#kt_datatable_bids")) {
-                    $("#kt_datatable_bids").DataTable().ajax.reload(); // Reload Bids Table
-                } else {
-                    initBidsTable(); // Initialize Bids Table if not initialized
-                }
-            }
+        // Function to load the required script based on tab selection
+        function loadScriptForType(type) {
+            let scriptSrc = type === "refunds" ?
+                "{{ asset('assets/js/datatables/product-refunds-show.js') }}" :
+                type === "bids" ?
+                "{{ asset('assets/js/datatables/product-auctions-show.js') }}" :
+                "{{ asset('assets/js/datatables/product-tickets-show.js') }}";
+
+            if (!scriptSrc) return; // Prevent execution if type is not valid
+
+            // Create script element
+            let script = document.createElement("script");
+            script.src = scriptSrc;
+            document.body.appendChild(script);
         }
     </script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     {{--  <script src="{{ asset('assets/js/datatables/datatables.bundle.js') }}"></script>  --}}
-    <script src="{{ asset('assets/js/datatables/product-show.js') }}"></script>
-    <script src="{{ asset('assets/js/datatables/product-auctions-show.js') }}"></script>
+    {{--  <script src="{{ asset('assets/js/datatables/product-show.js') }}"></script>  --}}
+    {{--  <script src="{{ asset('assets/js/datatables/product-auctions-show.js') }}"></script>  --}}
     <script src="{{ asset('assets/js/global/crud-operations.js') }}"></script>
 @endpush

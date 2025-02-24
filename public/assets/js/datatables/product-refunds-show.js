@@ -1,12 +1,13 @@
 "use strict";
 
 var datatable;
+
 // Class definition
 var KTDatatablesServerSide = function () {
     let dbTable = 'products';
     // Private functions
     var initDatatable = function () {
-        datatable = $("#kt_datatable_bids").DataTable({
+        datatable = $("#kt_datatable_refunds").DataTable({
             language: language,
             searchDelay: searchDelay,
             processing: processing,
@@ -14,18 +15,27 @@ var KTDatatablesServerSide = function () {
             order: [],
             stateSave: saveState,
             ajax: {
-                url: `/dashboard/${dbTable}/${productId}?type=bids`,
+                url: `/dashboard/${dbTable}/${productId}?type=refunds`,
             },
             columns: [
+                // { data: 'id' },
                 { data: 'user.name' },
-                { data: 'bid_amount' },
+                { data: 'reason' },
+                { data: 'status_text' },
                 { data: 'created_at' },
             ],
             columnDefs: [
                 {
-                    targets: 1, // "bid_amount" is the second column (index starts from 0)
-                    className: "text-center"
-                }
+                    targets: 2,
+                    render: function (data, type, row) {
+                        return `<span class="badge ${row.status === 1 ? 'badge-light-warning' :
+                            row.status === 2 ? 'badge-light-success' :
+                                'badge-light-danger'
+                            }" >
+                            ${data}
+                        </span>`;
+                    }
+                },
             ],
             // Add data-filter attribute
             createdRow: function (row, data, dataIndex) {
