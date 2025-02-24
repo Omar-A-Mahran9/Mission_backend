@@ -13,6 +13,7 @@ use App\Models\ProductBidding;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreProductRequest;
 use App\Http\Requests\Dashboard\UpdateProductRequest;
+use App\Models\Ticket;
 
 class ProductController extends Controller
 {
@@ -91,12 +92,14 @@ class ProductController extends Controller
             'refunds.user',
         ])->loadCount(['bids', 'refunds', 'tickets' => fn($query) => $query->whereDoesntHave('refunds'),]);
         if ($request->ajax()) {
-            // $model = Refund::with('user')->where('product_id', $product->id);
-            $type = $params['type'] ?? 'refunds'; // Default to refunds
+            $type = $params['type'] ?? 'tickets'; // Default to tickets
+
             if ($type === 'refunds') {
                 $model = Refund::with('user')->where('product_id', $product->id);
             } elseif ($type === 'bids') {
                 $model = Bid::with('user')->where('product_id', $product->id);
+            } elseif ($type === 'tickets') {
+                $model = Ticket::with('user')->where('product_id', $product->id)->whereDoesntHave('refunds');
             }
             $response = [
                 "recordsTotal" => $model->count(),

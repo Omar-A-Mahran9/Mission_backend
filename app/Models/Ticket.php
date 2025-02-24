@@ -39,7 +39,12 @@ class Ticket extends Model
         return $this->hasMany(Refund::class, 'ticket_id'); // Correct one-to-many relationship
     }
 
-    public function refund(){
+    public function refund()
+    {
         return $this->hasOne(Refund::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
