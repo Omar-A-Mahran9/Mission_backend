@@ -89,6 +89,6 @@ class Product extends Model
 
     public function productBiddings()
     {
-        return $this->hasMany(ProductBidding::class);
+        return $this->hasMany(ProductBidding::class)->orderByDesc('bidding_discount_percentage');
     }
 }

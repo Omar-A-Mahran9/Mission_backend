@@ -60,7 +60,8 @@ class AuctionController extends Controller
     public function bid(Request $request, Product $product)
     {
         $user = auth()->user();
-        $product->loadCount('bids');
+        $product->load('productBiddings', 'bids')->loadCount('bids');
+        $this->placeBid($product);
         if (now()->lessThan($product->start_time)) {
             return $this->failure(__('The product has not started yet'));
         }
@@ -160,5 +161,19 @@ class AuctionController extends Controller
             ->orderByDesc('bid_amount')
             ->limit(5)
             ->get();
+    }
+
+    public function placeBid(Product $product)
+    {
+        $productPrice = sanitizeNumber($product->product_price);
+        $currentPrice =  sanitizeNumber($product->bids()->latest()->first()?->bid_amount ?? $product->start_price);
+        $bidPrice = $currentPrice === sanitizeNumber($product->start_price) ? 0 : $product->bid_price;
+        $totalComparePercentage = ($currentPrice / $productPrice) * 100;
+        if ($currentPrice !== sanitizeNumber($product->start_price)) {
+        $finalPercentage = $product->productBiddings()->where('bidding_discount_percentage', '<=', $totalComparePercentage)->first();
+        $bidPrice = ($bidPrice * $finalPercentage->final_bidding_percentage) / 100;
+        }
+
+        return $currentPrice + $bidPrice;
     }
 }
