@@ -44,6 +44,27 @@ class AuctionController extends Controller
             ->paginate(8);
         return $this->successWithPagination("",  ProductListResource::collection($products)->response()->getData(true));
     }
+    public function auctionsNow(Request $request)
+    {
+        $today = Carbon::today()->toDateString();
+        $now = Carbon::now()->toTimeString(); // Get current time (HH:MM:SS)
+        $user = auth()->user();
+        $products = Product::with('tickets')
+            ->whereDate('start_time', $today) // Products that start today
+            ->whereTime('start_time', '<', $now) // Start time is earlier than now
+            ->whereTime('end_time', '>=', $now) // End time is still active
+            ->whereHas('tickets', fn($subQuery) => $subQuery->where('user_id', $user->id)) // User must have tickets
+            ->withCount(['tickets as refunded_tickets_count' => fn($query) => $query->whereDoesntHave('refunds')]) // Count non-refunded tickets
+            ->paginate(8);
+
+        // Process bids efficiently
+        $products->transform(function ($product) {
+            $product->highest_rank = $this->getHighestBids($product);
+            $product->bid_amount = $this->placeBid($product);
+            return $product;
+        });
+        return $this->successWithPagination("",  AuctionResource::collection($products)->response()->getData(true));
+    }
 
     public function auction(Product $product)
     {
@@ -55,37 +76,38 @@ class AuctionController extends Controller
             ->distinct()
             ->count('user_id');
         $product->highest_rank = $this->getHighestBids($product);
+        $product->bid_amount = $this->placeBid($product);
         return $this->success("",  new AuctionResource($product));
     }
     public function bid(Request $request, Product $product)
     {
         $user = auth()->user();
         $product->load('productBiddings', 'bids')->loadCount('bids');
-        $this->placeBid($product);
-        if (now()->lessThan($product->start_time)) {
-            return $this->failure(__('The product has not started yet'));
-        }
-        if (now()->greaterThan($product->end_time)) {
-            return $this->failure(__('The product has already ended'));
-        }
-        $ticket = $product->tickets()->where('user_id', $user->id);
-        if (!$ticket->exists()) {
-            return $this->failure(__('You do not have a ticket for this product'));
-        }
-        if (optional($product->bids()->latest()->first())->user_id === $user->id) {
-            return $this->failure(__('You have already placed a bid for this product'));
-        }
+        dd($this->adjustEndTime($product));
+        // if (now()->lessThan($product->start_time)) {
+        //     return $this->failure(__('The product has not started yet'));
+        // }
+        // if (now()->greaterThan($product->end_time)) {
+        //     return $this->failure(__('The product has already ended'));
+        // }
+        // $ticket = $product->tickets()->where('user_id', $user->id);
+        // if (!$ticket->exists()) {
+        //     return $this->failure(__('You do not have a ticket for this product'));
+        // }
+        // if (optional($product->bids()->latest()->first())->user_id === $user->id) {
+        //     return $this->failure(__('You have already placed a bid for this product'));
+        // }
 
         $product->bids()->create([
             'user_id' => $user->id,
-            'bid_amount' => optional($product->bids()->latest()->first())->bid_amount
-                ? optional($product->bids()->latest()->first())->bid_amount + 100
-                : str_replace(',', '', $product->start_price),
+            'bid_amount' => $this->placeBid($product),
         ]);
         // Count unique participants
         $product->participants_count = $product->bids()->distinct()->count('user_id');
         // Get highest bids per unique user
         $product->highest_rank = $this->getHighestBids($product);
+        $product->bid_amount = $this->placeBid($product);
+
         broadcast(new BidPlacedEvent($product));
         return $this->success("Successfully", new AuctionResource($product));
     }
@@ -163,17 +185,32 @@ class AuctionController extends Controller
             ->get();
     }
 
-    public function placeBid(Product $product)
+    public static  function placeBid(Product $product)
     {
         $productPrice = sanitizeNumber($product->product_price);
         $currentPrice =  sanitizeNumber($product->bids()->latest()->first()?->bid_amount ?? $product->start_price);
-        $bidPrice = $currentPrice === sanitizeNumber($product->start_price) ? 0 : $product->bid_price;
+        $bidPrice = $product->bids()->exists() ? $product->bid_price : 0;
         $totalComparePercentage = ($currentPrice / $productPrice) * 100;
-        if ($currentPrice !== sanitizeNumber($product->start_price)) {
-        $finalPercentage = $product->productBiddings()->where('bidding_discount_percentage', '<=', $totalComparePercentage)->first();
-        $bidPrice = ($bidPrice * $finalPercentage->final_bidding_percentage) / 100;
+        if (($product->bids()->exists()) && ($totalComparePercentage >= $product->productBiddings()->min('bidding_discount_percentage'))) {
+            $finalPercentage = $product->productBiddings()->where('bidding_discount_percentage', '<=', $totalComparePercentage)->first();
+            $bidPrice = ($bidPrice * $finalPercentage->final_bidding_percentage) / 100;
         }
-
         return $currentPrice + $bidPrice;
+    }
+    public function adjustEndTime(Product $product)
+    {
+        $now = Carbon::now();
+        $endTime = Carbon::parse($product->end_time);
+        $remainingSeconds = $endTime->diffInSeconds($now, false); // Get remaining time in seconds
+        // dd($remainingSeconds < 119 && $now->LessThanOrEqualTo($endTime),$now->LessThanOrEqualTo($endTime), $now, $endTime, $remainingSeconds);
+
+        if ($remainingSeconds < 119 && $now->LessThanOrEqualTo($endTime)) { // If less than 2 minutes remain
+            $additionalSeconds = 120 - $remainingSeconds;
+            $newEndTime = $endTime->addSeconds($additionalSeconds);
+            dd($now, $endTime, $newEndTime);
+            $product->end_time = $newEndTime;
+            // $product->save(); // Save updated end_time in the database
+        }
+        return $product->end_time; // Return the updated end time
     }
 }

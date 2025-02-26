@@ -47,6 +47,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('profile', 'ProfileController@profile');
         Route::post('profile', 'ProfileController@updateProfile');
         Route::post('profile/password', 'ProfileController@updatePassword');
+        Route::get('auctions/now', 'AuctionController@auctionsNow');
         Route::get('auctions/{product}', 'AuctionController@auction');
         Route::get('auctions', 'AuctionController@auctions');
         Route::get('ended', 'AuctionController@endedAuctions');

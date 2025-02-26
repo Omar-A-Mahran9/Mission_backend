@@ -32,7 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->namespace("$namespace\\Api")
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware(['web', 'auth:admin','set_locale'])
+            Route::middleware(['web', 'auth:admin', 'set_locale'])
                 ->namespace("$namespace\\Dashboard")
                 ->name('dashboard.')
                 ->prefix('dashboard')
