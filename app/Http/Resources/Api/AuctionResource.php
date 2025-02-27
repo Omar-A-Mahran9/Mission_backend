@@ -20,6 +20,7 @@ class AuctionResource extends JsonResource
             'description' => $this->description,
             'product_price' => $this->product_price,
             'start_price' => $this->start_price,
+            'remaining' =>  now()->diff($this->end_time)->format("%H:%I:%S"),
             'bid_count' => $this->bids_count,
             'participants_count' => $this->participants_count,
             'full_image_path' => $this->images,

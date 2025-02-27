@@ -86,7 +86,10 @@ class Product extends Model
     {
         return $this->hasMany(Winner::class, 'product_id');
     }
-
+    // public function winners()
+    // {
+    //     return $this->hasManyThrough(Winner::class, Bid::class, 'product_id', 'bid_id');
+    // }
     public function productBiddings()
     {
         return $this->hasMany(ProductBidding::class)->orderByDesc('bidding_discount_percentage');

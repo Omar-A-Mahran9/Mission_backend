@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Events\BidPlacedEvent;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Events\AuctionLiveDetailEvent;
 use App\Http\Resources\Api\CityResource;
@@ -79,38 +80,61 @@ class AuctionController extends Controller
         $product->bid_amount = $this->placeBid($product);
         return $this->success("",  new AuctionResource($product));
     }
+
+
     public function bid(Request $request, Product $product)
     {
+        // dd(now());
         $user = auth()->user();
-        $product->load('productBiddings', 'bids')->loadCount('bids');
-        dd($this->adjustEndTime($product));
-        // if (now()->lessThan($product->start_time)) {
-        //     return $this->failure(__('The product has not started yet'));
-        // }
-        // if (now()->greaterThan($product->end_time)) {
-        //     return $this->failure(__('The product has already ended'));
-        // }
-        // $ticket = $product->tickets()->where('user_id', $user->id);
-        // if (!$ticket->exists()) {
-        //     return $this->failure(__('You do not have a ticket for this product'));
-        // }
-        // if (optional($product->bids()->latest()->first())->user_id === $user->id) {
-        //     return $this->failure(__('You have already placed a bid for this product'));
-        // }
+        return DB::transaction(function () use ($product, $user) {
+            // Lock the product to prevent race conditions
+            $product = Product::where('id', $product->id)->lockForUpdate()->first();
 
-        $product->bids()->create([
-            'user_id' => $user->id,
-            'bid_amount' => $this->placeBid($product),
-        ]);
-        // Count unique participants
-        $product->participants_count = $product->bids()->distinct()->count('user_id');
-        // Get highest bids per unique user
-        $product->highest_rank = $this->getHighestBids($product);
-        $product->bid_amount = $this->placeBid($product);
+            // Load necessary relationships
+            $product->load('productBiddings', 'bids')->loadCount('bids');
 
-        broadcast(new BidPlacedEvent($product));
-        return $this->success("Successfully", new AuctionResource($product));
+            // Validate auction status
+            if (now()->lessThan($product->start_time)) {
+                return $this->failure(__('The product has not started yet'));
+            }
+            if (now()->greaterThan($product->end_time)) {
+                return $this->failure(__('The product has already ended'));
+            }
+
+            // Ensure user has a ticket
+            if (!$product->tickets()->where('user_id', $user->id)->exists()) {
+                return $this->failure(__('You do not have a ticket for this product'));
+            }
+
+            // Prevent duplicate consecutive bids by the same user
+            $latestBid = $product->bids()->latest()->first();
+            if ($latestBid && $latestBid->user_id === $user->id) {
+                return $this->failure(__('You have already placed a bid for this product'));
+            }
+
+            // Adjust auction end time if needed
+            $this->adjustEndTime($product);
+
+            // Place the bid
+            $product->bids()->create([
+                'user_id' => $user->id,
+                'bid_amount' => $this->placeBid($product),
+            ]);
+
+            // Count unique participants
+            $product->participants_count = $product->bids()->distinct()->count('user_id');
+
+            // Get highest bids per unique user
+            $product->highest_rank = $this->getHighestBids($product);
+            $product->bid_amount = $this->placeBid($product);
+
+            // Broadcast bid event
+            broadcast(new BidPlacedEvent($product));
+
+            return $this->success("Successfully", new AuctionResource($product));
+        });
     }
+
 
     public function endedAuctions()
     {
@@ -201,16 +225,44 @@ class AuctionController extends Controller
     {
         $now = Carbon::now();
         $endTime = Carbon::parse($product->end_time);
-        $remainingSeconds = $endTime->diffInSeconds($now, false); // Get remaining time in seconds
-        // dd($remainingSeconds < 119 && $now->LessThanOrEqualTo($endTime),$now->LessThanOrEqualTo($endTime), $now, $endTime, $remainingSeconds);
-
-        if ($remainingSeconds < 119 && $now->LessThanOrEqualTo($endTime)) { // If less than 2 minutes remain
+        $remainingSeconds = $endTime->diffInSeconds($now, true); // Get remaining time in seconds
+        if (($remainingSeconds > 0 && $remainingSeconds < 119) && $now->LessThanOrEqualTo($endTime)) {
             $additionalSeconds = 120 - $remainingSeconds;
             $newEndTime = $endTime->addSeconds($additionalSeconds);
-            dd($now, $endTime, $newEndTime);
             $product->end_time = $newEndTime;
-            // $product->save(); // Save updated end_time in the database
+            $product->save(); // Save updated end_time in the database
         }
         return $product->end_time; // Return the updated end time
+    }
+
+    public function storeWinner(Product $product)
+    {
+        $product->load(['bids' => function ($query) {
+            $query->latest()->limit(1);
+        }, 'winners']);
+
+        $latestBid = $product->bids->first();
+
+        if (!$latestBid) {
+            return $this->failure(__('No bids found for this product'));
+        }
+
+        if (Carbon::now()->lessThan($product->end_time)) {
+            return $this->failure(__('The auction is still active. No winner can be stored yet.'));
+        }
+
+        if ($product->winners->isNotEmpty()) {
+            return $this->failure(__('A winner has already been selected for this auction'));
+        }
+
+        if ($product->winners->where('user_id', $latestBid->user_id)->isNotEmpty()) {
+            return $this->failure(__('User has already won this auction'));
+        }
+        $product->winners()->create([
+            'user_id' => $latestBid->user_id,
+            'bid_id' => $latestBid->id,
+            'is_bought' => false,
+        ]);
+        return $this->success("", new AuctionResource($product));
     }
 }
