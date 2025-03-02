@@ -6,6 +6,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Http\Resources\Api\AuctionResource;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
+use App\Http\Controllers\Api\AuctionController;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
@@ -19,6 +20,7 @@ class BidPlacedEvent implements ShouldBroadcastNow
      */
     public function __construct($product)
     {
+        $product->bid_amount = AuctionController::placeBid($product);
         $this->product = (new AuctionResource($product));
     }
 

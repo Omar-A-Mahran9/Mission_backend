@@ -47,4 +47,9 @@ class Bid extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function winners()
+    {
+        return $this->hasMany(Winner::class,'bid_id');
+    }
 }

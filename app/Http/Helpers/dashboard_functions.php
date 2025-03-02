@@ -198,6 +198,16 @@ if (!function_exists('getDateRangeArray')) { // takes 'Y-m-d - Y-m-d' and return
     }
 }
 
+if (!function_exists('sanitizeNumber')) {
+    /**
+     * Remove commas from numeric inputs.
+     */
+    function sanitizeNumber($value)
+    {
+        return $value !== null ? str_replace(',', '', $value) : null;
+    }
+}
+
 if (!function_exists('getModelData')) {
 
     function getModelData(Model $model, $relations = [], $orsFilters = [], $andsFilters = [], $searchingColumns = null, $onlyTrashed = false): array
