@@ -60,6 +60,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('addresses', 'AddressController@store');
         Route::post('addresses/{address}', 'AddressController@update');
         Route::delete('addresses/{address}', 'AddressController@destroy');
-        Route::get('transactions/history', 'TransactionHistoryController');
+        Route::get('transactions/history', 'TransactionHistoryController@index');
+        Route::get('transactions/history/{product}', 'TransactionHistoryController@show');
     });
 });

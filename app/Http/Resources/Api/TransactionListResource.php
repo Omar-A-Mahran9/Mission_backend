@@ -18,6 +18,7 @@ class TransactionListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'status_name' => $this->getTransactionStatusName(),
             'status' => $this->getTransactionStatus(),
             'amount' => $this->getTransactionAmount(),
             'date' => $this->getTransactionDate(),
@@ -25,50 +26,157 @@ class TransactionListResource extends JsonResource
 
         ];
     }
-    private function getTransactionStatus()
+    private function getTransactionStatusName()
     {
-        // dd($this->tickets->first()?->refund,$this->winners);
-        // If there is a ticket and it has a refund
-        if ($this->tickets->first()?->refund) {
+        $userId = auth()->id();
+        $winner = $this->winners->firstWhere('user_id', $userId);
+        $ticket = $this->tickets->first(); // Get first ticket if exists
+
+        //  1. User won and received the product
+        if ($winner && $winner->is_delivered) {
+            return __('It was received');
+        }
+
+        //  2. User won, paid but not received
+        if ($winner && $winner->is_bought) {
+            return __('Payment has been made');
+        }
+
+        //  3. User won but did not pay
+        if ($winner) {
+            $paymentDeadline = Carbon::parse($winner->created_at)->addHours((int) setting('time_left_to_pay'));
+            if (Carbon::now()->greaterThan($paymentDeadline)) {
+                return __("You didn't win");
+            }
+            return __('Payment pending');
+        }
+
+        //  4. User had a ticket and got refunded
+        if ($ticket && $ticket->refund) {
             return __('Refunded');
         }
 
-        // Check if the user is the winner
-        $winner = $this->winners->first();
-        if ($winner) {
-            if ($winner->is_delivered) {
-                return __('It was received');
-            }
-            return $winner->is_bought ? __('Paid') : __('Not Paid');
+        //  5. User bought a ticket but did not win
+        if ($ticket) {
+            return __('Paid the ticket');
         }
 
-        return __('Paid the ticket');
+        //  6. User lost the auction
+        return __("You didn't win");
+    }
+    private function getTransactionStatus()
+    {
+        $userId = auth()->id();
+        $winner = $this->winners->firstWhere('user_id', $userId);
+        $ticket = $this->tickets->first();
+
+        //  1. User won and received the product
+        if ($winner && $winner->is_delivered) {
+            return 7;
+        }
+
+        //  2. User won, paid but not received
+        if ($winner && $winner->is_bought) {
+            return 6;
+        }
+
+        //  3. User won but did not pay
+        if ($winner) {
+            // Calculate the deadline
+            $paymentDeadline = Carbon::parse($winner->created_at)->addHours((int) setting('time_left_to_pay'));
+            if (Carbon::now()->greaterThan($paymentDeadline)) {
+                return 1;
+            }
+            return 4;
+        }
+
+        //  4. User had a ticket and got refunded
+        if ($ticket && $ticket->refund) {
+            return 2;
+        }
+
+        //  5. User bought a ticket but did not win
+        if ($ticket) {
+            return 1;
+        }
+
+        //  6. User lost the auction
+        return 1;
     }
     private function getTransactionAmount()
     {
-        $winner = $this->winners->first();
+        $userId = auth()->id();
+        $winner = $this->winners->firstWhere('user_id', $userId);
+        $ticket = $this->tickets->first();
+        //  1. User won and received the product
+        if ($winner && $winner->is_delivered) {
+            return $winner->bid->amount;
+        }
+
+        //  2. User won, paid but not received
+        if ($winner && $winner->is_bought) {
+            return $winner->bid->amount;
+        }
+
+        //  3. User won but did not pay
         if ($winner) {
-            return $winner->is_bought ? $this->product_price : 0;
+            $paymentDeadline = Carbon::parse($winner->created_at)->addHours((int) setting('time_left_to_pay'));
+            if (Carbon::now()->greaterThan($paymentDeadline)) {
+                return $this->ticket_price;
+            }
+            return $winner->bid->amount;
         }
 
-        if ($this->tickets->isNotEmpty()) {
-            return $this->ticket_price; // Ticket purchase price
+        //  4. User had a ticket and got refunded
+        if ($ticket && $ticket->refund) {
+            return $this->ticket_price;
         }
-        return null;
+
+        //  5. User bought a ticket but did not win
+        if ($ticket) {
+            return $this->ticket_price;
+        }
+
+        //  6. User lost the auction
+        return $this->ticket_price;
     }
-
     private function getTransactionDate()
     {
-        $winner = $this->winners->first();
+        $userId = auth()->id();
+        $winner = $this->winners->firstWhere('user_id', $userId);
+        $ticket = $this->tickets->first();
 
-        if ($this->tickets->isNotEmpty()) {
-            return Carbon::parse($this->tickets->first()->create_time)->format('Y-m-d');
+        //  1. User won and received the product
+        if ($winner && $winner->is_delivered) {
+            return Carbon::parse($winner->deliverd_at)->format('Y-m-d');
         }
 
+        //  2. User won, paid but not received
+        if ($winner && $winner->is_bought) {
+            return Carbon::parse($winner->paid_at)->format('Y-m-d');
+        }
+
+        //  3. User won but did not pay
         if ($winner) {
-            return Carbon::parse($winner->paid_at ?? $winner->updated_at)->format('Y-m-d');
+            // Calculate the deadline
+            $paymentDeadline = Carbon::parse($winner->created_at)->addHours((int) setting('time_left_to_pay'));
+            if (Carbon::now()->greaterThan($paymentDeadline)) {
+                return Carbon::parse($ticket->created_at)->format('Y-m-d');
+            }
+            return Carbon::now()->diffForHumans(Carbon::parse($this->winners->first()->created_at)->addHours((int) setting('time_left_to_pay')));
         }
 
-        return null;
+        //  4. User had a ticket and got refunded
+        if ($ticket && $ticket->refund) {
+            return Carbon::parse($ticket->refund->created_at)->format('Y-m-d');
+        }
+
+        //  5. User bought a ticket but did not win
+        if ($ticket) {
+            return Carbon::parse($ticket->created_at)->format('Y-m-d');
+        }
+
+        //  6. User lost the auction
+        return Carbon::parse($ticket->created_at)->format('Y-m-d');
     }
 }
