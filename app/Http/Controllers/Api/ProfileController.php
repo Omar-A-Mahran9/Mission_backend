@@ -33,7 +33,7 @@ class ProfileController extends Controller
             );
             $cacheData = Arr::except($data, ['image']);
             // Store OTP and profile data in cache (valid for 5 minutes)
-            Cache::put("profile_update_{$user->id}", $cacheData, now()->addMinutes(5));
+            Cache::put("profile_update_{$user->id}", $cacheData);
         } else {
             DB::transaction(function () use ($user, $data, $request) {
                 if ($request->has('image'))
@@ -60,6 +60,7 @@ class ProfileController extends Controller
             $user->update($profileData);
             $user->otp()->delete();
         });
+        Cache::forget("profile_update_{$user->id}");
         return $this->success("Successfully", new UserResource($user));
     }
     public function updatePassword(UpdatePasswordRequest $request)
