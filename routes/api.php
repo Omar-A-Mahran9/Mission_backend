@@ -42,10 +42,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('logout', 'Auth\AuthController@logout');
         Route::post('refund/{product}', 'ProductController@refund');
         Route::post('ticket/{product}', 'ProductController@buyTicket');
-        // Route::get('floating/auctions', 'ProductController@floatingAuctions');
+        Route::get('floating/auctions', 'ProductController@floatingAuctions');
         Route::get('unpaid-wins', 'ProductController@unpaidWinningProducts');
         Route::get('profile', 'ProfileController@profile');
         Route::post('profile', 'ProfileController@updateProfile');
+        Route::post('profile/update-with-otp', 'ProfileController@checkOtpAndUpdateProfile');
         Route::post('profile/password', 'ProfileController@updatePassword');
         Route::get('auctions/now', 'AuctionController@auctionsNow');
         Route::get('auctions/{product}', 'AuctionController@auction');
