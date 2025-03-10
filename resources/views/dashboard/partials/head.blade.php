@@ -1,4 +1,4 @@
-<title>{{ __('Peekabid') }}</title>
+<title>{{ __('Mission') }}</title>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta charset="utf-8" />
 <meta name="description"
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Keenthemes | Metronic" />
 <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
 <link rel="shortcut icon"
-    href="{{ isDarkMode() ? asset('placeholder_images/favicon-dark.svg') : asset('placeholder_images/favicon-light.svg') }}" />
+    href="{{ isDarkMode() ? asset('favicon.ico') : asset('favicon.ico') }}" />
 <!--begin::Fonts-->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">

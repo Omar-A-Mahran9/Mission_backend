@@ -32,31 +32,29 @@
                 themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
             }
             document.documentElement.setAttribute("data-bs-theme", themeMode);
-            {{--  document.querySelectorAll("theme-mode-menu").forEach(item => {
-                item.addEventListener("click", function(event) {
-                    event.preventDefault();
-                    let selectedMode = this.getAttribute("data-kt-value");  --}}
+            // {{--  document.querySelectorAll("theme-mode-menu").forEach(item => {
+            //     item.addEventListener("click", function(event) {
+            //         event.preventDefault();
+            //         let selectedMode = this.getAttribute("data-kt-value");  --}}
 
-            // Send the mode to the server
-            {{--  fetch(`/change-theme-mode/${themeMode}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector(
-                                'meta[name="csrf-token"]')
-                            .getAttribute("content")
-                    },
-                    body: JSON.stringify({
-                        mode: selectedMode
-                    })
-                }).then(response => response.json())
-                .then(data => console.log("Theme mode updated:", data))
-                .catch(error => console.error("Error updating theme mode:", error));  --}}
-            {{--  });
-            });  --}}
+        //     // Send the mode to the server
+        // fetch(`/change-theme-mode/${themeMode}`, {
+        //             method: "POST",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //                 "X-CSRF-TOKEN": document.querySelector(
+        //                         'meta[name="csrf-token"]')
+        //                     .getAttribute("content")
+        //             },
+        //             body: JSON.stringify({
+        //                 mode: selectedMode
+        //             })
+        //         }).then(response => response.json())
+        //         .then(data => console.log("Theme mode updated:", data))
+        //         .catch(error => console.error("Error updating theme mode:", error));  --}}
+        //     });
         }
     </script>
-    <!--end::Theme mode setup on page load-->
     <!--begin::App-->
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <!--begin::Page-->
@@ -130,10 +128,10 @@
     <div class="position-fixed bottom-0 start-0 p-3 " style="z-index: 1090">
         <div id="kt_docs_toast_toggle" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <img src="{{ asset('placeholder_images/favicon-light.svg') }}" class="me-2 theme-light-show"
-                    width="20" srcset="">
-                <img src="{{ asset('placeholder_images/favicon-dark.svg') }}" class="me-2 theme-dark-show"
-                    width="20" srcset="">
+                <img src="{{ asset('favicon.ico') }}" class="me-2 theme-light-show" width="20"
+                    srcset="">
+                <img src="{{ asset('favicon.ico') }}" class="me-2 theme-dark-show" width="20"
+                    srcset="">
                 <strong class="me-auto">{{ __('' . setting('website_name')) }}</strong>
                 <small>{{ __('Now') }}</small>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
