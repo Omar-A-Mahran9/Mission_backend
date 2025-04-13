@@ -15,15 +15,23 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('user_name');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->longText('short_description');
+            $table->longText('description');
+            $table->longText('bio')->nullable();
             $table->string('image')->nullable();
-            $table->string(column: 'email')->unique();
+            $table->string('cover')->nullable();
+            $table->string('email')->unique();
             $table->string('phone')->unique();
+            $table->boolean('is_valid')->default(false);
             $table->longText('fcm_token')->nullable();
-            $table->integer('provider')->comment('App\Enums\Provider')->default(Provider::Application->value);
             $table->integer('status')->comment('App\Enums\User')->default(UserStatus::Active->value);
             $table->string('password');
+            $table->unsignedBigInteger('city_id');
+            $table->unsignedBigInteger('field_id');
+            $table->foreign('city_id')->references('id')->on('cities')->cascadeOnDelete();
+            $table->foreign('field_id')->references('id')->on(' ')->cascadeOnDelete();
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->rememberToken();
