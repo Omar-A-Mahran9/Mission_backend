@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('field_specialists', function (Blueprint $table) {
+        Schema::create('portfolio_attachments', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('portfolio_id');
+            $table->foreign('portfolio_id')->references('id')->on('portfolios')->cascadeOnDelete();
+            $table->string('file');
+            $table->timestamps(); 
         });
     }
 
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('field_specialists');
+        Schema::dropIfExists('portfolio_attachments');
     }
 };

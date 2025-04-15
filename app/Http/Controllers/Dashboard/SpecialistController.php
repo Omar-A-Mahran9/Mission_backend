@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
 use App\Models\specialist;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class SpecialistController extends Controller
 {
