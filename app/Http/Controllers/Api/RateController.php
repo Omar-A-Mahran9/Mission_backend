@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\offers;
+use App\Http\Controllers\Controller;
+use App\Models\Rate;
 use Illuminate\Http\Request;
 
-class OffersController extends Controller
+class RateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class OffersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(offers $offers)
+    public function show(Rate $rate)
     {
         //
     }
@@ -42,7 +43,7 @@ class OffersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(offers $offers)
+    public function edit(Rate $rate)
     {
         //
     }
@@ -50,7 +51,7 @@ class OffersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, offers $offers)
+    public function update(Request $request, Rate $rate)
     {
         //
     }
@@ -58,7 +59,7 @@ class OffersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(offers $offers)
+    public function destroy(Rate $rate)
     {
         //
     }
