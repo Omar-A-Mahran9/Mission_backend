@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             SettingSeeder::class,
             CitySeeder::class,
-            ProductSeeder::class,
-        ]);
+         ]);
     }
 }
