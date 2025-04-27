@@ -17,13 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger('mission_id'); // Foreign key to the mission table
             $table->unsignedBigInteger('user_id')->nullable(); // Foreign key to the user table (nullable)
             $table->string('reason')->nullable(); // Reason (nullable)
-            $table->timestamps(); // created_at and updated_at
 
             // Adding foreign key constraints
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
             $table->foreign('mission_id')->references('id')->on('missions')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-
             $table->timestamps();
         });
     }

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('mission_id');
             $table->unsignedBigInteger('user_id');
             $table->text('details');
-            $table->timestamps(); // created_at, updated_at
 
             // Foreign Keys
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');

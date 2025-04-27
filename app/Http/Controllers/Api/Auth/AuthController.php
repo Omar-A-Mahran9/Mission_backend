@@ -8,6 +8,7 @@ use App\Rules\PhoneNumber;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Services\Api\AuthService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -18,36 +19,45 @@ use App\Http\Requests\Api\RegisterRequest;
 
 class AuthController extends Controller
 {
+    protected $service;
+
+    public function __construct(AuthService $service)
+    {
+        $this->service = $service;
+    }
     public function register(RegisterRequest $request)
     {
         $data                 = $request->validated();
-        $user = User::create($data);
-        $token = $user->createToken('Personal access token to apis')->plainTextToken;
+        // dd($data);
+        $this->service->register($request);
+        // $user = User::create($data);
+        // $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
-        return $this->success(__("registered in successfully"), ['token' => $token, "customer" => new UserResource($user)]);
+        // return $this->success(__("registered in successfully"), ['token' => $token, "customer" => new UserResource($user)]);
     }
     public function login(LoginRequest $request)
     {
         $request->validated();
-        $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
-        if (!$user->verified_at) {
-            UserOtp::updateOrCreate(
-                ['user_id' => $user->id], // Condition to find or create the record
-                ['otp' => rand(1111, 9999)] // Update the OTP value
-            );
-            return response([
-                'success' => false,
-                'message' => __('Your account is not verified.'),
-                'data' => ['otp' => optional($user->otp()->first())->otp]
-            ], 422);
-        }
-        if (Hash::check($request->password, $user->password)) {
-            $token = $user->createToken('Personal access token to apis')->plainTextToken;
+        $auth = $this->service->login($request->only(['email', 'password']));
+        // $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
+        // if (!$user->verified_at) {
+        //     UserOtp::updateOrCreate(
+        //         ['user_id' => $user->id], // Condition to find or create the record
+        //         ['otp' => rand(1111, 9999)] // Update the OTP value
+        //     );
+        //     return response([
+        //         'success' => false,
+        //         'message' => __('Your account is not verified.'),
+        //         'data' => ['otp' => optional($user->otp()->first())->otp]
+        //     ], 422);
+        // }
+        // if (Hash::check($request->password, $user->password)) {
+        //     $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
-            return $this->success("logged in successfully", ['token' => $token, "user" => new UserResource($user)]);
-        } else {
-            return $this->validationFailure(["password" => [__("Password mismatch")]]);
-        }
+        //     return $this->success("logged in successfully", ['token' => $token, "user" => new UserResource($user)]);
+        // } else {
+        //     return $this->validationFailure(["password" => [__("Password mismatch")]]);
+        // }
     }
     public function resendOTP(Request $request, $mobile)
     {

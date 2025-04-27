@@ -22,7 +22,7 @@ return new class extends Migration
             $table->longText('bio')->nullable();
             $table->string('image')->nullable();
             $table->string('cover')->nullable();
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('phone')->unique();
             $table->boolean('is_valid')->default(false);
             $table->longText('fcm_token')->nullable();

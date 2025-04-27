@@ -20,8 +20,6 @@ return new class extends Migration
              $table->foreign('mission_owner')->references('id')->on('users')->onDelete('cascade');
              $table->foreign('profissionalist_id')->references('id')->on('users')->onDelete('cascade');
              $table->foreignId('mission_id')->constrained()->onDelete('cascade')->nullable();
-             $table->timestamp('updated_at')->nullable();
-
             $table->timestamps();
         });
     }
