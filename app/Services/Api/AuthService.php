@@ -27,8 +27,11 @@ class AuthService
         $cacheKey = "register:{$registrationToken}";
         $cachedData = Cache::get($cacheKey, []);
         if (request()->query('step', 1) == 0) {
-            $otp = rand(1111, 9999);
-            $data['otp'] = $otp;
+            if (!(isset($cachedData['time']) && now()->diffInSeconds($cachedData['time']) < 60)) {
+                $otp = rand(1111, 9999);
+                $data['otp'] = $otp;
+                $data['time'] = now()->toTimeString();
+            }
         }
         if (request()->query('step', 1) == 1) {
             unset($cachedData['otp']);
