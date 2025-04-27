@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('rates', function (Blueprint $table) {
             $table->id();
-             $table->unsignedBigInteger('mission_owner');
+             $table->unsignedBigInteger('mission_owner')->nullable();
 
-             $table->unsignedBigInteger('mission_owner');
              $table->unsignedBigInteger('profissionalist_id');
              $table->decimal('rate', 10, 2)->nullable();
              $table->foreign('mission_owner')->references('id')->on('users')->onDelete('cascade');

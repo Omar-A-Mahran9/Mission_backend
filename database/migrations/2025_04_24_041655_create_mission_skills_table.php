@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('mission_id')->constrained()->onDelete('cascade'); // Foreign key for mission
             $table->foreignId('skill_id')->constrained()->onDelete('cascade');   // Foreign key for skill
-
             $table->timestamps();
         });
     }
