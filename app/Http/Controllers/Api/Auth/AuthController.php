@@ -27,30 +27,20 @@ class AuthController extends Controller
     }
     public function register(RegisterRequest $request)
     {
-        $data                 = $request->validated();
+        // $data                 = $request->validated();
         // dd($data);
-        $this->service->register($request);
+        $result = $this->service->register($request);
         // $user = User::create($data);
         // $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
-        // return $this->success(__("registered in successfully"), ['token' => $token, "customer" => new UserResource($user)]);
+        return $this->success(__("registered in successfully"), $result);
     }
     public function login(LoginRequest $request)
     {
         $request->validated();
-        $auth = $this->service->login($request->only(['email', 'password']));
+        $auth = $this->service->login($request->only(['phone', 'password']));
         // $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
-        // if (!$user->verified_at) {
-        //     UserOtp::updateOrCreate(
-        //         ['user_id' => $user->id], // Condition to find or create the record
-        //         ['otp' => rand(1111, 9999)] // Update the OTP value
-        //     );
-        //     return response([
-        //         'success' => false,
-        //         'message' => __('Your account is not verified.'),
-        //         'data' => ['otp' => optional($user->otp()->first())->otp]
-        //     ], 422);
-        // }
+
         // if (Hash::check($request->password, $user->password)) {
         //     $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
@@ -59,22 +49,10 @@ class AuthController extends Controller
         //     return $this->validationFailure(["password" => [__("Password mismatch")]]);
         // }
     }
-    public function resendOTP(Request $request, $mobile)
+    public function resendOTP($token)
     {
-        $phoneNormalized = Str::startsWith($request->phone, '0') ? ltrim($request->phone, '0') : '0' . $request->phone;
-        $user = User::with('otp')->wherePhone($phoneNormalized)->orWhere('phone', $request->phone)->first();
-        $request['phone'] = $user->phone ?? $request->phone;
-        if (!$user) {
-            $existsUser = 'exists:users';
-        }
-        $request->validate([
-            'phone' => ['required', new PhoneNumber(), $existsUser ?? null],
-        ]);
-        UserOtp::updateOrCreate(
-            ['user_id' => $user->id], // Condition to find or create the record
-            ['otp' => rand(1111, 9999)] // Update the OTP value
-        );
-        return $this->success("OTP resent sucessfully.", ["user" => new UserResource($user)]);
+        $token = $this->service->resendOtp($token);
+        return $this->success("OTP resent sucessfully.", $token);
     }
     public function checkOTP(Request $request, $phone)
     {

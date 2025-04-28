@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->longText('short_description');
-            $table->longText('description');
+            $table->longText('short_description')->nullable();
+            $table->longText('description')->nullable();
             $table->longText('bio')->nullable();
             $table->string('image')->nullable();
             $table->string('cover')->nullable();

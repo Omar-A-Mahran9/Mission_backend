@@ -2,7 +2,9 @@
 
 namespace App\Services\Api;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Rules\NotNumbersOnly;
 use Illuminate\Support\Facades\Cache;
 use App\Repositories\Api\Eloquent\AuthRepository;
 
@@ -17,32 +19,111 @@ class AuthService
 
     public function login($credentials)
     {
-        // return $this->authRepository->login($credentials);
+        return $this->authRepository->login($credentials);
     }
     public function register($data)
     {
+        $step = request()->query('step', 1);
+        // step 1
         $registrationToken = $data->input('registration_token', Str::uuid());
-        $data = $data->validated();
-        // 2. Get cached data, or empty array
+        $dataValidated = $data->validated();
         $cacheKey = "register:{$registrationToken}";
         $cachedData = Cache::get($cacheKey, []);
-        if (request()->query('step', 1) == 0) {
+        // unset($cachedData['otp'], $cachedData['time']);
+        /** STEP 0: Generate OTP (only if not generated within 60 seconds) */
+        if ($step == 0) {
             if (!(isset($cachedData['time']) && now()->diffInSeconds($cachedData['time']) < 60)) {
                 $otp = rand(1111, 9999);
                 $data['otp'] = $otp;
                 $data['time'] = now()->toTimeString();
             }
         }
-        if (request()->query('step', 1) == 1) {
-            unset($cachedData['otp']);
+        if ($step == 1) {
+            unset($cachedData['otp'], $cachedData['time']);
         }
-        // 3. Merge new validated step data
-        $newData = array_merge($cachedData, $data);
 
-        // 4. Store back in cache
-        Cache::put($cacheKey, $newData, 30 * 60);
-        dd($registrationToken, $newData);
-        // return $this->authRepository->register($data);
-        return $registrationToken;
+        // step 3
+        if ($data->has('certificates')) {
+            $certificatesPath = $this->certificate($data);
+            $dataValidated['certificates'] = $certificatesPath;
+        }
+        // unset($cachedData['otp']);
+
+
+        // step 4
+        if ($data->has('license')) {
+            $licensePath = $this->license($data);
+            $dataValidated['license'] = $licensePath;
+        }
+        $newData = array_merge($cachedData, $dataValidated);
+        Cache::put($cacheKey, $newData, 60 * 60);
+        if ($step == 4) {
+            $mergedDocument = array_merge(
+                $newData['certificates'] ?? [],
+                $newData['license'] ?? []
+            );
+            $dataUser = Arr::except($newData, ['certificates', 'license']);
+            $user = $this->authRepository->register($mergedDocument, $dataUser);
+            Cache::forget($cacheKey);
+            return $user;
+        }
+        return ['registration_token' => $registrationToken, 'otp' => $cachedData['otp'] ?? null];
+    }
+
+
+    public function certificate($data)
+    {
+        if ($data->has('certificates')) {
+            $certificatesPath = [];
+            foreach ($data->input('certificates') as $i => $certificate) {
+                $certificate['type_id'] = 1;
+                $certificatesPath[$i] = $certificate;
+                if ($data->hasFile("certificates.$i.files")) {
+                    foreach ($data->file("certificates.$i.files") as $file) {
+                        $path = uploadImageToDirectory($file, 'documents');
+                        $certificatesPath[$i]['files'][] = $path;
+                    }
+                }
+            }
+            return $certificatesPath;
+        }
+    }
+
+    public function license($data)
+    {
+        if ($data->has('license')) {
+            $licensePath = [];
+            foreach ($data->input('license') as $i => $license) {
+                $license['type_id'] = 2;
+                $licensePath[$i] = $license;
+                if ($data->hasFile("license.$i.files")) {
+                    foreach ($data->file("license.$i.files") as $file) {
+                        $path = uploadImageToDirectory($file, 'documents');
+                        $licensePath[$i]['files'][] = $path;
+                    }
+                }
+            }
+            return $licensePath;
+        }
+    }
+
+    public function resendOtp($token)
+    {
+        $cacheKey = "register:{$token}";
+        if (Cache::has($cacheKey)) {
+            $cachedData = Cache::get($cacheKey, []);
+            $data = [];
+            if (!(isset($cachedData['time']) && now()->diffInSeconds($cachedData['time']) < 60)) {
+                $otp = rand(1111, 9999);
+                $data['otp'] = $otp;
+                $data['time'] = now()->toTimeString();
+            }
+            $newData = array_merge($cachedData, $data);
+
+            Cache::put($cacheKey, $newData, 60 * 60);
+            return ['registration_token' => $token, 'otp' => $newData['otp']];
+        } else {
+            return null;
+        }
     }
 }

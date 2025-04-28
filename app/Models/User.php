@@ -71,6 +71,10 @@ class User extends Authenticatable
     //     $this->save();
     // }
 
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
     public function otp()
     {
         return $this->hasOne(UserOtp::class, 'user_id');

@@ -50,7 +50,6 @@ class RegisterRequest extends FormRequest
                     if ($cachedData['otp'] != $value) {
                         return $fail(__('The OTP is not valid.'));
                     }
-                    // dd();
                 }],
                 'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],
@@ -58,6 +57,7 @@ class RegisterRequest extends FormRequest
                 'field_id' => ['required', 'exists:fields,id'],
                 'interest_id' => ['nullable', 'array'],
                 'interest_id.*' => ['exists:interests,id'],
+                'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],
             [
                 'certificates' => ['nullable', 'array', 'min:1'],
@@ -71,6 +71,7 @@ class RegisterRequest extends FormRequest
                     'mimes:jpg,jpeg,png,pdf',
                     'max:5120'
                 ],
+                'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],
             [
                 'license' => ['nullable', 'array', 'min:1'],
@@ -84,8 +85,8 @@ class RegisterRequest extends FormRequest
                     'mimes:jpg,jpeg,png,pdf',
                     'max:5120'
                 ],
+                'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],
-
         ];
         return array_key_exists($currentStep, $stepsRules) ? $stepsRules[$currentStep] : [];
     }

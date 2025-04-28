@@ -19,7 +19,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     // 🔹 Public Authentication Routes (No Auth Required)
     Route::post('register', 'Auth\AuthController@register');
     Route::post('login', 'Auth\AuthController@login');
-    Route::get('resend-otp/{phone}', 'Auth\AuthController@resendOTP');
+    Route::get('resend-otp/{token}', 'Auth\AuthController@resendOTP');
     Route::post('check-otp/{phone}', 'Auth\AuthController@checkOTP');
 
     // 🔹 Forget Password Routes
