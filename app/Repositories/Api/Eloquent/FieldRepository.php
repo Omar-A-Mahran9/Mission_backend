@@ -10,6 +10,6 @@ class FieldRepository implements FieldRepositoryInterface
 {
     public function index()
     {
-        return Field::paginate(50);
+        return Field::get();
     }
 }

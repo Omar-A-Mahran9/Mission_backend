@@ -17,6 +17,6 @@ class CityController extends Controller
     }
     public function index(Request $request)
     {
-        return $this->successWithPagination("", CityResource::collection($this->service->index())->response()->getData(true));
+        return $this->success("", CityResource::collection($this->service->index()));
     }
 }
