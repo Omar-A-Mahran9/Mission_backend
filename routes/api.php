@@ -33,7 +33,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('support', 'SupportController@supportData');
     Route::get('cities', 'CityController@index');
     Route::get('fields', 'FieldController@index');
-    Route::get(' ', 'InterestController@index');
+    Route::get('interests', 'InterestController@index');
     // 🔒 Protected Routes (Require Auth)
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('logout', 'Auth\AuthController@logout');
