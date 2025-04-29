@@ -190,19 +190,14 @@ return [
     */
 
     'attributes' => [
-        "denominations.*.image" => "image",
-        "denominations.*.name_ar" => "name ar",
-        "denominations.*.name_en" => "name en",
-        "denominations.*.code" => "code",
-        "denominations.*.price" => "price",
-        "denominations.*.price_after_discount" => "price after discount",
-        "denominations.*.cost" => "cost",
-        "denominations.*.codes" => "codes",
-        "denominations.*.currency_code" => "currency code",
-        'design_type_id' => 'design type',
-        'vendor_id' => 'vendor',
-        'variations.*.bidding_discount_percentage' => 'Bidding Discount Percentage',
-        'variations.*.final_bidding_percentage' => 'Bidding Percentage After Discount',
+        "certificates.*.name" => "Certificate Name",
+        "certificates.*.files" => "Certificate Attachment",
+        "certificates.*.expiration_date" => "Expiration Date",
+        "certificates.*.have_expiration_date" => "Does Not Expire",
+        "license.*.name" => "License Name",
+        "license.*.files" => "License Attachment",
+        "license.*.expiration_date" => "Expiration Date",
+        "license.*.have_expiration_date" => "Does Not Expire",
         'city_id' => 'city',
         'return_policy_en' => 'Return policy in english',
         'return_policy_ar' => 'Return policy in arabic'

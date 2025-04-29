@@ -5,15 +5,23 @@ namespace App\Http\Controllers\Api;
 use App\Models\Field;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\FieldResource;
+use App\Services\Api\FieldService;
 
 class FieldController extends Controller
 {
+    protected $service;
+
+    public function __construct(FieldService $service)
+    {
+        $this->service = $service;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return $this->successWithPagination("", FieldResource::collection($this->service->index())->response()->getData(true));
     }
 
     /**

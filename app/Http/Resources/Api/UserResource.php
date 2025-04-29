@@ -18,11 +18,9 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'image' => $this->full_image_path,
-            'name' => $this->name,
-            'user_name' => $this->user_name,
+            'name' => $this->full_name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'otp' => optional($this->otp()->first())->otp,
         ];
     }
 }

@@ -17,12 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->longText('short_description');
-            $table->longText('description');
+            $table->longText('short_description')->nullable();
+            $table->longText('description')->nullable();
             $table->longText('bio')->nullable();
             $table->string('image')->nullable();
             $table->string('cover')->nullable();
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('phone')->unique();
             $table->boolean('is_valid')->default(false);
             $table->longText('fcm_token')->nullable();

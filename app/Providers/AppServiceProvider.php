@@ -13,7 +13,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\AuthRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\AuthRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\CityRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\CityRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\FieldRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\FieldRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\InterestRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\InterestRepository::class
+        );
     }
 
     /**

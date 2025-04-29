@@ -747,7 +747,7 @@
     "Payment has been made": "تم الدفع",
     "Payment pending": "قيد الدفع",
     "You didn't win": "لم تربح",
-    "": "",
+    "The OTP is not valid.": "رقم التحقق غير صالح.",
     "": "",
     "": ""
 }

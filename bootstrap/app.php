@@ -68,7 +68,6 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \App\Http\Middleware\ApiLocalization::class,
             \App\Http\Middleware\CheckVerify::class,
-            \App\Http\Middleware\BroadcastMiddleware::class
         ]);
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
@@ -86,7 +85,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'json.response' => \App\Http\Middleware\ForceJsonResponse::class,
             'cors' => \App\Http\Middleware\Cors::class,
             'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::class,
-            'BoadcastMiddleware' => \App\Http\Middleware\BroadcastMiddleware::class,
             // 'check.verify' => \App\Http\Middleware\CheckVerify::class,
         ]);
     })

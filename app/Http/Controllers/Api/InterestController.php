@@ -5,16 +5,23 @@ namespace App\Http\Controllers\Api;
 use App\Models\Interest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Services\Api\InterestService;
+use App\Http\Resources\Api\InterestResource;
 
 class InterestController extends Controller
 {
+    protected $service;
+
+    public function __construct(InterestService $service)
+    {
+        $this->service = $service;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return $this->successWithPagination("", InterestResource::collection($this->service->index())->response()->getData(true));
     }
 
     /**
