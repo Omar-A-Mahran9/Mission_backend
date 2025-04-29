@@ -14,7 +14,6 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // dd($this->otp);
         return [
             'id' => $this->id,
             'image' => $this->full_image_path,

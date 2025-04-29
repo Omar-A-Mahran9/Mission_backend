@@ -21,7 +21,7 @@ class InterestController extends Controller
      */
     public function index()
     {
-        return $this->successWithPagination("", InterestResource::collection($this->service->index())->response()->getData(true));
+        return $this->success("", InterestResource::collection($this->service->index()));
     }
 
     /**

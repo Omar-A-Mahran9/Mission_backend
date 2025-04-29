@@ -36,7 +36,6 @@ class AuthService
         $dataValidated = $data->validated();
         $cacheKey = "register:{$registrationToken}";
         $cachedData = Cache::get($cacheKey, []);
-        // unset($cachedData['otp'], $cachedData['time']);
         /** STEP 0: Generate OTP (only if not generated within 60 seconds) */
         if ($step == 0) {
             if (!(isset($cachedData['time']) && now()->diffInSeconds($cachedData['time']) < 60)) {
@@ -54,8 +53,6 @@ class AuthService
             $certificatesPath = $this->certificate($data);
             $dataValidated['certificates'] = $certificatesPath;
         }
-        // unset($cachedData['otp']);
-
 
         // step 4
         if ($data->has('license')) {

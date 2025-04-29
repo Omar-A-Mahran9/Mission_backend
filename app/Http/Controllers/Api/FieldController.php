@@ -21,7 +21,7 @@ class FieldController extends Controller
      */
     public function index()
     {
-        return $this->successWithPagination("", FieldResource::collection($this->service->index())->response()->getData(true));
+        return $this->success("", FieldResource::collection($this->service->index()));
     }
 
     /**

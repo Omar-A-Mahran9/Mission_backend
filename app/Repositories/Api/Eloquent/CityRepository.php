@@ -9,6 +9,6 @@ class CityRepository implements CityRepositoryInterface
 {
     public function index()
     {
-        return City::paginate(50);
+        return City::get();
     }
 }
