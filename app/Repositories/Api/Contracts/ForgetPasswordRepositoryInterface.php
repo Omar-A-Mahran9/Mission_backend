@@ -9,4 +9,5 @@ interface  ForgetPasswordRepositoryInterface
     public function updateOtp($data);
     public function changePassword($user, $password);
     public function getUserByPhone($phone);
+    public function securOtp($userId);
 }

@@ -42,7 +42,16 @@ class ForgetPasswordRepository implements ForgetPasswordRepositoryInterface
     public function changePassword($user, $password)
     {
         $user->update(['password' => $password]);
+        return $user;
+    }
 
-        return Interest::get();
+
+    public function securOtp($userId)
+    {
+        $userOtp = UserOtp::where('user_id', $userId)->first();
+        if ($userOtp) {
+            return $userOtp;
+        }
+        return null;
     }
 }

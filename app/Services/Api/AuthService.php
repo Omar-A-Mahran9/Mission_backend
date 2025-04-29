@@ -71,7 +71,7 @@ class AuthService
             Cache::forget($cacheKey);
             return $user;
         }
-        return ['registration_token' => $registrationToken, 'otp' => (string)$dataValidated['otp'] ?? null];
+        return ['registration_token' => $registrationToken, 'otp' => isset($dataValidated['otp']) ? (string)$dataValidated['otp'] : null];
     }
 
 

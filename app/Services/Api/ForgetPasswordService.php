@@ -37,6 +37,13 @@ class ForgetPasswordService
         if ($user->status === UserStatus::Inactive->value) {
             return ["status" => 422, "phone" => __("Your account is blocked. Please contact support.")];
         }
+        $secure = $this->forgetPasswordRepository->securOtp($user->id);
+        if ($secure) {
+            $secondsPassed = $secure->updated_at->diffInSeconds(now());
+            if ($secondsPassed < 60) {
+                return ["status" => 422, "phone" => __("Please wait for 60 seconds before requesting a new OTP.")];
+            }
+        }
         $this->forgetPasswordRepository->updateOtp($user->id);
         return $user;
     }
@@ -68,6 +75,12 @@ class ForgetPasswordService
         });
         return $user;
     }
+    /**
+     * Handle the change password request.
+     *
+     * @param array $data
+     * @return mixed
+     */
     public function changePassword($request)
     {
         $request['phone'] = $request->phone;
