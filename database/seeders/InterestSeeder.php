@@ -20,7 +20,7 @@ class InterestSeeder extends Seeder
             ['name_en' => 'Sports',     'name_ar' => 'الرياضة'],
             ['name_en' => 'Reading',    'name_ar' => 'القراءة'],
         ];
-
+        
         DB::table('interests')->insert($interests);
     }
 }

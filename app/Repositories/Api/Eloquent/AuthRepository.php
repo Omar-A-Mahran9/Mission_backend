@@ -22,7 +22,6 @@ class AuthRepository implements AuthRepositoryInterface
     public function register($document = null, $dataUser)
     {
         DB::beginTransaction();
-
         try {
             $user = User::create($dataUser);
             if ($document) {

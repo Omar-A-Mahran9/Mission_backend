@@ -10,45 +10,40 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\UserResource;
+use App\Services\Api\ForgetPasswordService;
 use Illuminate\Validation\Rules\Password;
 
 class ForgetPasswordController extends Controller
 {
+    protected $service;
+
+    public function __construct(ForgetPasswordService $service)
+    {
+        $this->service = $service;
+    }
     public function sendOtp(Request $request, $phone)
     {
-        $request['phone'] = $request->phone;
-        $request->validate([
-            'phone' => ['required', new PhoneNumber()],
-        ]);
-        $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
-        if (!$user)
-            return $this->failure(__("This user does not exist"));
-        if ($user->status === UserStatus::Inactive->value) {
-            return $this->failure(__("Your account is blocked. Please contact support."));
+        $user = $this->service->forgetPassword($request);
+        if ($user['status'] == 422) {
+            return $this->validationFailure(["phone" => [$user['phone']]]);
         }
-        UserOtp::updateOrCreate(
-            ['user_id' => $user->id], // Condition to find or create the record
-            ['otp' => rand(1111, 9999)] // Update the OTP value
-        );
         return $this->success("Send otp is successfully", ["customer" => new UserResource($user)]);
     }
 
+    public function verifyOtp(Request $request, $phone)
+    {
+        $user = $this->service->verifyOtp($request, $phone);
+        if ($user['status'] == 422) {
+            return $this->validationFailure(["phone" => [$user['phone']]]);
+        }
+        return $this->success("OTP verified successfully");
+    }
     public function changePassword(Request $request, $phone)
     {
-        $request['phone'] = $request->phone;
-        $request->validate([
-            'phone' => ['required', new PhoneNumber()],
-            'password' => ['required', Password::min(8)->max(16)->letters()->numbers()],
-            'password_confirmation' => 'required|same:password',
-        ]);
-        $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
-        if (!$user)
-            return $this->failure(__("This user does not exist"));
-        if ($user->status === UserStatus::Inactive->value) {
-            return $this->failure(__("Your account is blocked. Please contact support."));
+        $user = $this->service->changePassword($request);
+        if ($user['status'] == 422) {
+            return $this->validationFailure(["phone" => [$user['phone']]]);
         }
-        $user->update(['password' => $request->password]);
-
         return $this->success("password changed successfully");
     }
 }

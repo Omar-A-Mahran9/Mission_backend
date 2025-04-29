@@ -29,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Contracts\InterestRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\InterestRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\ForgetPasswordRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\ForgetPasswordRepository::class
+        );
     }
 
     /**

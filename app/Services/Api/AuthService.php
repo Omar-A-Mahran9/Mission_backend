@@ -40,7 +40,7 @@ class AuthService
         if ($step == 0) {
             if (!(isset($cachedData['time']) && now()->diffInSeconds($cachedData['time']) < 60)) {
                 $otp = rand(1111, 9999);
-                $data['otp'] = $otp;
+                $dataValidated['otp'] = $otp;
                 $data['time'] = now()->toTimeString();
             }
         }
@@ -71,7 +71,7 @@ class AuthService
             Cache::forget($cacheKey);
             return $user;
         }
-        return ['registration_token' => $registrationToken, 'otp' => $cachedData['otp'] ?? null];
+        return ['registration_token' => $registrationToken, 'otp' => (string)$dataValidated['otp'] ?? null];
     }
 
 

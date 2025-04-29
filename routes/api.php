@@ -20,10 +20,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('register', 'Auth\AuthController@register');
     Route::post('login', 'Auth\AuthController@login');
     Route::get('resend-otp/{token}', 'Auth\AuthController@resendOTP');
-    Route::post('check-otp/{phone}', 'Auth\AuthController@checkOTP');
 
     // 🔹 Forget Password Routes
     Route::post('forget-password/{phone}', 'Auth\ForgetPasswordController@sendOtp');
+    Route::post('check-otp/{phone}', 'Auth\ForgetPasswordController@verifyOtp');
     Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
 
     // 🔹 Public Home Routes (Both No Auth Required, Require)
