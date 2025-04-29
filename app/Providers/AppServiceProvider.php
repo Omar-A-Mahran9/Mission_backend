@@ -33,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Contracts\ForgetPasswordRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\ForgetPasswordRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\FaqRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\FaqRepository::class
+        );
     }
 
     /**

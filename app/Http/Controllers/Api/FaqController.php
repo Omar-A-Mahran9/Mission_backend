@@ -4,16 +4,25 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Faqs;
 use Illuminate\Http\Request;
+use App\Services\Api\FaqService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\FaqResource;
 
 class FaqController extends Controller
 {
+    protected $service;
+
+    public function __construct(FaqService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return $this->success("faqs fetched successfully", FaqResource::collection($this->service->index()));
     }
 
     /**
