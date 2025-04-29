@@ -5,6 +5,7 @@ namespace App\Services\Api;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Rules\NotNumbersOnly;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use App\Repositories\Api\Eloquent\AuthRepository;
 
@@ -19,7 +20,13 @@ class AuthService
 
     public function login($credentials)
     {
-        return $this->authRepository->login($credentials);
+        $user = $this->authRepository->login($credentials);
+        if (Hash::check($credentials['password'], $user->password)) {
+            $token = $user->createToken('Personal access token to apis')->plainTextToken;
+            return ["status" => 200, "token" => $token, "user" => $user];
+        } else {
+            return ["status" => 422, "password" => [__("Password mismatch")]];
+        }
     }
     public function register($data)
     {

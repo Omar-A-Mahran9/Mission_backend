@@ -18,7 +18,7 @@ class User extends Authenticatable
     use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
 
     protected $guarded = ["password_confirmation"];
-    protected $appends = ['full_image_path'];
+    protected $appends = ['full_image_path','full_name'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -50,15 +50,14 @@ class User extends Authenticatable
     protected static function booted(): void
     {
         static::addGlobalScope(new SortingScope);
-        static::created(function ($user) {
-            $user->otp()->create([
-                'otp' => rand(1111, 9999), // Generate a random 4-digit OTP
-            ]);
-        });
     }
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
+    }
+    public function getFullNameAttribute()
+    {
+        return trim("{$this->first_name} {$this->last_name}");
     }
     // public function sendOTP()
     // {

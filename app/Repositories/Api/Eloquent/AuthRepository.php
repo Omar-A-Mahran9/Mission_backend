@@ -12,29 +12,12 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function login($credentials)
     {
-        dd($credentials);
+         $user = User::where('phone', 'LIKE', "%{$credentials['phone']}%")->first();
+        if (!$user) {
+            return null;
+        }
+        return $user;
     }
-
-    // public function register($document = null, $dataUser)
-    // {
-    //     $user = User::create($dataUser);
-    //     if ($document) {
-    //         foreach ($document as $doc) {
-    //             $document = $user->documents()->create([
-    //                 'name' => $doc['name'],
-    //                 'have_expiration_date' => $doc['have_expiration_date'],
-    //                 'expiration_date' => $doc['expiration_date'],
-    //                 'type_id' => $doc['type_id'],
-    //             ]);
-    //             foreach ($doc['files'] as $filePath) {
-    //                 $document->files()->create(['file' => $filePath]);
-    //             }
-    //         }
-    //     }
-    //     dd($document, $dataUser, $user);
-
-    //     return ;
-    // }
 
     public function register($document = null, $dataUser)
     {

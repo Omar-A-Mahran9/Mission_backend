@@ -27,11 +27,7 @@ class AuthController extends Controller
     }
     public function register(RegisterRequest $request)
     {
-        // $data                 = $request->validated();
-        // dd($data);
         $result = $this->service->register($request);
-        // $user = User::create($data);
-        // $token = $user->createToken('Personal access token to apis')->plainTextToken;
 
         return $this->success(__("registered in successfully"), $result);
     }
@@ -39,15 +35,11 @@ class AuthController extends Controller
     {
         $request->validated();
         $auth = $this->service->login($request->only(['phone', 'password']));
-        // $user = User::where('phone', 'LIKE', "%$request->phone%")->first();
-
-        // if (Hash::check($request->password, $user->password)) {
-        //     $token = $user->createToken('Personal access token to apis')->plainTextToken;
-
-        //     return $this->success("logged in successfully", ['token' => $token, "user" => new UserResource($user)]);
-        // } else {
-        //     return $this->validationFailure(["password" => [__("Password mismatch")]]);
-        // }
+        if ($auth['status'] == 200) {
+            return $this->success("logged in successfully", ['token' => $auth['token'], "user" => new UserResource($auth['user'])]);
+        } else {
+            return $this->validationFailure(["password" => $auth['password']]);
+        }
     }
     public function resendOTP($token)
     {
