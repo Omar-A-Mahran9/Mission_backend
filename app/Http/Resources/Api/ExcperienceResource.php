@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SpecialistResource extends JsonResource
+class ExcperienceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +15,9 @@ class SpecialistResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'field' => new FieldResource($this->field),
+            'skills' => SkillResource::collection($this->skills),
+            'specialists' => SpecialistResource::collection($this->specialists),
         ];
     }
 }

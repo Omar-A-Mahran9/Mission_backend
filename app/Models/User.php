@@ -18,7 +18,7 @@ class User extends Authenticatable
     use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
 
     protected $guarded = ["password_confirmation"];
-    protected $appends = ['full_image_path','full_name'];
+    protected $appends = ['full_image_path', 'full_name'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -86,5 +86,17 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany(Address::class);
+    }
+    public function specialists()
+    {
+        return $this->belongsToMany(Specialist::class, 'specialist_users');
+    }
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class); // if you want to track created_at/updated_at
+    }
+    public function field()
+    {
+        return $this->hasOne(Field::class,'id','field_id'); // if you want to track created_at/updated_at
     }
 }

@@ -33,4 +33,8 @@ class Field extends Model
     {
         return $this->attributes['name_' . app()->getLocale()];
     }
+    public function specialists()
+    {
+        return $this->belongsToMany(Specialist::class, 'field_specialists');
+    }
 }

@@ -37,6 +37,18 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Contracts\FaqRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\FaqRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\SupportRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\SupportRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\ProfileRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\ProfileRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\ExcperiencRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\ExcperiencRepository::class
+        );
     }
 
     /**

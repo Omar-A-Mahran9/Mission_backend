@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
 
-class FieldSpecialist extends Model
+class SpecialistUser extends Model
 {
     protected $guarded = [];
 
@@ -27,14 +27,5 @@ class FieldSpecialist extends Model
     protected static function booted(): void
     {
         static::addGlobalScope(new SortingScope);
-    }
-
-    public function specialists()
-    {
-        return $this->belongsToMany(Specialist::class, 'field_specialists');
-    }
-    public function fields()
-    {
-        return $this->belongsToMany(Field::class, 'field_specialists', 'specialist_id', 'field_id');
     }
 }

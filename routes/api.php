@@ -37,8 +37,15 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('faqs', 'FaqController@index');
     Route::get('support', 'SupportMessageController@index');
     Route::post('support', 'SupportMessageController@store');
+    Route::get('skills', 'ExcperiencController@skills');
+    Route::get('specialists/{specialist}', 'ExcperiencController@specialists');
     // 🔒 Protected Routes (Require Auth)
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('logout', 'Auth\AuthController@logout');
+
+        Route::get('over-view', 'ProfileController@overView');
+        Route::post('over-view', 'ProfileController@update');
+        Route::get('experience', 'ExcperiencController@show');
+        Route::post('experience', 'ExcperiencController@store');
     });
 });
