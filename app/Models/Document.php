@@ -38,4 +38,8 @@ class Document extends Model
     {
         return $this->hasMany(DocumentAttachment::class);
     }
+    public function type()
+    {
+        return $this->belongsTo(DocumentType::class, 'type_id');
+    }
 }
