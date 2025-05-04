@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ExcperienceResource extends JsonResource
+class DocumentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,10 @@ class ExcperienceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'field' => new FieldResource($this->field),
-            'skills' => SkillResource::collection($this->skills),
-            'specialists' => SpecialistResource::collection($this->specialists),
+            'name' => $this->name,
+            'expiration_date' => $this->expiration_date,
+            'have_expiration_date' => $this->have_expiration_date,
+            'full_path' => $this->files->pluck('full_image_path')
         ];
     }
 }

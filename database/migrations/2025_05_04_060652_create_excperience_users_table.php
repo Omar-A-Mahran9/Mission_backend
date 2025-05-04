@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('excperience_users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('type_id');
-            $table->foreign('type_id')->references('id')->on('document_types')->cascadeOnDelete();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            // $table->timestamp('issue_date')->nullable();
-            $table->date('expiration_date')->nullable();
-            $table->boolean('have_expiration_date')->default(false);
+            $table->unsignedBigInteger('field_id');
+            $table->foreign('field_id')->references('id')->on('fields')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('excperience_users');
     }
 };

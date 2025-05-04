@@ -9,6 +9,7 @@ use App\Http\Resources\Api\SkillResource;
 use App\Http\Resources\Api\SpecialistResource;
 use App\Http\Resources\Api\ExcperienceResource;
 use App\Http\Requests\Api\StoreExcperiencRequest;
+use App\Http\Requests\Api\UpdateExcperienceRequest;
 
 class ExcperiencController extends Controller
 {
@@ -28,18 +29,30 @@ class ExcperiencController extends Controller
     }
     public function store(StoreExcperiencRequest $request)
     {
-        return $this->success("", $this->service->store($request));
+        $created = $this->service->store($request);
+        if (!$created) {
+            return $this->failure(__('Error in creating experience'));
+        }
+        return $this->success('', new ExcperienceResource($created));
     }
-    public function show()
+    public function index()
     {
-        return $this->success("", new ExcperienceResource($this->service->show()));
+        return $this->success("",  ExcperienceResource::collection($this->service->show()->experiences));
     }
-    public function update(Request $request, $id)
+    public function update(UpdateExcperienceRequest $request, $id)
     {
-        return $this->success("", []);
+        $updated = $this->service->update($request, $id);
+        if (!$updated) {
+            return $this->failure(__('Error in updating experience'));
+        }
+        return $this->success('', new ExcperienceResource($updated));
     }
     public function destroy($id)
     {
-        return $this->success("", []);
+        $deleted = $this->service->destroy($id);
+        if (!$deleted) {
+            return $this->failure(__('Error in deleting experience'));
+        }
+        return $this->success("",  ExcperienceResource::collection($deleted));
     }
 }

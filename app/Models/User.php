@@ -87,16 +87,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Address::class);
     }
-    public function specialists()
+    public function experiences()
     {
-        return $this->belongsToMany(Specialist::class, 'specialist_users');
-    }
-    public function skills()
-    {
-        return $this->belongsToMany(Skill::class); // if you want to track created_at/updated_at
+        return $this->hasMany(ExcperienceUser::class);
     }
     public function field()
     {
-        return $this->hasOne(Field::class,'id','field_id'); // if you want to track created_at/updated_at
+        return $this->hasOne(Field::class, 'id', 'field_id'); // if you want to track created_at/updated_at
+    }
+
+    public function certificates()
+    {
+        return $this->hasMany(Document::class)->where('type_id', 1);
+    }
+
+    public function Licenses()
+    {
+        return $this->hasMany(Document::class)->where('type_id', 2);
     }
 }

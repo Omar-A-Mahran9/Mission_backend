@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ExcperiencController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +46,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
         Route::get('over-view', 'ProfileController@overView');
         Route::post('over-view', 'ProfileController@update');
-        Route::get('experience', 'ExcperiencController@show');
-        Route::post('experience', 'ExcperiencController@store');
+        Route::apiResource('experiences', 'ExcperiencController');
+        Route::apiResource('certificates', 'CertificateController');
     });
 });

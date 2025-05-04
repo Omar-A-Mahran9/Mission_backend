@@ -25,6 +25,6 @@ class DocumentAttachment extends Model
 
     public function getFullImagePathAttribute()
     {
-        return asset(getImagePathFromDirectory($this->image, 'Documents', "default.svg"));
+        return asset(getImagePathFromDirectory($this->file, 'Documents', "default.svg"));
     }
 }
