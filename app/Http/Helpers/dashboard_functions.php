@@ -83,6 +83,21 @@ if (!function_exists('deleteImageFromDirectory')) {
     }
 }
 
+if (!function_exists('deleteImagesFromDirectory')) {
+
+    function deleteImagesFromDirectory($imageNames, $model)
+    {
+        $model = Str::plural($model);
+        $model = Str::ucfirst($model);
+        foreach ($imageNames as $imageName) {
+            if ($imageName != 'default.png') {
+                $path = "/Images/" . $model . '/' . $imageName;
+                Storage::disk('public')->delete($path);
+            }
+        }
+    }
+}
+
 
 if (!function_exists('getImagePathFromDirectory')) {
 

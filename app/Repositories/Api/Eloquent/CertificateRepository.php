@@ -45,43 +45,60 @@ class CertificateRepository implements CertificateRepositoryInterface
             return false;
         }
     }
+
     public function update($data, $id)
     {
         try {
-            $experience = auth()->user()->experiences()->find($id);
-            if (!$experience) {
+            $certificate = auth()->user()->certificates()->with("files")->find($id);
+            if (!$certificate) {
                 return false;
             }
-            DB::transaction(function () use ($data, $experience) {
-                if ($experience) {
-                    $experience->update(["field_id" => $data['field_id']]);
-                    $experience->specialists()->sync($data['specialist_ids']);
-                    $experience->skills()->sync($data['skill_ids']);
+            $deletedFileIds = $data['deleted_files'] ?? [];
+            $matchedFiles = $certificate->files()->whereIn('id', $deletedFileIds)->get();
+            if (count($matchedFiles) !== count($deletedFileIds)) {
+                return false;
+            }
+            DB::transaction(function () use ($data, $certificate, $matchedFiles) {
+
+                $certificate->update([
+                    'name' => $data['name'],
+                    'expiration_date' => $data['expiration_date'] ?? null,
+                    'have_expiration_date' => $data['have_expiration_date']
+                ]);
+
+                if ($matchedFiles) {
+                    deleteImagesFromDirectory($matchedFiles->pluck('file'), "Documents");
+                    $matchedFiles->each->delete();
+                }
+                if (isset($data['files'])) {
+                    foreach ($data['files'] as $file) {
+                        $certificate->files()->create(['file' => uploadImageToDirectory($file, "Documents")]);
+                    }
                 }
             });
-            $experience->load(['field', 'skills', 'specialists']);
-
-            return $experience;
+            return $certificate->load('files');
         } catch (\Throwable $e) {
-            return false;
+            return $e->getMessage();
         }
     }
 
     public function destroy($id)
     {
         try {
-            $experience = auth()->user()->experiences()->find($id);
-            if (!$experience) {
+            $certificate = auth()->user()->certificates()->find($id);
+            if (!$certificate) {
                 return false;
             }
-            DB::transaction(function () use ($experience) {
-                $experience->specialists()->detach();
-                $experience->skills()->detach();
-                $experience->delete();
+            DB::transaction(function () use ($certificate) {
+                $certificate->files()->each(function ($file) {
+                    deleteImageFromDirectory($file->file, "Documents");
+                    $file->delete();
+                });
+                $certificate->delete();
             });
             return auth()->user()
-                ->experiences()
-                ->with(['skills', 'specialists', 'field'])
+                ->certificates()
+                ->with(['files'])
                 ->get();
         } catch (\Throwable $e) {
             return false;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreDocumentRequest;
+use App\Http\Requests\Api\UpdateDocumentRequest;
 use App\Http\Resources\Api\DocumentResource;
 use App\Services\Api\CertificateService;
 use Illuminate\Http\Request;
@@ -30,13 +31,14 @@ class CertificateController extends Controller
         }
         return $this->success('', new DocumentResource($created));
     }
-    public function update(Request $request, $id)
+    public function update(UpdateDocumentRequest $request, $id)
     {
         $updated = $this->service->update($request, $id);
         if (!$updated) {
-            return $this->failure(__('Error in updating certificate'));
+            // return $this->failure(__('Error in updating certificate'));
+            return $this->failure($updated);
         }
-        return $this->success('', $updated);
+        return $this->success('', new DocumentResource($updated));
     }
     public function destroy($id)
     {
@@ -44,6 +46,6 @@ class CertificateController extends Controller
         if (!$deleted) {
             return $this->failure(__('Error in deleting certificate'));
         }
-        return $this->success("", $deleted);
+        return $this->success("", DocumentResource::collection($deleted));
     }
 }
