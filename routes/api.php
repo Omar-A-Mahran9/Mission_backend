@@ -50,5 +50,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('over-view', 'ProfileController@update');
         Route::apiResource('experiences', 'ExcperiencController');
         Route::apiResource('certificates', 'CertificateController');
+        Route::apiResource('license', 'CertificateController');
     });
 });

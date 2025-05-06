@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DocumentResource extends JsonResource
+class DocumentImageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,7 @@ class DocumentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'expiration_date' => $this->expiration_date,
-            'have_expiration_date' => $this->have_expiration_date,
-            'full_path' => DocumentImageResource::collection($this->files)
+            'full_path' => $this->full_image_path
         ];
     }
 }
