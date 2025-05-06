@@ -61,7 +61,7 @@ class RegisterRequest extends FormRequest
             ],
             [
                 'certificates' => ['nullable', 'array', 'min:1'],
-                'certificates.*.name' => ['required', 'string', 'max:255'],
+                'certificates.*.name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
                 'certificates.*.have_expiration_date' => ['required', 'boolean'],
                 'certificates.*.expiration_date' => ['required_unless:certificates.*.have_expiration_date,true', 'nullable', 'date'],
                 'certificates.*.files' => ['required', 'array', 'min:1'],
@@ -69,13 +69,13 @@ class RegisterRequest extends FormRequest
                     'required',
                     'file',
                     'mimes:jpg,jpeg,png,pdf',
-                    'max:5120'
+                    'max:2048'
                 ],
                 'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],
             [
                 'license' => ['nullable', 'array', 'min:1'],
-                'license.*.name' => ['required', 'string', 'max:255'],
+                'license.*.name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
                 'license.*.have_expiration_date' => ['required', 'boolean'],
                 'license.*.expiration_date' => ['required_unless:license.*.have_expiration_date,true', 'nullable', 'date'],
                 'license.*.files' => ['required', 'array', 'min:2'],
@@ -83,7 +83,7 @@ class RegisterRequest extends FormRequest
                     'required',
                     'file',
                     'mimes:jpg,jpeg,png,pdf',
-                    'max:5120'
+                    'max:2048'
                 ],
                 'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],

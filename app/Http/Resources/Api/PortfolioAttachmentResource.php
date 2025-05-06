@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PortfolioResource extends JsonResource
+class PortfolioAttachmentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,7 @@ class PortfolioResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'files' => PortfolioAttachmentResource::collection($this->files),
+            'full_path' => $this->full_image_path
         ];
     }
 }
