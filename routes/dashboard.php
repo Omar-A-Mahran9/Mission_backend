@@ -14,6 +14,7 @@ Route::get("products/restore-selected", "ProductController@restoreSelected");
 /* end Delete And restore */
 
 
+Route::resource('users', 'UserController');
 
 Route::resource('products', 'ProductController');
 Route::get("products/{product}/images", "ProductController@images");
