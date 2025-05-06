@@ -46,6 +46,19 @@ if (!function_exists('uploadImageToDirectory')) {
     }
 }
 
+
+if (!function_exists('uploadAttachmentToDirectory')) {
+    function uploadAttachmentToDirectory($file, $folder = 'missions/attachments')
+    {
+        $folder = trim($folder, '/'); // clean up input
+        $fileName = 'attachment_' . time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
+        $file->storeAs($folder, $fileName, 'public');
+
+        return $folder . '/' . $fileName;
+    }
+}
+
+
 if (!function_exists('updateModelImage')) {
 
     function updateModelImage($model, $imageFile, $directory)

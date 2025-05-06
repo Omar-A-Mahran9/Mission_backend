@@ -16,11 +16,17 @@ class MissionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'description_ar' => $this->description_ar,
-            'description_en' => $this->description_en,
-            'field_id' => $this->field_id,
-            'specialist_id' => $this->specialist_id,
-            'budget' => $this->budget,
+            'description' => $this->description,
+            'field' => [
+                'id'=>$this->field->id,
+                'name'=>$this->field->name
+            ],
+            'specialist' => [
+                'id'=>$this->specialist->id,
+                'name'=> $this->specialist->name
+            ],
+
+             'budget' => $this->budget,
             'user_id' => $this->user_id,
             'payment_way_id' => $this->payment_way_id,
             'delivery_time' => $this->delivery_time?->toDateTimeString(),

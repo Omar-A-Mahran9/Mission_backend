@@ -12,10 +12,21 @@ class MissionRepository implements MissionRepositoryInterface
         return Mission::all();
     }
 
-    public function store(array $data)
+    public function store($data)
     {
         return Mission::create($data);
     }
+
+    public function attachFile(Mission $mission, $file)
+    {
+        $path = uploadAttachmentToDirectory($file, 'mission/attachments');
+
+
+        return $mission->attachments()->create([
+            'file' => $path,
+        ]);
+    }
+
 
     public function show($id)
     {

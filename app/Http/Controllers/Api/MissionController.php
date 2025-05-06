@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\StoreMissionRequest;
 use App\Http\Resources\Api\MissionResource;
 use App\Models\Mission;
 use App\Services\Api\MissionService;
@@ -36,11 +37,16 @@ class MissionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreMissionRequest $request)
     {
-        //
-    }
+        $validated = $request->validated();
 
+        // Call the service to store the mission
+        $mission = $this->service->store($validated);
+
+        return $this->success('Mission created successfully!', new MissionResource($mission));
+
+    }
     /**
      * Display the specified resource.
      */

@@ -36,7 +36,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('interests', 'InterestController@index');
     Route::get('faqs', 'FaqController@index');
     Route::get('tips', 'TipController@index');
-    Route::apiResource('missions', MissionController::class);
 
     Route::get('support', 'SupportMessageController@index');
     Route::post('support', 'SupportMessageController@store');
@@ -51,5 +50,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::apiResource('experiences', 'ExcperiencController');
         Route::apiResource('certificates', 'CertificateController');
         Route::apiResource('license', 'CertificateController');
+        Route::apiResource('missions', MissionController::class);
+
     });
 });

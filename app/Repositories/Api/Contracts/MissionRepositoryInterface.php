@@ -6,7 +6,7 @@ namespace App\Repositories\Api\Contracts;
 interface MissionRepositoryInterface
 {
     public function index();
-    public function store(array $data);
+    public function store($data);
     public function show($id);
     public function update($id, array $data);
     public function destroy($id);
