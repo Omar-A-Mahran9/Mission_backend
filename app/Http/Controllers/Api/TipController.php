@@ -5,15 +5,22 @@ namespace App\Http\Controllers\Api;
 use App\Models\Tip;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\TipResource;
+use App\Services\Api\TipService;
 
 class TipController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $service;
+
+    public function __construct(TipService $service)
+    {
+         $this->service = $service;
+    }
+
+
     public function index()
     {
-        //
+        return $this->success("Tips fetched successfully", TipResource::collection($this->service->index()));
     }
 
     /**

@@ -13,15 +13,17 @@ return new class extends Migration
     {
         Schema::create('missions', function (Blueprint $table) {
             $table->id();
-            $table->string('description_ar');
-            $table->string('description_en');
+            $table->string('description');
             $table->unsignedBigInteger('field_id');
             $table->unsignedBigInteger('specialist_id');
             $table->decimal('budget', 10, 2);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('payment_way_id');
+            $table->integer('days_until_delivery')->nullable();
             $table->timestamp('delivery_time');
             $table->boolean('is_publish')->default(false);
+            $table->boolean('available_attachment')->default(false);
+
             $table->unsignedBigInteger('city_id');
             $table->timestamps();
 

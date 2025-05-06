@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ExcperiencController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\MissionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +35,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('fields', 'FieldController@index');
     Route::get('interests', 'InterestController@index');
     Route::get('faqs', 'FaqController@index');
+    Route::get('tips', 'TipController@index');
+    Route::apiResource('missions', MissionController::class);
+
     Route::get('support', 'SupportMessageController@index');
     Route::post('support', 'SupportMessageController@store');
     Route::get('skills', 'ExcperiencController@skills');

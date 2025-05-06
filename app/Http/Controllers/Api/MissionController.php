@@ -3,17 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\MissionResource;
 use App\Models\Mission;
+use App\Services\Api\MissionService;
 use Illuminate\Http\Request;
 
 class MissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+
+    protected $service;
+
+    public function __construct(MissionService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index()
     {
-        //
+        return $this->success("Missions fetched successfully", MissionResource::collection($this->service->index()));
+
     }
 
     /**
