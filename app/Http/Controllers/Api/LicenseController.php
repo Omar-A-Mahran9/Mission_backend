@@ -7,13 +7,14 @@ use App\Http\Requests\Api\StoreDocumentRequest;
 use App\Http\Requests\Api\UpdateDocumentRequest;
 use App\Http\Resources\Api\DocumentResource;
 use App\Services\Api\CertificateService;
+use App\Services\Api\LicenseService;
 use Illuminate\Http\Request;
 
-class CertificateController extends Controller
+class LicenseController extends Controller
 {
     protected $service;
 
-    public function __construct(CertificateService $service)
+    public function __construct(LicenseService $service)
     {
         $this->service = $service;
     }

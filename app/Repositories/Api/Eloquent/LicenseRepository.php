@@ -2,22 +2,14 @@
 
 namespace App\Repositories\Api\Eloquent;
 
-use App\Models\Field;
-use App\Models\Skill;
-use App\Models\Interest;
-use App\Models\Specialist;
-use App\Models\SpecialistUser;
-use App\Models\SupportMessage;
-use App\Models\FieldSpecialist;
-use App\Repositories\Api\Contracts\CertificateRepositoryInterface;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\Api\Contracts\ExcperiencRepositoryInterface;
+use App\Repositories\Api\Contracts\LicenseRepositoryInterface;
 
-class CertificateRepository implements CertificateRepositoryInterface
+class LicenseRepository implements LicenseRepositoryInterface
 {
     public function index()
     {
-        return auth()->user()->certificates()
+        return auth()->user()->Licenses()
             ->with('files') // eager load files for performance
             ->get();
     }
@@ -26,9 +18,9 @@ class CertificateRepository implements CertificateRepositoryInterface
     {
         try {
             DB::transaction(function () use ($data) {
-                $certificate = auth()->user()->certificates()->create([
+                $certificate = auth()->user()->Licenses()->create([
                     'name' => $data['name'],
-                    'type_id' => 1,
+                    'type_id' => 2,
                     'expiration_date' => $data['expiration_date'],
                     'have_expiration_date' => $data['have_expiration_date']
                 ]);
@@ -37,7 +29,7 @@ class CertificateRepository implements CertificateRepositoryInterface
                 }
             });
             return auth()->user()
-                ->certificates()
+                ->Licenses()
                 ->with(['files'])
                 ->latest()
                 ->first();
@@ -49,7 +41,7 @@ class CertificateRepository implements CertificateRepositoryInterface
     public function update($data, $id)
     {
         try {
-            $certificate = auth()->user()->certificates()->with("files")->find($id);
+            $certificate = auth()->user()->Licenses()->with("files")->find($id);
             if (!$certificate) {
                 return false;
             }
@@ -85,7 +77,7 @@ class CertificateRepository implements CertificateRepositoryInterface
     public function destroy($id)
     {
         try {
-            $certificate = auth()->user()->certificates()->find($id);
+            $certificate = auth()->user()->Licenses()->find($id);
             if (!$certificate) {
                 return false;
             }
@@ -97,7 +89,7 @@ class CertificateRepository implements CertificateRepositoryInterface
                 $certificate->delete();
             });
             return auth()->user()
-                ->certificates()
+                ->Licenses()
                 ->with(['files'])
                 ->get();
         } catch (\Throwable $e) {
