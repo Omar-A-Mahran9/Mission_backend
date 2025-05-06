@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateDocumentRequest extends FormRequest
+class UpdatePortfolioRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +23,8 @@ class UpdateDocumentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'have_expiration_date' => ['required', 'boolean'],
-            'expiration_date' => ['required_unless:have_expiration_date,true', 'nullable', 'date'],
+            'title' => ['required', 'string', 'max:255', new NotNumbersOnly()],
+            'description' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'files' => ['nullable', 'array', 'min:1'],
             'files.*' => [
                 'required',
@@ -33,11 +33,6 @@ class UpdateDocumentRequest extends FormRequest
                 'max:2048'
             ],
             'deleted_files' => ['array'],
-            'deleted_files.*' => [
-                'required',
-                'integer',
-                'exists:document_attachments,id'
-            ]
         ];
     }
 }

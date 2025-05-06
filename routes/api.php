@@ -44,10 +44,13 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('logout', 'Auth\AuthController@logout');
 
+        // 🔒 User Profile Routes
+        Route::get('profile/steps', 'ProfileController@stepsStatus');
         Route::get('over-view', 'ProfileController@overView');
         Route::post('over-view', 'ProfileController@update');
         Route::apiResource('experiences', 'ExcperiencController');
         Route::apiResource('certificates', 'CertificateController');
-        Route::apiResource('license', 'CertificateController');
+        Route::apiResource('licenses', 'CertificateController');
+        Route::apiResource('portfolios', 'PortfolioController');
     });
 });

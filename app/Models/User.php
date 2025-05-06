@@ -105,4 +105,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Document::class)->where('type_id', 2);
     }
+
+    public function portfolios()
+    {
+        return $this->hasMany(Portfolio::class);
+    }
 }
