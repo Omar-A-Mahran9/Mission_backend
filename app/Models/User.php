@@ -95,6 +95,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Field::class, 'id', 'field_id'); // if you want to track created_at/updated_at
     }
+    public function city()
+    {
+        return $this->hasOne(City::class, 'id', 'city_id'); // if you want to track created_at/updated_at
+    }
 
     public function certificates()
     {
@@ -109,5 +113,18 @@ class User extends Authenticatable
     public function portfolios()
     {
         return $this->hasMany(Portfolio::class);
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Rate::class);
+    }
+    public function missions()
+    {
+        return $this->hasMany(Mission::class);
     }
 }

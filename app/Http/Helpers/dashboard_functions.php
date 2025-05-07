@@ -137,6 +137,14 @@ if (!function_exists('isTabHere')) {
     }
 }
 
+if (!function_exists('isTabBold')) {
+
+    function isTabBold($path)
+    {
+        if (request()->routeIs($path))
+            return 'font-weight: 800';
+    }
+}
 
 if (!function_exists('isTabOpen')) {
 
