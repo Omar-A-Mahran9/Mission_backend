@@ -1384,8 +1384,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="certificates" role="tabpanel">
-                @include('dashboard.users.tabs.certificates', ['user' => $user])
-                @yield('certificates')
+                @include('dashboard.users.certificates', ['user' => $user])
             </div>
         </div>
         <!--end::Row-->
