@@ -52,5 +52,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::apiResource('license', 'CertificateController');
         Route::apiResource('missions', MissionController::class);
 
+
     });
 });

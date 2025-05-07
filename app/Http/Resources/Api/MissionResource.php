@@ -17,29 +17,42 @@ class MissionResource extends JsonResource
         return [
             'id' => $this->id,
             'description' => $this->description,
-            'field' => [
-                'id'=>$this->field->id,
-                'name'=>$this->field->name
-            ],
-            'specialist' => [
-                'id'=>$this->specialist->id,
-                'name'=> $this->specialist->name
-            ],
 
-             'budget' => $this->budget,
-            'user_id' => $this->user_id,
-            'payment_way_id' => $this->payment_way_id,
+            'budget' => $this->budget,
             'delivery_time' => $this->delivery_time?->toDateTimeString(),
             'is_publish' => (bool) $this->is_publish,
-            'city_id' => $this->city_id,
-            'created_at' => $this->created_at?->toDateTimeString(),
-            'updated_at' => $this->updated_at?->toDateTimeString(),
+            'city' => $this->whenLoaded('city', fn () => [
+                    'id' => $this->city->id,
+                    'name' => $this->city->name,
+                ]),
 
             // Optionally include relationships if loaded
-            'field' => $this->whenLoaded('field'),
-            'specialist' => $this->whenLoaded('specialist'),
-            'user' => $this->whenLoaded('user'),
-            'payment_way' => $this->whenLoaded('paymentWay'),
-            'city' => $this->whenLoaded('city'),
+            'field' => $this->whenLoaded('field', fn () => [
+                    'id' => $this->field->id,
+                    'name' => $this->field->name,
+                ]),
+
+            'specialist' => $this->whenLoaded('specialist', fn () => [
+                'id' => $this->specialist->id,
+                'name' => $this->specialist->name,
+            ]),
+
+            'user' => $this->whenLoaded('user', fn () => [
+                'id' => $this->user->id,
+                'name' => $this->user->first_name . ' '. $this->user->last_name ,
+            ]),
+
+            'payment_way' => $this->whenLoaded('paymentWay', fn () => [
+                'id' => $this->paymentWay->id,
+                'name' => $this->paymentWay->name,
+            ]),
+
+             // Last status
+            'last_statue' => $this->whenLoaded('lastStatue', fn () => [
+
+                    'id' => $this->lastStatue->status->id,
+                    'name' => $this->lastStatue->status->name,
+
+            ]),
         ]; }
 }

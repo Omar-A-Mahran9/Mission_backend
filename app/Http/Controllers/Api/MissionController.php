@@ -47,25 +47,7 @@ class MissionController extends Controller
         return $this->success('Mission created successfully!', new MissionResource($mission));
 
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show(Mission $mission)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Mission $mission)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Mission $mission)
     {
         //

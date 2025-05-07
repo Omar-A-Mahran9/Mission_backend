@@ -44,4 +44,26 @@ class Mission extends Model
     {
         return $this->hasOne(Specialist::class, 'id', 'specialist_id'); // if you want to track created_at/updated_at
     }
+    public function payment()
+    {
+        return $this->hasOne(Payment_way::class, 'id', 'payment_way_id'); // if you want to track created_at/updated_at
+    }
+    public function city()
+    {
+        return $this->hasOne(City::class, 'id', 'city_id'); // if you want to track created_at/updated_at
+    }
+    public function statue(): HasMany
+    {
+        return $this->hasMany(MissionStatue::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function lastStatue()
+    {
+        return $this->hasOne(MissionStatue::class)->latestOfMany();
+    }
+
+
 }

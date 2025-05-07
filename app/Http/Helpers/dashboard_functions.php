@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Notifications\NewNotification;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\NewNotificationDashboard;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('isArabic')) {
     function isArabic(): bool
@@ -58,6 +59,18 @@ if (!function_exists('uploadAttachmentToDirectory')) {
     }
 }
 
+if (!function_exists('deleteAttachmentFromDirectory')) {
+    function deleteAttachmentFromDirectory($attachment, $folder = 'missions/attachments')
+    {
+        $folder = trim($folder, '/');
+        // Assuming the attachment contains only the path after the 'public' disk (i.e. 'missions/attachments/filename')
+        $path = $attachment->file;
+
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+    }
+}
 
 if (!function_exists('updateModelImage')) {
 

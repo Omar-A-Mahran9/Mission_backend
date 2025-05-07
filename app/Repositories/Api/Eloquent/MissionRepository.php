@@ -19,8 +19,13 @@ class MissionRepository implements MissionRepositoryInterface
 
     public function attachFile(Mission $mission, $file)
     {
-        $path = uploadAttachmentToDirectory($file, 'mission/attachments');
+        // First, delete the old attachment (if any)
+        if ($mission->attachments->isNotEmpty()) {
+            deleteAttachmentFromDirectory($mission->attachments->first()); // Delete the old attachment
+        }
 
+        // Upload new attachment
+        $path = uploadAttachmentToDirectory($file, 'mission/attachments');
 
         return $mission->attachments()->create([
             'file' => $path,
@@ -33,12 +38,13 @@ class MissionRepository implements MissionRepositoryInterface
         return Mission::findOrFail($id);
     }
 
-    public function update($id, array $data)
-    {
-        $mission = Mission::findOrFail($id);
-        $mission->update($data);
-        return $mission;
-    }
+
+        public function update($id, $data)
+        {
+            $mission = Mission::findOrFail($id);
+            $mission->update($data);
+            return $mission;
+        }
 
     public function destroy($id) // 🔄 Rename to match interface
     {
