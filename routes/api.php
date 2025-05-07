@@ -49,8 +49,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('over-view', 'ProfileController@overView');
         Route::post('over-view', 'ProfileController@update');
         Route::apiResource('experiences', 'ExcperiencController');
-        Route::apiResource('certificates', 'CertificateController');
-        Route::apiResource('licenses', 'CertificateController');
-        Route::apiResource('portfolios', 'PortfolioController');
+        Route::apiResource('certificates', 'CertificateController')->except(['index', 'show', 'store', 'destroy']);
+        Route::post('certificates/{id}/update', 'CertificateController@update');
+        Route::apiResource('licenses', 'LicenseController')->except(['index', 'show', 'store', 'destroy']);
+        Route::post('licenses/{id}/update', 'LicenseController@update');
+        Route::apiResource('portfolios', 'PortfolioController')->except(['index', 'show', 'store', 'destroy']);
+        Route::post('portfolios/{id}/update', 'PortfolioController@update');
     });
 });

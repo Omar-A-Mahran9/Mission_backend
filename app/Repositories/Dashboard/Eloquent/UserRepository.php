@@ -27,6 +27,8 @@ class UserRepository implements UserRepositoryInterface
     }
     public function show($user)
     {
+        $user->load('field', 'city', 'certificates.files')->loadCount('offers', 'missions');
+
         return $user;
     }
     // public function login($credentials)

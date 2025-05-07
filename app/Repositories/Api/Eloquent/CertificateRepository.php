@@ -63,7 +63,8 @@ class CertificateRepository implements CertificateRepositoryInterface
                 $certificate->update([
                     'name' => $data['name'],
                     'expiration_date' => $data['expiration_date'] ?? null,
-                    'have_expiration_date' => $data['have_expiration_date']
+                    'have_expiration_date' => $data['have_expiration_date'],
+                    'is_review' => false
                 ]);
 
                 if ($matchedFiles) {
