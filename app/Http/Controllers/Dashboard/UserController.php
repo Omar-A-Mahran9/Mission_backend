@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\User;
-use App\Services\Dashboard\UserService;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\Dashboard\UserService;
 
 class UserController extends Controller
 {
@@ -25,5 +26,10 @@ class UserController extends Controller
         $this->authorize('show_users');
 
         return $this->service->show($user);
+    }
+    public function approve(User $user, Document $document)
+    {
+        // $this->authorize('approve_users');
+        return $this->service->approve($user, $document);
     }
 }

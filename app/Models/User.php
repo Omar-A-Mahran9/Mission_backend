@@ -105,7 +105,7 @@ class User extends Authenticatable
         return $this->hasMany(Document::class)->where('type_id', 1);
     }
 
-    public function Licenses()
+    public function licenses()
     {
         return $this->hasMany(Document::class)->where('type_id', 2);
     }

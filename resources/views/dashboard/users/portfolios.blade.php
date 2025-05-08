@@ -1,19 +1,25 @@
 <!--begin::Row-->
 <div class="row g-6 g-xl-9 mb-6 mb-xl-9">
     <div class="mb-3 text-end">
-        <button id="toggle-all" class="btn btn-sm btn-primary">{{ __('Expand All') }}</button>
+        <button id="toggle-all-portfolios" class="btn btn-sm btn-primary">{{ __('Expand All') }}</button>
     </div>
-    @forelse ($user->certificates as $certificate)
+    @forelse ($user->portfolios as $portfolio)
+        @php
+            $maxLength = 50;
+            $description = $portfolio->description;
+            $isLong = strlen($description) > $maxLength;
+            $shortDesc = Str::limit($description, $maxLength, '...');
+        @endphp
         <!--begin::Col-->
         <div class="col-md-6 col-lg-4 col-xl-3" id="{{ $loop->index }}">
             <!--begin::Card-->
             <div class="card h-100">
                 <!--begin::Card body-->
-                <div class="card-body card-custom d-flex justify-content-center text-center flex-column p-8"
-                    data-bs-toggle="collapse" id="fileCollapse-{{ $certificate->id }}"
-                    data-bs-target="#certificate-{{ $certificate->id }}" style="cursor: pointer;">
+                <div class="card-body card-custom-portfolios d-flex justify-content-center text-center flex-column p-8"
+                    data-bs-toggle="collapse" id="fileCollapse-portfolios-{{ $portfolio->id }}"
+                    data-bs-target="#portfolios-{{ $portfolio->id }}" style="cursor: pointer;">
                     <!--begin::Name-->
-                    <a href="#certificate-{{ $certificate->id }}"
+                    <a href="#portfolios-{{ $portfolio->id }}"
                         class="text-gray-800 text-hover-primary d-flex flex-column">
                         <!--begin::Image-->
                         <div class="symbol symbol-75px mb-5">
@@ -24,45 +30,28 @@
                         </div>
                         <!--end::Image-->
                         <!--begin::Title-->
-                        <div class="fs-5 fw-bold mb-2">{{ $certificate->name }}</div>
+                        <div class="fs-5 fw-bold mb-2">{{ $portfolio->title }}</div>
                         <!--end::Title-->
                     </a>
                     <!--end::Name-->
                     <!--begin::Description-->
-                    <div class="fs-7 fw-semibold text-gray-500 mb-6">
-                        {{ $certificate->files->count() . ' ' . __('files') }}</div>
-                    <!--end::Description-->
-                    <!--begin::Info-->
-                    <div class="d-flex flex-center flex-wrap">
-                        <!--begin::Stats-->
-                        @if ($certificate->expiration_date)
-                            <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3">
-                                <div class="fs-6 fw-bold text-gray-700">{{ $certificate->expiration_date }}</div>
-                                <div class="fw-semibold text-gray-500">{{ __('Expiration date') }}</div>
-                            </div>
+                    <div class="fs-7 fw-semibold mb-2"> <span class="description-preview"
+                            id="desc-{{ $portfolio->id }}">
+                            {{ $isLong ? $shortDesc : $description }}
+                        </span>
+
+                        @if ($isLong)
+                            <a href="javascript:void(0);" class="fs-8 text-semibold ms-2 toggle-desc"
+                                data-id="{{ $portfolio->id }}" data-full="{{ e($description) }}"
+                                data-short="{{ e($shortDesc) }}" style="color: gray">
+                                ({{ __('Show more') }})
+                            </a>
                         @endif
-                        <!--end::Stats-->
-                        <!--begin::Stats-->
-                        <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3">
-                            <div class="fs-6 fw-bold text-gray-700">
-                                {{ $certificate->is_review ? __('Yes') : __('No') }}
-                            </div>
-                            <div class="fw-semibold text-gray-500">{{ __('Reviewed?') }}</div>
-                        </div>
-                        <!--end::Stats-->
                     </div>
-                    @if (!$certificate->is_review)
-                        <form method="POST"
-                            action="{{ route('dashboard.approve', ['user' => $user->id, 'document' => $certificate->id]) }}"
-                            data-redirection-url="{{ route('dashboard.users.show', $user) }}" class="form ajax-form"
-                            method="POST">
-                            @method('put')
-                            <button type="submit" class="btn btn-sm btn-primary mt-3">
-                                {{ __('Approve') }}
-                            </button>
-                        </form>
-                    @endif
-                    <!--end::Info-->
+                    <div class="fs-7 fw-semibold text-gray-500 mb-6">
+                        {{ $portfolio->files->count() . ' ' . __('files') }}</div>
+                    <!--end::Description-->
+
                 </div>
                 <!--end::Card body-->
             </div>
@@ -70,10 +59,10 @@
         </div>
 
         <!--begin::Body-->
-        <div id="certificate-{{ $certificate->id }}" class="fs-6 collapse card-open-custom ps-10"
+        <div id="portfolios-{{ $portfolio->id }}" class="fs-6 collapse card-open-custom-portfolios ps-10"
             data-bs-parent="#{{ $loop->index }}">
             <div class="row g-6 g-xl-9 mb-6 mb-xl-9">
-                @forelse ($certificate->files as $file)
+                @forelse ($portfolio->files as $file)
                     @php
                         $extension = strtolower(pathinfo($file->file, PATHINFO_EXTENSION));
                         $filename = pathinfo($file->file, PATHINFO_FILENAME);
@@ -137,29 +126,14 @@
                     </div>
                     <!--end::Col-->
                     @empty
+                        
                     @endforelse
                 </div>
             </div>
             <!--end::Body-->
             <!--end::Col-->
             @empty
-                <p class="text-muted">{{ __('No certificates found.') }}</p>
+                <p class="text-muted">{{ __('No portfolios found.') }}</p>
             @endforelse
         </div>
         <!--end:Row-->
-        {{--  @push('script')
-            <script>
-                document.getElementById('toggle-all').addEventListener('click', function() {
-                    const fileCollapses = document.querySelectorAll('[id^="fileCollapse-"]');
-                    console.log(fileCollapses);
-                    const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
-
-                    fileCollapses.forEach(el => {
-                        const instance = bootstrap.Collapse.getOrCreateInstance(el);
-                        allShown ? instance.hide() : instance.show();
-                    });
-
-                    this.textContent = allShown ? 'Expand All' : 'Collapse All';
-                });
-            </script>
-        @endpush  --}}

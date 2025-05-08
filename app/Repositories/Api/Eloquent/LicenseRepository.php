@@ -9,7 +9,7 @@ class LicenseRepository implements LicenseRepositoryInterface
 {
     public function index()
     {
-        return auth()->user()->Licenses()
+        return auth()->user()->licenses()
             ->with('files') // eager load files for performance
             ->get();
     }
@@ -18,7 +18,7 @@ class LicenseRepository implements LicenseRepositoryInterface
     {
         try {
             DB::transaction(function () use ($data) {
-                $certificate = auth()->user()->Licenses()->create([
+                $certificate = auth()->user()->licenses()->create([
                     'name' => $data['name'],
                     'type_id' => 2,
                     'expiration_date' => $data['expiration_date'],
@@ -29,7 +29,7 @@ class LicenseRepository implements LicenseRepositoryInterface
                 }
             });
             return auth()->user()
-                ->Licenses()
+                ->licenses()
                 ->with(['files'])
                 ->latest()
                 ->first();
@@ -41,7 +41,7 @@ class LicenseRepository implements LicenseRepositoryInterface
     public function update($data, $id)
     {
         try {
-            $certificate = auth()->user()->Licenses()->with("files")->find($id);
+            $certificate = auth()->user()->licenses()->with("files")->find($id);
             if (!$certificate) {
                 return false;
             }
@@ -78,7 +78,7 @@ class LicenseRepository implements LicenseRepositoryInterface
     public function destroy($id)
     {
         try {
-            $certificate = auth()->user()->Licenses()->find($id);
+            $certificate = auth()->user()->licenses()->find($id);
             if (!$certificate) {
                 return false;
             }
@@ -90,7 +90,7 @@ class LicenseRepository implements LicenseRepositoryInterface
                 $certificate->delete();
             });
             return auth()->user()
-                ->Licenses()
+                ->licenses()
                 ->with(['files'])
                 ->get();
         } catch (\Throwable $e) {

@@ -27,8 +27,14 @@ class UserRepository implements UserRepositoryInterface
     }
     public function show($user)
     {
-        $user->load('field', 'city', 'certificates.files')->loadCount('offers', 'missions');
+        $user->load('field', 'city', 'certificates.files', 'licenses.files', 'portfolios.files')->loadCount('offers', 'missions');
 
+        return $user;
+    }
+    public function approve($user, $document)
+    {
+        abort_if($document->user_id !== $user->id, 403);
+        $document->update(['is_review' => true]);
         return $user;
     }
     // public function login($credentials)
