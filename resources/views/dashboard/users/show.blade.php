@@ -16,10 +16,8 @@
                     <!--begin: Pic-->
                     <div class="me-7 mb-4">
                         <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                            <img src="assets/media/avatars/300-1.jpg" alt="image" />
-                            <div
-                                class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px">
-                            </div>
+                            <img src="{{ $user->full_image_path }}" alt="image" />
+
                         </div>
                     </div>
                     <!--end::Pic-->
@@ -133,7 +131,13 @@
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
                         <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                            href="#portfolio">{{ __('Portfolios') }}</a>
+                            href="#licenses">{{ __('Licenses') }}</a>
+                    </li>
+                    <!--end::Nav item-->
+                    <!--begin::Nav item-->
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
+                            href="#portfolios">{{ __('Portfolios') }}</a>
                     </li>
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
@@ -180,16 +184,27 @@
         <!--begin::Row-->
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="over_view" role="tabpanel">
+                @include('dashboard.users.experiences', ['user' => $user])
+            </div>
+            <div class="tab-pane fade show active" id="over_view" role="tabpanel">
                 @include('dashboard.users.over-view', ['user' => $user])
             </div>
             <div class="tab-pane fade" id="certificates" role="tabpanel">
                 @include('dashboard.users.certificates', ['user' => $user])
+            </div>
+            <div class="tab-pane fade" id="licenses" role="tabpanel">
+                @include('dashboard.users.licenses', ['user' => $user])
+            </div>
+            <div class="tab-pane fade" id="portfolios" role="tabpanel">
+                @include('dashboard.users.portfolios', ['user' => $user])
             </div>
         </div>
         <!--end::Row-->
     </div>
     <!--end::Content-->
 @endsection
+
+
 @push('scripts')
     <script>
         window.isArabic = '{{ isArabic() }}';
@@ -200,49 +215,92 @@
     </script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
     <script>
-        function reinitializeDataTables() {
-            if (typeof userTicketsInit === "function") {
-                userTicketsInit(); // Reinitialize User Tickets Table
-            }
-            if (typeof userWonInit === "function") {
-                userWonInit(); // Reinitialize User Won Table
-            }
-        }
-
-        // Example: Call this function after an event like button click or AJAX success
-        document.addEventListener("DOMContentLoaded", function() {
-            reinitializeDataTables(); // Runs on page load
+        let checkCards = true
+        document.getElementById('toggle-all').addEventListener('click', function() {
+            checkCards = !checkCards
+            const fileCollapses = document.querySelectorAll('[id^="fileCollapse-"]');
+            const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
+            let cards = document.querySelectorAll('.card-custom');
+            let cardsShow = document.querySelectorAll('.card-open-custom');
+            cards.forEach(card => {
+                card.classList.remove('collapsed');
+                if (checkCards) {} else {
+                    card.classList.add('collapsed');
+                }
+            });
+            cardsShow.forEach(card => {
+                card.classList.remove('show');
+                if (checkCards) {} else {
+                    card.classList.add('show');
+                }
+            });
+            this.textContent = checkCards ? __('Expand All') : __('Collapse All');
         });
     </script>
     <script>
-        var type = "tickets"; // Declare globally
-        document.addEventListener("DOMContentLoaded", function() {
-            loadScriptForType(type); // Load the default script
-            document.querySelectorAll(".nav-link").forEach(function(tab) {
-                tab.addEventListener("click", function() {
-                    type = this.getAttribute("data-type"); // Read the selected type
-                    console.log("Clicked Tab Type:", type); // Verify in console
+        let checkCardsLicens = true
+        document.getElementById('toggle-all-licenses').addEventListener('click', function() {
+            checkCardsLicens = !checkCardsLicens
+            const fileCollapses = document.querySelectorAll('[id^="fileCollapse-licens-"]');
+            const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
+            let cards = document.querySelectorAll('.card-custom-licens');
+            let cardsShow = document.querySelectorAll('.card-open-custom-licens');
+            cards.forEach(card => {
+                card.classList.remove('collapsed');
+                if (checkCardsLicens) {} else {
+                    card.classList.add('collapsed');
+                }
+            });
+            cardsShow.forEach(card => {
+                card.classList.remove('show');
+                if (checkCardsLicens) {} else {
+                    card.classList.add('show');
+                }
+            });
+            this.textContent = checkCardsLicens ? __('Expand All') : __('Collapse All');
+        });
+    </script>
+    <script>
+        let checkCardsPortfolios = true
+        document.getElementById('toggle-all-portfolios').addEventListener('click', function() {
+            checkCardsPortfolios = !checkCardsPortfolios
+            const fileCollapses = document.querySelectorAll('[id^="fileCollapse-portfolios-"]');
+            const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
+            let cards = document.querySelectorAll('.card-custom-portfolios');
+            let cardsShow = document.querySelectorAll('.card-open-custom-portfolios');
+            cards.forEach(card => {
+                card.classList.remove('collapsed');
+                if (checkCardsPortfolios) {} else {
+                    card.classList.add('collapsed');
+                }
+            });
+            cardsShow.forEach(card => {
+                card.classList.remove('show');
+                if (checkCardsPortfolios) {} else {
+                    card.classList.add('show');
+                }
+            });
+            this.textContent = checkCardsPortfolios ? __('Expand All') : __('Collapse All');
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.toggle-desc').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const descEl = document.getElementById('desc-' + id);
 
-                    // Call the function to reload DataTable based on the selected tab
-                    loadScriptForType(type);
+                    const isExpanded = this.textContent.trim() === __('Show less');
+
+                    if (isExpanded) {
+                        descEl.textContent = this.dataset.short;
+                        this.textContent = `(${__('Show more')})`;
+                    } else {
+                        descEl.textContent = this.dataset.full;
+                        this.textContent = `(${__('Show less')})`;
+                    }
                 });
             });
         });
-
-        // Function to load the required script based on tab selection
-        function loadScriptForType(type) {
-            let scriptSrc = type === "address" ?
-                "{{ asset('assets/js/datatables/address.js') }}" :
-                type === "won" ?
-                "{{ asset('assets/js/datatables/user-won.js') }}" :
-                "{{ asset('assets/js/datatables/user-tickets.js') }}";
-
-            if (!scriptSrc) return; // Prevent execution if type is not valid
-
-            // Create script element
-            let script = document.createElement("script");
-            script.src = scriptSrc;
-            document.body.appendChild(script);
-        }
     </script>
 @endpush

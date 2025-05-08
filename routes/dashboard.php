@@ -15,6 +15,7 @@ Route::get("products/restore-selected", "ProductController@restoreSelected");
 
 
 Route::resource('users', 'UserController');
+Route::put("users/{user}/document/{document}", "UserController@approve")->name('approve');
 
 Route::resource('products', 'ProductController');
 Route::get("products/{product}/images", "ProductController@images");

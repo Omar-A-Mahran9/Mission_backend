@@ -32,4 +32,9 @@ class UserService
 
         // return $this->repository->show($document, $data);
     }
+    public function approve($user, $document)
+    {
+        $this->repository->approve($user, $document);
+        return response(["Product update successfully"]);
+    }
 }
