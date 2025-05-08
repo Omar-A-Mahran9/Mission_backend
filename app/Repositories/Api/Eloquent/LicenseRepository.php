@@ -56,7 +56,7 @@ class LicenseRepository implements LicenseRepositoryInterface
                     'name' => $data['name'],
                     'expiration_date' => $data['expiration_date'] ?? null,
                     'have_expiration_date' => $data['have_expiration_date'],
-                    'is_review' => false
+                    'is_review' => 0
                 ]);
 
                 if ($matchedFiles) {
