@@ -118,14 +118,14 @@
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                            href="#experiences">{{ __('Experiences') }}</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab" href="#experiences"
+                            data-type="experiences">{{ __('Experiences') }}</a>
                     </li>
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                            href="#certificates">{{ __('Certificates') }}</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab" href="#certificates"
+                            data-type="certificates">{{ __('Certificates') }}</a>
                     </li>
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
@@ -184,12 +184,14 @@
         <!--begin::Row-->
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="over_view" role="tabpanel">
-                @include('dashboard.users.experiences', ['user' => $user])
-            </div>
-            <div class="tab-pane fade show active" id="over_view" role="tabpanel">
                 @include('dashboard.users.over-view', ['user' => $user])
             </div>
-            <div class="tab-pane fade" id="certificates" role="tabpanel">
+            <div class="tab-pane fade experiences-container" id="experiences" role="tabpanel">
+
+                @include('dashboard.users.experiences', ['user' => $user])
+            </div>
+            <div class="tab-pane fade certificates-container" id="certificates" role="tabpanel">
+
                 @include('dashboard.users.certificates', ['user' => $user])
             </div>
             <div class="tab-pane fade" id="licenses" role="tabpanel">
@@ -200,11 +202,41 @@
             </div>
         </div>
         <!--end::Row-->
+        <!--begin::Row-->
+        <div class="row g-6 g-xl-9">
+            <!--begin::Col-->
+            <div class="col-md-12 col-xxl-12" style="display: none" id="no-results-alert">
+                <!--begin::Button-->
+                <div class=" d-flex flex-column flex-center">
+                    <!--begin::Illustration-->
+                    <img src="/assets/vendor-dashboard/media/illustrations/unitedpalms-1/no_results.png" alt=""
+                        class="mw-100 mh-250px">
+                    <!--end::Illustration-->
+                    <!--begin::Label-->
+                    <div class="fs-4 text-gray-800 fw-bold mb-0">
+                        {{ __('There is no result try another search method') }}
+                    </div>
+                    <!--end::Label-->
+                </div>
+                <!--begin::Button-->
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+
+        {{--  <!--begin::Pagination-->
+        <div class="d-flex flex-stack flex-wrap pt-10 mt-5" id="pagination-container">
+            <div class="fs-6 fw-semibold pagination-info"></div>
+            <!--begin::Pages-->
+            <ul class="pagination">
+            </ul>
+            <!--end::Pages-->
+        </div>
+        <!--end::Pagination-->  --}}
     </div>
+
     <!--end::Content-->
 @endsection
-
-
 @push('scripts')
     <script>
         window.isArabic = '{{ isArabic() }}';
@@ -289,8 +321,8 @@
                 btn.addEventListener('click', function() {
                     const id = this.dataset.id;
                     const descEl = document.getElementById('desc-' + id);
-
-                    const isExpanded = this.textContent.trim() === __('Show less');
+                    console.log(this.textContent.trim());
+                    const isExpanded = this.textContent.trim() === `(${__('Show less')})`;
 
                     if (isExpanded) {
                         descEl.textContent = this.dataset.short;
@@ -302,5 +334,36 @@
                 });
             });
         });
+    </script>
+    <script>
+        var type = "certificates"; // Declare globally
+        document.addEventListener("DOMContentLoaded", function() {
+            loadScriptForType(type); // Load the default script
+            document.querySelectorAll(".nav-link").forEach(function(tab) {
+                tab.addEventListener("click", function() {
+                    type = this.getAttribute("data-type"); // Read the selected type
+                    console.log("Clicked Tab Type:", type); // Verify in console
+
+                    // Call the function to reload DataTable based on the selected tab
+                    loadScriptForType(type);
+                });
+            });
+        });
+
+        // Function to load the required script based on tab selection
+        function loadScriptForType(type) {
+            let scriptSrc = type === "certificates" ?
+                "{{ asset('assets/js/forms/users/certificates.js') }}" :
+                type === "experiences" ?
+                "{{ asset('assets/js/forms/users/experiences.js') }}" :
+                "{{ asset('assets/js/datatables/product-tickets-show.js') }}";
+
+            if (!scriptSrc) return; // Prevent execution if type is not valid
+
+            // Create script element
+            let script = document.createElement("script");
+            script.src = scriptSrc;
+            document.body.appendChild(script);
+        }
     </script>
 @endpush
