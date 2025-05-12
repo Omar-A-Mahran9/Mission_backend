@@ -130,14 +130,14 @@
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                            href="#licenses">{{ __('Licenses') }}</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab" href="#licenses"
+                            data-type="licenses">{{ __('Licenses') }}</a>
                     </li>
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                            href="#portfolios">{{ __('Portfolios') }}</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab" href="#portfolios"
+                            data-type="portfolios">{{ __('Portfolios') }}</a>
                     </li>
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
@@ -187,18 +187,13 @@
                 @include('dashboard.users.over-view', ['user' => $user])
             </div>
             <div class="tab-pane fade experiences-container" id="experiences" role="tabpanel">
-
-                {{--  @include('dashboard.users.experiences', ['user' => $user])  --}}
             </div>
             <div class="tab-pane fade certificates-container" id="certificates" role="tabpanel">
-
-                {{--  @include('dashboard.users.certificates', ['user' => $user])  --}}
             </div>
-            <div class="tab-pane fade" id="licenses" role="tabpanel">
-                @include('dashboard.users.licenses', ['user' => $user])
+            <div class="tab-pane fade licenses-container" id="licenses" role="tabpanel">
             </div>
-            <div class="tab-pane fade" id="portfolios" role="tabpanel">
-                @include('dashboard.users.portfolios', ['user' => $user])
+            <div class="tab-pane fade portfolios-container" id="portfolios" role="tabpanel">
+                {{--  @include('dashboard.users.portfolios', ['user' => $user])  --}}
             </div>
         </div>
         <!--end::Row-->
@@ -214,7 +209,7 @@
                     <!--end::Illustration-->
                     <!--begin::Label-->
                     <div class="fs-4 text-gray-800 fw-bold mb-0">
-                        {{ __('There is no result try another search method') }}
+                        {{ __('There is no data') }}
                     </div>
                     <!--end::Label-->
                 </div>
@@ -246,84 +241,14 @@
         let riyalLogoUrl = "{{ asset('placeholder_images/riyal_logo.svg') }}";
     </script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
-    <script>
-        let checkCards = true
-        document.getElementById('toggle-all').addEventListener('click', function() {
-            checkCards = !checkCards
-            const fileCollapses = document.querySelectorAll('[id^="fileCollapse-"]');
-            const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
-            let cards = document.querySelectorAll('.card-custom');
-            let cardsShow = document.querySelectorAll('.card-open-custom');
-            cards.forEach(card => {
-                card.classList.remove('collapsed');
-                if (checkCards) {} else {
-                    card.classList.add('collapsed');
-                }
-            });
-            cardsShow.forEach(card => {
-                card.classList.remove('show');
-                if (checkCards) {} else {
-                    card.classList.add('show');
-                }
-            });
-            this.textContent = checkCards ? __('Expand All') : __('Collapse All');
-        });
-    </script>
-    <script>
-        let checkCardsLicens = true
-        document.getElementById('toggle-all-licenses').addEventListener('click', function() {
-            checkCardsLicens = !checkCardsLicens
-            const fileCollapses = document.querySelectorAll('[id^="fileCollapse-licens-"]');
-            const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
-            let cards = document.querySelectorAll('.card-custom-licens');
-            let cardsShow = document.querySelectorAll('.card-open-custom-licens');
-            cards.forEach(card => {
-                card.classList.remove('collapsed');
-                if (checkCardsLicens) {} else {
-                    card.classList.add('collapsed');
-                }
-            });
-            cardsShow.forEach(card => {
-                card.classList.remove('show');
-                if (checkCardsLicens) {} else {
-                    card.classList.add('show');
-                }
-            });
-            this.textContent = checkCardsLicens ? __('Expand All') : __('Collapse All');
-        });
-    </script>
-    <script>
-        let checkCardsPortfolios = true
-        document.getElementById('toggle-all-portfolios').addEventListener('click', function() {
-            checkCardsPortfolios = !checkCardsPortfolios
-            const fileCollapses = document.querySelectorAll('[id^="fileCollapse-portfolios-"]');
-            const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
-            let cards = document.querySelectorAll('.card-custom-portfolios');
-            let cardsShow = document.querySelectorAll('.card-open-custom-portfolios');
-            cards.forEach(card => {
-                card.classList.remove('collapsed');
-                if (checkCardsPortfolios) {} else {
-                    card.classList.add('collapsed');
-                }
-            });
-            cardsShow.forEach(card => {
-                card.classList.remove('show');
-                if (checkCardsPortfolios) {} else {
-                    card.classList.add('show');
-                }
-            });
-            this.textContent = checkCardsPortfolios ? __('Expand All') : __('Collapse All');
-        });
-    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.toggle-desc').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     const id = this.dataset.id;
                     const descEl = document.getElementById('desc-' + id);
-                    console.log(this.textContent.trim());
                     const isExpanded = this.textContent.trim() === `(${__('Show less')})`;
-
                     if (isExpanded) {
                         descEl.textContent = this.dataset.short;
                         this.textContent = `(${__('Show more')})`;
@@ -336,7 +261,7 @@
         });
     </script>
     <script>
-        var type = "certificates"; // Declare globally
+        var type = ""; // Declare globally
         document.addEventListener("DOMContentLoaded", function() {
             loadScriptForType(type); // Load the default script
             document.querySelectorAll(".nav-link").forEach(function(tab) {
@@ -355,8 +280,12 @@
             let scriptSrc = type === "certificates" ?
                 "{{ asset('assets/js/forms/users/certificates.js') }}" :
                 type === "experiences" ?
-                "{{ asset('assets/js/forms/users/experiences.js') }}" :
+                "{{ asset('assets/js/forms/users/experiences.js') }}" : type === "licenses" ?
+                "{{ asset('assets/js/forms/users/licenses.js') }}" :
+                type === "portfolios" ?
+                "{{ asset('assets/js/forms/users/portfolios.js') }}" :
                 "{{ asset('assets/js/datatables/product-tickets-show.js') }}";
+
 
             if (!scriptSrc) return; // Prevent execution if type is not valid
 

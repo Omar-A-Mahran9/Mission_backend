@@ -28,19 +28,26 @@ class UserController extends Controller
     }
     public function certificatesAjax(Request $request, User $user)
     {
-        $certificates = $user->certificates()->with('files')->paginate(2); // paginate 6 items per page
-        $total    = $user->certificates()->count();
-        return response(['certificates' => $certificates, 'total' => $total]);
+        return response($this->service->certificatesAjax($user));
     }
     public function experiencesAjax(Request $request, User $user)
     {
-        $experiences = $user->experiences()->with(['field', 'specialists', 'skills'])->paginate(2); // paginate 6 items per page
-        $total    = $user->experiences()->count();
-        return response(['experiences' => $experiences, 'total' => $total]);
+
+        return response($this->service->experiencesAjax($user));
+    }
+    public function licensesAjax(Request $request, User $user)
+    {
+        return response($this->service->licensesAjax($user));
+    }
+    public function portfoliosAjax(Request $request, User $user)
+    {
+        return response($this->service->portfoliosAjax($user));
     }
     public function approve(User $user, Document $document)
     {
         // $this->authorize('approve_users');
-        return $this->service->approve($user, $document);
+        if ($this->service->approve($user, $document)) {
+            return redirect()->back();
+        }
     }
 }

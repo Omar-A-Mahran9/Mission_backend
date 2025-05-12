@@ -126,7 +126,6 @@
                     </div>
                     <!--end::Col-->
                     @empty
-                        
                     @endforelse
                 </div>
             </div>
