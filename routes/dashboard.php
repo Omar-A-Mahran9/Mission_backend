@@ -16,7 +16,10 @@ Route::get("products/restore-selected", "ProductController@restoreSelected");
 
 Route::resource('users', 'UserController');
 Route::put("users/{user}/document/{document}", "UserController@approve")->name('approve');
-
+Route::get('users/{user}/certificates', "UserController@certificatesAjax")
+    ->name('dashboard.users.certificates.ajax');
+Route::get('users/{user}/experiences', "UserController@experiencesAjax")
+    ->name('dashboard.users.experiences.ajax');
 Route::resource('products', 'ProductController');
 Route::get("products/{product}/images", "ProductController@images");
 Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');

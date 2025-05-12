@@ -147,19 +147,3 @@
             @endforelse
         </div>
         <!--end:Row-->
-        {{--  @push('script')
-            <script>
-                document.getElementById('toggle-all').addEventListener('click', function() {
-                    const fileCollapses = document.querySelectorAll('[id^="fileCollapse-"]');
-                    console.log(fileCollapses);
-                    const allShown = Array.from(fileCollapses).every(el => el.classList.contains('show'));
-
-                    fileCollapses.forEach(el => {
-                        const instance = bootstrap.Collapse.getOrCreateInstance(el);
-                        allShown ? instance.hide() : instance.show();
-                    });
-
-                    this.textContent = allShown ? 'Expand All' : 'Collapse All';
-                });
-            </script>
-        @endpush  --}}
