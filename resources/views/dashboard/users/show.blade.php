@@ -188,11 +188,11 @@
             </div>
             <div class="tab-pane fade experiences-container" id="experiences" role="tabpanel">
 
-                @include('dashboard.users.experiences', ['user' => $user])
+                {{--  @include('dashboard.users.experiences', ['user' => $user])  --}}
             </div>
             <div class="tab-pane fade certificates-container" id="certificates" role="tabpanel">
 
-                @include('dashboard.users.certificates', ['user' => $user])
+                {{--  @include('dashboard.users.certificates', ['user' => $user])  --}}
             </div>
             <div class="tab-pane fade" id="licenses" role="tabpanel">
                 @include('dashboard.users.licenses', ['user' => $user])
@@ -224,7 +224,7 @@
         </div>
         <!--end::Row-->
 
-        {{--  <!--begin::Pagination-->
+        <!--begin::Pagination-->
         <div class="d-flex flex-stack flex-wrap pt-10 mt-5" id="pagination-container">
             <div class="fs-6 fw-semibold pagination-info"></div>
             <!--begin::Pages-->
@@ -232,7 +232,7 @@
             </ul>
             <!--end::Pages-->
         </div>
-        <!--end::Pagination-->  --}}
+        <!--end::Pagination-->
     </div>
 
     <!--end::Content-->

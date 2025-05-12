@@ -43,19 +43,26 @@ var productItems = function (response) {
     if (Object.keys(experiences).length > 0) {
         $("#no-results-alert").hide();
         $.each(experiences, function (index, product) {
-            console.log(product);
             let skillsHtml = '';
             let specialistsHtml = '';
 
             // Loop through skills if available
             if (product.skills && product.skills.length > 0) {
                 $.each(product.skills, function (i, skill) {
-                    skillsHtml += `<span class="badge badge-light-primary fs-7 m-1">${skill.name}</span>`;
+                    skillsHtml += `<span class=" fs-7 m-1" style="border-radius: 4px;
+    background: #409597;
+    color: white;
+    font-size: 14px;
+    font-weight: 400;   padding: 7px 7px;">${skill.name}</span>`;
                 });
             }
             if (product.specialists && product.specialists.length > 0) {
                 $.each(product.specialists, function (i, specialist) {
-                    specialistsHtml += `<span class=" fs-7 m-1">${specialist.name}</span>`;
+                    specialistsHtml += `<span class=" fs-7 m-1" style="border-radius: 4px;
+    background: #409597;
+    color: white;
+    font-size: 14px;
+    font-weight: 400;   padding: 7px 7px;">${specialist.name}</span>`;
                 });
             }
             productCards += `
@@ -67,20 +74,17 @@ var productItems = function (response) {
                     <div class="rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;font-size: 16px;  background: #409597">
                         ${index + 1}
                     </div>
-                    <div class="mb-2">
-                        <a href="#" class="fs-4 fw-bold mb-1 text-gray-900 text-hover-primary"style="width: 225px;height: 19px;font-weight: 500 !important;
-font-size: 16px !important;
+                        <a href="#" class="fs-4 fw-bold mb-1 text-gray-900 text-hover-primary mb-2"style="width: 225px;height: 19px;font-weight: 500 !important;
+font-size: 22px !important;
 line-height: 100%;
-letter-spacing: 0%;
 ">${product.field.name}</a>
-                    </div>
                     <!--end::Title-->
                     </div>
                     <!--begin::Header-->
                     <div>
-                    <h5 class="text-gray-600 fs-6 mb-3" style="font-size:14px;Weight:400;color:#555555;">${__(`Specialists`)}</h5>
+                    <h5 class="text-gray-600 fs-6 mb-2" style="font-size:14px;Weight:400;color:#555555;">${__(`Specialists`)}</h5>
                     </div>
-                    <div class="d-flex align-items-center mb-3">
+                    <div class="d-flex align-items-center flex-wrap mb-6">
                         <!--begin::Badge-->
                         ${specialistsHtml}
                         <!--end::Badge-->
@@ -88,14 +92,12 @@ letter-spacing: 0%;
                     <!--end::Header-->
                     <!--begin::Header-->
                     <div>
-                    <h5 class="text-gray-600 fs-6 mb-0">${__(`Skills`)}</h5>
+                    <h5 class="text-gray-600 fs-6 mb-2"style="font-size:14px;Weight:400;color:#555555;">${__(`Skills`)}</h5>
                     </div>
-                    <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center border border-dashed border-gray-300 rounded p-2 flex-wrap">
+                    <div class="d-flex align-items-center flex-wrap gap-1">
                         <!--begin::Badge-->
                         ${skillsHtml}
                         <!--end::Badge-->
-                        </div>
                     </div>
                     <!--end::Header-->
                 </div>
@@ -111,26 +113,22 @@ letter-spacing: 0%;
             $("#no-results-alert").fadeIn();
         }
     }
-
     $(".experiences-container").html(productCards);
-    deleteProduct();
     paginator(response);
     KTMenu.createInstances();
 
 }
 
 var paginator = function (response) {
-    console.log(response);
     var links = '';
     var paginationContent = '';
     var products = response.experiences.data || [];
     var paginationData = response.experiences;
     var prevUrl = paginationData.prev_page_url || 'javascript:;';
     var nextUrl = paginationData.next_page_url || 'javascript:;';
-
+    console.log(products.length);
     // Serialize the filter form to include filter parameters
     var filterParams = $('#filter-form').serialize();
-
     if (products.length != 0) {
         for (var i = 1; i <= paginationData.last_page; i++) {
             var isCurrentPage = paginationData.current_page == i;
@@ -173,7 +171,6 @@ var paginator = function (response) {
     } else {
         $("#pagination-container").hide();
     }
-
     $(".pagination").html(paginationContent);
 }
 
@@ -185,7 +182,6 @@ var pageTransition = function () {
 
         if (url != '#') {
             $("#pagination-loading").removeClass('d-none');
-
             // Use the serialized filter form data in the AJAX request
             $.get(url, function (response) {
                 $("#pagination-loading").addClass('d-none');
@@ -195,45 +191,10 @@ var pageTransition = function () {
     });
 }
 
-
-
 function showLoading() {
     $('#products-container').html('');
     $('#loading-alert').removeClass('d-none');
 }
 function hideLoading() {
     $('#loading-alert').addClass('d-none');
-}
-
-function deleteProduct(params) {
-    $('.delete-item').on('click', function (e) {
-        e.preventDefault();
-
-        let id = $(this).attr('data-id');
-        deleteElement('', `/dashboard/experiences/${id}`, () => retrieveProductsFormBackend())
-    });
-}
-
-function handlePreviewClick(imagePath) {
-    // Clear the current attachments preview
-    $(".attachments").html('');
-
-    // Append the new attachment to be previewed
-    $(".attachments").append(`
-        <!--begin::Overlay-->
-        <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${imagePath}">
-            <!--begin::Action-->
-            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                <i class="bi bi-eye-fill text-white fs-3x"></i>
-            </div>
-            <!--end::Action-->
-        </a>
-        <!--end::Overlay-->
-    `);
-
-    // Refresh lightbox instance to ensure the new content is recognized
-    refreshFsLightbox();
-
-    // Automatically trigger the first attachment preview (lightbox)
-    $("[data-fslightbox='lightbox-basic']:first").trigger('click');
 }

@@ -41,11 +41,13 @@ class PortfolioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePortfolioRequest $request, Portfolio $portfolio)
+    public function update(UpdatePortfolioRequest $request,  $portfolio)
     {
-        $portfolio = $this->service->update($request, $portfolio->id);
+        // Check if the portfolio belongs to the authenticated user
+        $portfolio = $this->service->update($request, $portfolio);
         if (!$portfolio) {
-            return $this->failure(__('Error in updating portfolio'));
+            return $this->failure($portfolio);
+            // return $this->failure(__('Error in updating portfolio'));
         }
         return $this->success("", new PortfolioResource($portfolio));
     }
