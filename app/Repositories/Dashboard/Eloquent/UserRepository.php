@@ -37,54 +37,28 @@ class UserRepository implements UserRepositoryInterface
         $document->update(['is_review' => true]);
         return $user;
     }
-    // public function login($credentials)
-    // {
-    //     $user = User::where('phone', 'LIKE', "%{$credentials['phone']}%")->first();
-    //     if (!$user) {
-    //         return null;
-    //     }
-    //     return $user;
-    // }
-
-    // public function register($document = null, $dataUser)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $user = User::create($dataUser);
-    //         if ($document) {
-    //             foreach ($document as $doc) {
-    //                 $docModel = $user->documents()->create([
-    //                     'name' => $doc['name'],
-    //                     'have_expiration_date' => $doc['have_expiration_date'],
-    //                     'expiration_date' => $doc['expiration_date'],
-    //                     'type_id' => $doc['type_id'],
-    //                 ]);
-
-    //                 foreach ($doc['files'] as $filePath) {
-    //                     $docModel->files()->create(['file' => $filePath]);
-    //                 }
-    //             }
-    //         }
-    //         DB::commit();
-    //         // Return the user, or whatever you need
-    //         return true; // Success!
-    //     } catch (\Throwable $e) {
-    //         DB::rollBack();
-    //         // Optionally log the error or rethrow
-    //         throw $e;
-    //     }
-    // }
-
-    // public function resendOtp($data)
-    // {
-    //     $user = User::where('phone', 'LIKE', "%$data->phone%")->first();
-    //     if (!$user) {
-    //         return null;
-    //     }
-    //     $user->otp()->updateOrCreate(
-    //         ['user_id' => $user->id],
-    //         ['otp' => rand(1111, 9999)]
-    //     );
-    //     return $user;
-    // }
+    public function certificatesAjax($user)
+    {
+        $certificates = $user->certificates()->with('files')->paginate(30); // paginate 6 items per page
+        $total    = $user->certificates()->count();
+        return ['certificates' => $certificates, 'total' => $total];
+    }
+    public function experiencesAjax($user)
+    {
+        $experiences = $user->experiences()->with(['field', 'specialists', 'skills'])->paginate(30); // paginate 6 items per page
+        $total    = $user->experiences()->count();
+        return ['experiences' => $experiences, 'total' => $total];
+    }
+    public function licensesAjax($user)
+    {
+        $licenses = $user->licenses()->with('files')->paginate(2); // paginate 6 items per page
+        $total    = $user->licenses()->count();
+        return ['licenses' => $licenses, 'total' => $total];
+    }
+    public function portfoliosAjax($user)
+    {
+        $portfolios = $user->portfolios()->with('files')->paginate(2); // paginate 6 items per page
+        $total      = $user->portfolios()->count();
+        return ['portfolios' => $portfolios, 'total' => $total];
+    }
 }

@@ -22,16 +22,14 @@ function retrieveProductsFormBackend(page = 1) {
     showLoading();
     $.ajax({
         type: "get",
-        url: `/dashboard/users/${userId}/experiences?page=${page}`,
+        url: `/dashboard/users/${userId}/experiences`,
         data: $(form).serialize(),
         success: function (response) {
             hideLoading();
-            console.log(response);
             productItems(response);
         },
         error: function (response) {
             hideLoading();
-            console.log(response);
         }
     });
 }
@@ -40,6 +38,7 @@ var productItems = function (response) {
     var experiences = response.experiences.data || {};
     var productCards = '';
     productCards = `<div class="d-flex gap-3">`;
+
     if (Object.keys(experiences).length > 0) {
         $("#no-results-alert").hide();
         $.each(experiences, function (index, product) {
@@ -108,7 +107,7 @@ line-height: 100%;
         productCards += `</div>`;
 
     } else {
-        if (response.total > 0) { // check if database contains products
+        if (response.total == 0) { // check if database contains products
             productCards = ``;
             $("#no-results-alert").fadeIn();
         }
@@ -127,8 +126,6 @@ var paginator = function (response) {
     var prevUrl = paginationData.prev_page_url || 'javascript:;';
     var nextUrl = paginationData.next_page_url || 'javascript:;';
     console.log(products.length);
-    // Serialize the filter form to include filter parameters
-    var filterParams = $('#filter-form').serialize();
     if (products.length != 0) {
         for (var i = 1; i <= paginationData.last_page; i++) {
             var isCurrentPage = paginationData.current_page == i;
@@ -136,7 +133,7 @@ var paginator = function (response) {
 
             if (paginationData.links[i] !== undefined) {
                 // Append filter parameters to the pagination URLs
-                var pageUrl = paginationData.links[i].url + '&' + filterParams;
+                var pageUrl = paginationData.links[i].url;
                 links += `
                 <li class="page-item ${activeClass}">
                     <a href="${isCurrentPage ? '#' : pageUrl}" class="page-link">${i}</a>
@@ -145,8 +142,8 @@ var paginator = function (response) {
             }
         }
 
-        var prevPageUrl = prevUrl !== 'javascript:;' ? prevUrl + '&' + filterParams : 'javascript:;';
-        var nextPageUrl = nextUrl !== 'javascript:;' ? nextUrl + '&' + filterParams : 'javascript:;';
+        var prevPageUrl = prevUrl !== 'javascript:;' ? prevUrl : 'javascript:;';
+        var nextPageUrl = nextUrl !== 'javascript:;' ? nextUrl : 'javascript:;';
 
         paginationContent = `
         <div class="spinner-border spinner-border-sm my-auto d-none" id="pagination-loading" role="status">
@@ -170,6 +167,7 @@ var paginator = function (response) {
         $("#pagination-container").show();
     } else {
         $("#pagination-container").hide();
+
     }
     $(".pagination").html(paginationContent);
 }
@@ -192,7 +190,7 @@ var pageTransition = function () {
 }
 
 function showLoading() {
-    $('#products-container').html('');
+    $('#experiences-container').html('');
     $('#loading-alert').removeClass('d-none');
 }
 function hideLoading() {

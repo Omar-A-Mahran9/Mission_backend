@@ -1,31 +1,31 @@
 $(document).ready(function () {
-    retrieveCertificatesFormBackend();
+    retrieveLicensesFormBackend();
 
     $("#filter-form").submit(function (e) {
         e.preventDefault();
-        retrieveCertificatesFormBackend();
+        retrieveLicensesFormBackend();
     });
 
     $("input[name='name']").keyup(function (e) {
-        retrieveCertificatesFormBackend();
+        retrieveLicensesFormBackend();
     });
 
     pageTransition();
 });
 
 
-function retrieveCertificatesFormBackend(page = 1) {
+function retrieveLicensesFormBackend(page = 1) {
     let form = document.getElementById('filter-form');
 
     showLoading();
     $.ajax({
         type: "get",
-        url: `/dashboard/users/${userId}/certificates`,
+        url: `/dashboard/users/${userId}/licenses`,
         data: $(form).serialize(),
         success: function (response) {
             hideLoading();
             console.log(response);
-            certificateItems(response);
+            licenseItems(response);
         },
         error: function (response) {
             hideLoading();
@@ -34,27 +34,27 @@ function retrieveCertificatesFormBackend(page = 1) {
     });
 }
 
-var certificateItems = function (response) {
-    var certificates = response.certificates.data || {};
-    var certificateCards = '';
-    if (certificates.length > 0) {
-        certificateCards = `
-        <div  id="certificates-grid">
+var licenseItems = function (response) {
+    var licenses = response.licenses.data || {};
+    var licenseCards = '';
+    if (licenses.length > 0) {
+        licenseCards = `
+        <div  id="licenses-grid">
         <div class="row g-6 g-xl-9 mb-6 mb-xl-9">
         `;
         $("#no-results-alert").hide();
-        certificates.forEach((certificate, index) => {
-            const expirationHtml = certificate.expiration_date
+        licenses.forEach((license, index) => {
+            const expirationHtml = license.expiration_date
                 ? `<div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3">
-                <div class="fs-6 fw-bold text-gray-700">${certificate.expiration_date}</div>
+                <div class="fs-6 fw-bold text-gray-700">${license.expiration_date}</div>
                 <div class="fw-semibold text-gray-500">${__('Expiration date')}</div>
            </div>`
                 : '';
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            const approveFormHtml = !certificate.is_review
+            const approveFormHtml = !license.is_review
                 ? `<form method="POST"
-                    action="/dashboard/users/${userId}/document/${certificate.id}"
+                    action="/dashboard/users/${userId}/document/${license.id}"
                     data-redirection-url="${window.location.href}"
                     class="form ajax-form">
                 <input type="hidden" name="_token" value="${csrfToken}">
@@ -64,7 +64,7 @@ var certificateItems = function (response) {
                 </button>
             </form>`
                 : '';
-            certificateCards += `
+            licenseCards += `
             <div class="col-md-6 col-lg-4 col-xl-3" id="${index + 1}">
             <!--begin::Card-->
             <div class="card h-100">
@@ -72,8 +72,8 @@ var certificateItems = function (response) {
                 <div class="card-body card-custom d-flex justify-content-center text-center flex-column p-8"
                     data-bs-toggle="collapse" style="cursor: pointer;">
                     <!--begin::Name-->
-                    <a href="#certificate-${certificate.id}"
-                        class="text-gray-800 text-hover-primary d-flex flex-column certificate-click" data-certificate-id="${certificate.id}">
+                    <a href="#license-${license.id}"
+                        class="text-gray-800 text-hover-primary d-flex flex-column license-click" data-license-id="${license.id}" >
                         <!--begin::Image-->
                         <div class="symbol symbol-75px mb-5">
                             <img src="/assets/media/svg/files/folder-document.svg"
@@ -83,13 +83,13 @@ var certificateItems = function (response) {
                         </div>
                         <!--end::Image-->
                         <!--begin::Title-->
-                        <div class="fs-5 fw-bold mb-2">${certificate.name}</div>
+                        <div class="fs-5 fw-bold mb-2">${license.name}</div>
                         <!--end::Title-->
                     </a>
                     <!--end::Name-->
                     <!--begin::Description-->
                     <div class="fs-7 fw-semibold text-gray-500 mb-6">
-                         ${certificate.files.length} ${__('files')}</div>
+                         ${license.files.length} ${__('files')}</div>
                     <!--end::Description-->
                     <!--begin::Info-->
                     <div class="d-flex flex-center flex-wrap">
@@ -99,7 +99,7 @@ var certificateItems = function (response) {
                         <!--begin::Stats-->
                         <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3">
                             <div class="fs-6 fw-bold text-gray-700">
-                                ${certificate.is_review ? __('Yes') : __('No')}
+                                ${license.is_review ? __('Yes') : __('No')}
                             </div>
                             <div class="fw-semibold text-gray-500">${__('Reviewed?')}</div>
                         </div>
@@ -111,129 +111,39 @@ var certificateItems = function (response) {
                 <!--end::Card body-->
             </div>
             <!--end::Card-->
-        </div>
-            `;
-            //     const extension = file.file.split('.').pop().toLowerCase();
-            //     const filename = file.file.split('/').pop();
-            //     const nameOnly = filename.includes('_') ? filename.split('_').pop().split('.')[0] : filename;
-
-            //     let icon = 'file.svg';
-            //     switch (extension) {
-            //         case 'pdf': icon = 'pdf.svg'; break;
-            //         case 'jpg':
-            //         case 'jpeg': icon = 'jpg.png'; break;
-            //         case 'png': icon = 'png.png'; break;
-            //     }
-
-            //     certificateCards += `
-            //         <div class="col-md-6 col-lg-4 col-xl-3">
-            //             <div class="card h-100">
-            //                 <div class="card-body d-flex justify-content-center text-center flex-column p-8">
-            //                     <a href="${file.full_image_path}" target="_blank" class="text-gray-800 text-hover-primary d-flex flex-column">
-            //                         <div class="symbol symbol-60px mb-5">
-            //                             <img src="/assets/media/svg/files/${icon}" alt="">
-            //                         </div>
-            //                         <div class="fs-5 fw-bold mb-2">${nameOnly}</div>
-            //                     </a>
-            //                     <div class="fs-7 fw-semibold text-gray-500">${file.created_at}</div>
-            //                 </div>
-            //             </div>
-            //         </div>`;
-            // });
-
-            // certificateCards += `
-            //     </div>
-            // </div>`; // close file tab row and outer div
-            // certificateCards += `
-            // <div id="certificate-${certificate.id}" class="fs-6 collapse card-open-custom ps-10"
-            // data-bs-parent="#${index + 1}">
-            // <div class="row g-6 g-xl-9 mb-6 mb-xl-9">
-            // `;
-            // certificate.files.forEach(file => {
-            //     const extension = file.file.split('.').pop().toLowerCase();
-            //     const filename = file.file.split('/').pop();
-            //     const nameOnly = filename.includes('_') ? filename.split('_').pop().split('.')[0] : filename;
-            //     let icon = '';
-
-            //     switch (extension) {
-            //         case 'pdf':
-            //             icon = 'pdf.svg';
-            //             break;
-            //         case 'jpg':
-            //         case 'jpeg':
-            //             icon = 'jpg.png';
-            //             break;
-            //         case 'png':
-            //             icon = 'png.png';
-            //             break;
-            //         default:
-            //             icon = 'file.svg';
-            //             break;
-            //     }
-            //     certificateCards += `
-            //     <div class="col-md-6 col-lg-4 col-xl-3">
-            //             <!--begin::Card-->
-            //             <div class="card h-100">
-            //                 <!--begin::Card body-->
-            //                 <div class=" card-body d-flex justify-content-center text-center flex-column p-8">
-            //                     <!--begin::Name-->
-            //                     <a href="${file.full_image_path}"
-            //                         class="text-gray-800 text-hover-primary d-flex flex-column" target="_blank">
-            //                         <!--begin::Image-->
-            //                         <div class="symbol symbol-60px mb-5">
-            //                            <img src="/assets/media/svg/files/${icon}" class="theme-light-show" alt="">
-            //                         </div>
-            //                         <!--end::Image-->
-            //                         <!--begin::Title-->
-            //                         <div class="fs-5 fw-bold mb-2">${nameOnly}</div>
-            //                         <!--end::Title-->
-            //                     </a>
-            //                     <!--end::Name-->
-            //                     <!--begin::Description-->
-            //                     <div class="fs-7 fw-semibold text-gray-500">${file.created_at}
-            //                     </div>
-            //                     <!--end::Description-->
-            //                 </div>
-            //                 <!--end::Card body-->
-            //             </div>
-            //             <!--end::Card-->
-            //         </div>
-            //     `;
-            // });
-            // certificateCards += `
-            // </div></div>`;
+        </div>`;
         });
-        certificateCards += `
+        licenseCards += `
         </div> <!-- close .row -->
-      </div> <!-- close #certificates-grid -->
-      <div id="certificate-details" style="display: none;"></div>
+      </div> <!-- close #licenses-grid -->
+      <div id="license-details" style="display: none;"></div>
       `;
     } else {
         if (response.total == 0) { // check if database contains products
-            certificateCards = ``;
+            licenseCards = ``;
             $("#no-results-alert").fadeIn();
         }
     }
 
-    $(".certificates-container").html(certificateCards);
-    $(".certificate-click").off("click").on("click", function () {
-        const certId = $(this).data("certificate-id");
+    $(".licenses-container").html(licenseCards);
+    $(".license-click").off("click").on("click", function () {
+        const certId = $(this).data("license-id");
 
-        $("#certificates-grid").hide();
+        $("#licenses-grid").hide();
 
-        $("#certificate-details").html(""); // Clear previous content
+        $("#license-details").html(""); // Clear previous content
 
-        const cert = certificates.find(c => c.id === certId);
+        const cert = licenses.find(c => c.id === certId);
         if (cert) {
             let filesHtml = `
         <div class="mb-4">
             <!--begin::Table header-->
-                <div class="d-flex flex-stack mb-4 back-to-certificates">
+                <div class="d-flex flex-stack mb-4 back-to-licenses">
                     <!--begin::Folder path-->
                     <div class="badge badge-lg "style="background: #409597;">
                         <div class="d-flex align-items-center flex-wrap">
                         <i class="ki-outline ki-abstract-32 fs-2x text-white me-3"></i>
-                        <a href="#" class="text-white" >${__("Certificates")}</a>
+                        <a href="#" class="text-white" >${__("Licenses")}</a>
                         <i class="ki-outline ki-right fs-2x text-white mx-1"></i>
                         <a href="#" class="text-white">${cert.name}</a>
                     </div>
@@ -271,14 +181,14 @@ var certificateItems = function (response) {
             });
 
             filesHtml += `</div></div>`;
-            $("#certificate-details").html(filesHtml).fadeIn();
+            $("#license-details").html(filesHtml).fadeIn();
         }
     });
 
     // Handle the back button click
-    $(document).on("click", ".back-to-certificates", function () {
-        $("#certificate-details").hide();
-        $("#certificates-grid").fadeIn();
+    $(document).on("click", ".back-to-licenses", function () {
+        $("#license-details").hide();
+        $("#licenses-grid").fadeIn();
     });
 
     paginator(response);
@@ -289,12 +199,12 @@ var certificateItems = function (response) {
 var paginator = function (response) {
     var links = '';
     var paginationContent = '';
-    var certificates = response.certificates.data || [];
-    var paginationData = response.certificates;
+    var licenses = response.licenses.data || [];
+    var paginationData = response.licenses;
     var prevUrl = paginationData.prev_page_url || 'javascript:;';
     var nextUrl = paginationData.next_page_url || 'javascript:;';
 
-    if (certificates.length != 0) {
+    if (licenses.length != 0) {
         for (var i = 1; i <= paginationData.last_page; i++) {
             var isCurrentPage = paginationData.current_page == i;
             var activeClass = isCurrentPage ? 'active' : '';
@@ -352,13 +262,13 @@ var pageTransition = function () {
             // Use the serialized filter form data in the AJAX request
             $.get(url, function (response) {
                 $("#pagination-loading").addClass('d-none');
-                certificateItems(response);
+                licenseItems(response);
             });
         }
     });
 }
 function showLoading() {
-    $('#certificates-container').html('');
+    $('#licenses-container').html('');
     $('#loading-alert').removeClass('d-none');
 }
 function hideLoading() {

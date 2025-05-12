@@ -20,6 +20,10 @@ Route::get('users/{user}/certificates', "UserController@certificatesAjax")
     ->name('dashboard.users.certificates.ajax');
 Route::get('users/{user}/experiences', "UserController@experiencesAjax")
     ->name('dashboard.users.experiences.ajax');
+Route::get('users/{user}/licenses', "UserController@licensesAjax")
+    ->name('dashboard.users.licenses.ajax');
+Route::get('users/{user}/portfolios', "UserController@portfoliosAjax")
+    ->name('dashboard.users.portfolios.ajax');
 Route::resource('products', 'ProductController');
 Route::get("products/{product}/images", "ProductController@images");
 Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');

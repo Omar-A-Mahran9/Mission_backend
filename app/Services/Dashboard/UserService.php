@@ -35,7 +35,22 @@ class UserService
     }
     public function approve($user, $document)
     {
-        $this->repository->approve($user, $document);
-        return response(["Product update successfully"]);
+        return $this->repository->approve($user, $document);
+    }
+    public function certificatesAjax($user)
+    {
+        return $this->repository->certificatesAjax($user);
+    }
+    public function experiencesAjax($user)
+    {
+        return $this->repository->experiencesAjax($user);
+    }
+    public function licensesAjax($user)
+    {
+        return $this->repository->licensesAjax($user);
+    }
+    public function portfoliosAjax($user)
+    {
+        return $this->repository->portfoliosAjax($user);
     }
 }
