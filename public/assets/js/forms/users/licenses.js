@@ -244,7 +244,8 @@ var paginator = function (response) {
 
         $("#pagination-container").show();
     } else {
-        $("#pagination-container").hide();
+        document.getElementById("pagination-container").style.setProperty('display', 'none', 'important');
+        // $("#pagination-container").hide();
     }
 
     $(".pagination").html(paginationContent);

@@ -183,6 +183,7 @@
         <!--end::Navbar-->
         <!--begin::Row-->
         <div class="tab-content" id="myTabContent">
+
             <div class="tab-pane fade show active" id="over_view" role="tabpanel">
                 @include('dashboard.users.over-view', ['user' => $user])
             </div>
@@ -193,16 +194,18 @@
             <div class="tab-pane fade licenses-container" id="licenses" role="tabpanel">
             </div>
             <div class="tab-pane fade portfolios-container" id="portfolios" role="tabpanel">
-                {{--  @include('dashboard.users.portfolios', ['user' => $user])  --}}
             </div>
         </div>
         <!--end::Row-->
         <!--begin::Row-->
         <div class="row g-6 g-xl-9">
             <!--begin::Col-->
-            <div class="col-md-12 col-xxl-12" style="display: none" id="no-results-alert">
+            <div class="col-md-12 col-xxl-12 d-flex flex-column" style="display: none" id="no-results-alert">
+                <div class="spinner-border d-none mx-auto" id="loading-alert" role="status">
+                    <span class="sr-only">{{ __('Loading...') }}</span>
+                </div>
                 <!--begin::Button-->
-                <div class=" d-flex flex-column flex-center">
+                <div class="" style="justify-items: center">
                     <!--begin::Illustration-->
                     <img src="/assets/vendor-dashboard/media/illustrations/unitedpalms-1/no_results.png" alt=""
                         class="mw-100 mh-250px">
@@ -241,25 +244,6 @@
         let riyalLogoUrl = "{{ asset('placeholder_images/riyal_logo.svg') }}";
     </script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.toggle-desc').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const descEl = document.getElementById('desc-' + id);
-                    const isExpanded = this.textContent.trim() === `(${__('Show less')})`;
-                    if (isExpanded) {
-                        descEl.textContent = this.dataset.short;
-                        this.textContent = `(${__('Show more')})`;
-                    } else {
-                        descEl.textContent = this.dataset.full;
-                        this.textContent = `(${__('Show less')})`;
-                    }
-                });
-            });
-        });
-    </script>
     <script>
         var type = ""; // Declare globally
         document.addEventListener("DOMContentLoaded", function() {
@@ -268,7 +252,6 @@
                 tab.addEventListener("click", function() {
                     type = this.getAttribute("data-type"); // Read the selected type
                     console.log("Clicked Tab Type:", type); // Verify in console
-
                     // Call the function to reload DataTable based on the selected tab
                     loadScriptForType(type);
                 });
@@ -294,5 +277,6 @@
             script.src = scriptSrc;
             document.body.appendChild(script);
         }
+
     </script>
 @endpush

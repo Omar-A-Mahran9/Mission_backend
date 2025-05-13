@@ -4,7 +4,6 @@ namespace App\Repositories\Api\Eloquent;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use App\Repositories\Api\Contracts\AuthRepositoryInterface;
 
 class AuthRepository implements AuthRepositoryInterface

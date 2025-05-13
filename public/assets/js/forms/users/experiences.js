@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    // const existingScript = document.getElementById('experiences');
+    // if (existingScript) {
+    //     existingScript.remove();
+    // }
     retrieveProductsFormBackend();
 
     $("#filter-form").submit(function (e) {
@@ -40,7 +44,9 @@ var productItems = function (response) {
     productCards = `<div class="d-flex gap-3">`;
 
     if (Object.keys(experiences).length > 0) {
-        $("#no-results-alert").hide();
+        document.getElementById("no-results-alert").style.setProperty('display', 'none', 'important');
+
+        // $("#no-results-alert").hide();
         $.each(experiences, function (index, product) {
             let skillsHtml = '';
             let specialistsHtml = '';
@@ -166,8 +172,8 @@ var paginator = function (response) {
 
         $("#pagination-container").show();
     } else {
-        $("#pagination-container").hide();
-
+        document.getElementById("pagination-container").style.setProperty('display', 'none', 'important');
+        // $("#pagination-container").hide();
     }
     $(".pagination").html(paginationContent);
 }

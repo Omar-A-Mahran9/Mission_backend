@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     retrieveCertificatesFormBackend();
 
     $("#filter-form").submit(function (e) {
@@ -42,7 +43,7 @@ var portfoliosItems = function (response) {
         portfolioCards = `
         <div  id="portfolios-grid">
         <div class="row g-6 g-xl-9 mb-6 mb-xl-9">`;
-        $("#no-results-alert").hide();
+        document.getElementById("no-results-alert").style.setProperty('display', 'none', 'important');
         portfolios.forEach((portfolio, index) => {
             const maxLength = 50;
             const fullDesc = portfolio.description || '';
@@ -248,7 +249,9 @@ var paginator = function (response) {
 
         $("#pagination-container").show();
     } else {
-        $("#pagination-container").hide();
+        document.getElementById("pagination-container").style.setProperty('display', 'none', 'important');
+
+        // $("#pagination-container").hide();
     }
 
     $(".pagination").html(paginationContent);

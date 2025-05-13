@@ -42,7 +42,7 @@ var certificateItems = function (response) {
         <div  id="certificates-grid">
         <div class="row g-6 g-xl-9 mb-6 mb-xl-9">
         `;
-        $("#no-results-alert").hide();
+        document.getElementById("no-results-alert").style.setProperty('display', 'none', 'important');
         certificates.forEach((certificate, index) => {
             const expirationHtml = certificate.expiration_date
                 ? `<div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3">
@@ -334,7 +334,9 @@ var paginator = function (response) {
 
         $("#pagination-container").show();
     } else {
-        $("#pagination-container").hide();
+        document.getElementById("pagination-container").style.setProperty('display', 'none', 'important');
+
+        // $("#pagination-container").hide();
     }
 
     $(".pagination").html(paginationContent);

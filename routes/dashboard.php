@@ -28,6 +28,8 @@ Route::resource('products', 'ProductController');
 Route::get("products/{product}/images", "ProductController@images");
 Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');
 
+Route::resource('promo-codes', 'PromoCodeController');
+
 /** ajax routes **/
 Route::post('dropzone/validate-image', 'DropzoneController@validateImage')->name('dropzone.validate-image');
 

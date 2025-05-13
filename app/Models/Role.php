@@ -27,7 +27,8 @@ class Role extends Model
         'products',
         'settings',
         'recycle_bin',
-        'dashboard'
+        'dashboard',
+        'promo_codes',
     ];
 
     protected static function booted()
