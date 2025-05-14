@@ -35,6 +35,7 @@ class RepositoryModule extends Command
         $this->createInterface($name, $namespaceFolder);
         $this->createRepository($name, $namespaceFolder);
         $this->createService($name, $namespaceFolder);
+        $this->appendBindingToAppServiceProvider($namespaceFolder, $name);
     }
 
     protected function createController(string $name, string $folder)
@@ -159,5 +160,55 @@ PHP;
         } else {
             $this->warn("⚠️ Skipped (already exists): {$path}");
         }
+    }
+
+    protected function appendBindingToAppServiceProvider(string $namespace, string $name)
+    {
+        $providerPath = app_path('Providers/AppServiceProvider.php');
+
+        if (!File::exists($providerPath)) {
+            $this->error('❌ AppServiceProvider.php not found.');
+            return;
+        }
+
+        $lines = file($providerPath);
+        $binding = "        \$this->app->bind(\n" .
+            "            \\App\\Repositories\\{$namespace}\\Contracts\\{$name}RepositoryInterface::class,\n" .
+            "            \\App\\Repositories\\{$namespace}\\Eloquent\\{$name}Repository::class\n" .
+            "        );\n";
+
+        $newContent = '';
+        $insideRegister = false;
+        $braceLevel = 0;
+
+        foreach ($lines as $line) {
+            // detect start of register() method
+            if (Str::contains($line, 'function register')) {
+                $insideRegister = true;
+            }
+
+            // if we're inside register, track braces
+            if ($insideRegister) {
+                $braceLevel += substr_count($line, '{');
+                $braceLevel -= substr_count($line, '}');
+
+                // if closing brace of register() reached
+                if ($braceLevel === 0 && Str::contains($line, '}')) {
+                    // only add binding if not already exists
+                    if (!Str::contains(implode('', $lines), "\\App\\Repositories\\{$namespace}\\Contracts\\{$name}RepositoryInterface")) {
+                        $newContent .= $binding;
+                        $this->info("✅ Binding added to AppServiceProvider.");
+                    } else {
+                        $this->warn("⚠️ Binding already exists for {$name}RepositoryInterface.");
+                    }
+
+                    $insideRegister = false; // reset flag
+                }
+            }
+
+            $newContent .= $line;
+        }
+
+        file_put_contents($providerPath, $newContent);
     }
 }
