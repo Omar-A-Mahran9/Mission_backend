@@ -79,6 +79,21 @@
                             </div>
                             <!--end:Menu item-->
                         @endcan
+                        @can('view_promo_codes')
+                            <!--begin:Menu item-->
+                            <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                                data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
+                                class="menu-item menu-lg-down-accordion me-0 me-lg-2 {{ isTabHere('dashboard.promo-codes.*') }}">
+                                <!--begin:Menu link-->
+                                <a class="menu-link "href="{{ route('dashboard.promo-codes.index') }}">
+                                    {{--  <span class="menu-link">  --}} <span class="menu-title">{{ __('Promo Codes') }}</span>
+                                    <span class="menu-arrow d-lg-none"></span>
+                                    {{--  </span>  --}}
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
+                        @endcan
                         @can('view_cities')
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"

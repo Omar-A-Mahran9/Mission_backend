@@ -54,10 +54,18 @@ class RegisterRequest extends FormRequest
                 'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],
             [
-                'field_id' => ['required', 'exists:fields,id'],
+                'field_id' => ['nullable', 'exists:fields,id'],
+                "specialist_ids" => "required_with:field_id|array",
+                "specialist_ids.*" => "required|exists:specialists,id",
+                "skill_ids" => "required_with:field_id|array",
+                "skill_ids.*" => "required|exists:skills,id",
+                'registration_token' => ['required_with:field_id', 'string', new NotNumbersOnly()],
+            ],
+            [
+                // 'field_id' => ['required', 'exists:fields,id'],
                 'interest_id' => ['nullable', 'array'],
                 'interest_id.*' => ['exists:interests,id'],
-                'registration_token' => ['required', 'string', new NotNumbersOnly()],
+                'registration_token' => ['required_with:interest_id', 'string', new NotNumbersOnly()],
             ],
             [
                 'certificates' => ['nullable', 'array', 'min:1'],
@@ -71,7 +79,7 @@ class RegisterRequest extends FormRequest
                     'mimes:jpg,jpeg,png,pdf',
                     'max:2048'
                 ],
-                'registration_token' => ['required', 'string', new NotNumbersOnly()],
+                'registration_token' => ['required_with:certificates', 'string', new NotNumbersOnly()],
             ],
             [
                 'license' => ['nullable', 'array', 'min:1'],
@@ -85,7 +93,7 @@ class RegisterRequest extends FormRequest
                     'mimes:jpg,jpeg,png,pdf',
                     'max:2048'
                 ],
-                'registration_token' => ['required', 'string', new NotNumbersOnly()],
+                'registration_token' => ['required_with:license', 'string', new NotNumbersOnly()],
             ],
         ];
         return array_key_exists($currentStep, $stepsRules) ? $stepsRules[$currentStep] : [];

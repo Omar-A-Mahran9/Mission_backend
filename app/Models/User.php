@@ -127,4 +127,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Mission::class);
     }
+    public function interests()
+    {
+        return $this->belongsToMany(Interest::class, 'user_interests');
+    }
 }

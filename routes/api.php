@@ -49,11 +49,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('over-view', 'ProfileController@overView');
         Route::post('over-view', 'ProfileController@update');
         Route::apiResource('experiences', 'ExcperiencController');
-        Route::apiResource('certificates', 'CertificateController');
+        Route::apiResource(' es', 'CertificateController');
         Route::post('certificates/{id}/update', 'CertificateController@update');
         Route::apiResource('licenses', 'LicenseController');
         Route::post('licenses/{id}/update', 'LicenseController@update');
         Route::apiResource('portfolios', 'PortfolioController');
         Route::post('portfolios/{id}/update', 'PortfolioController@update');
+        Route::apiResource('promo-codes', 'PromoCodeController');
     });
 });
