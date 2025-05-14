@@ -28,89 +28,136 @@ class RepositoryModule extends Command
     public function handle()
     {
         $name = Str::studly($this->argument('name'));
+        $type = $this->choice('Is this for API or Dashboard?', ['Api', 'Dashboard'], 0);
 
-        $type = $this->choice(
-            'Is this for API or Dashboard?',
-            ['Api', 'Dashboard'],
-            0
-        );
+        $namespaceFolder = $type;
+        $this->createController($name, $namespaceFolder);
+        $this->createInterface($name, $namespaceFolder);
+        $this->createRepository($name, $namespaceFolder);
+        $this->createService($name, $namespaceFolder);
+    }
 
-        $controllerPath = $type === 'Api'
-            ? "App\\Http\\Controllers\\Api\\{$name}Controller"
-            : "App\\Http\\Controllers\\Dashboard\\{$name}Controller";
+    protected function createController(string $name, string $folder)
+    {
+        $dir = app_path("Http/Controllers/{$folder}");
+        File::ensureDirectoryExists($dir);
 
-        $controllerDir = app_path("Http/Controllers/" . ($type === 'Api' ? 'Api' : 'Dashboard'));
-        File::ensureDirectoryExists($controllerDir);
+        $path = "{$dir}/{$name}Controller.php";
+        $namespace = "App\Http\Controllers\\{$folder}";
+        $serviceNamespace = "App\\Services\\{$folder}\\{$name}Service";
 
-        $controllerContent = "<?php
+        $content = <<<PHP
+<?php
 
-namespace App\Http\Controllers\\" . ($type === 'Api' ? "Api" : "Dashboard") . ";
+namespace {$namespace};
 
 use App\Http\Controllers\Controller;
+use {$serviceNamespace};
 
 class {$name}Controller extends Controller
 {
-    //
+    protected \$service;
+
+    public function __construct({$name}Service \$service)
+    {
+        \$this->service = \$service;
+    }
 }
-";
-        File::put($controllerDir . "/{$name}Controller.php", $controllerContent);
-        $this->info("✔️ Controller created: {$controllerPath}");
-        $namespaceFolder = $type === 'Api' ? 'Api' : 'Dashboard';
 
-        // Interface
-        $contractDir = app_path("Repositories/{$namespaceFolder}/Contracts");
-        File::ensureDirectoryExists($contractDir);
-        $interfacePath = "{$contractDir}/{$name}RepositoryInterface.php";
+PHP;
 
-        File::put($interfacePath, "<?php
+        $this->createFile($path, $content, 'Controller');
+    }
 
-            namespace App\Repositories\\{$namespaceFolder}\Contracts;
+    protected function createInterface(string $name, string $folder)
+    {
+        $dir = app_path("Repositories/{$folder}/Contracts");
+        File::ensureDirectoryExists($dir);
 
-            interface {$name}RepositoryInterface
-            {
-                // define methods
-            }
-            ");
-        $this->info("✔️ Interface created: {$interfacePath}");
+        $path = "{$dir}/{$name}RepositoryInterface.php";
+        $namespace = "App\Repositories\\{$folder}\Contracts";
 
-        // Eloquent Repository
-        $repoDir = app_path("Repositories/{$namespaceFolder}/Eloquent");
-        File::ensureDirectoryExists($repoDir);
-        $repoPath = "{$repoDir}/{$name}Repository.php";
+        $content = <<<PHP
+<?php
 
-        File::put($repoPath, "<?php
+namespace {$namespace};
 
-namespace App\Repositories\\{$namespaceFolder}\Eloquent;
-use App\Repositories\\{$namespaceFolder}\Contracts\\{$name}RepositoryInterface;
+interface {$name}RepositoryInterface
+{
+    // define methods
+}
+
+PHP;
+
+        $this->createFile($path, $content, 'Interface');
+    }
+
+    protected function createRepository(string $name, string $folder)
+    {
+        $dir = app_path("Repositories/{$folder}/Eloquent");
+        File::ensureDirectoryExists($dir);
+
+        $path = "{$dir}/{$name}Repository.php";
+        $namespace = "App\Repositories\\{$folder}\Eloquent";
+        $interfaceNamespace = "App\Repositories\\{$folder}\Contracts\\{$name}RepositoryInterface";
+
+        $content = <<<PHP
+<?php
+
+namespace {$namespace};
+
+use {$interfaceNamespace};
 
 class {$name}Repository implements {$name}RepositoryInterface
 {
     // implement methods
 }
-");
-        $this->info("✔️ Repository created: {$repoPath}");
 
-        // Service
-        $serviceDir = app_path("Services/{$namespaceFolder}");
-        File::ensureDirectoryExists($serviceDir);
-        $servicePath = "{$serviceDir}/{$name}Service.php";
+PHP;
 
-        File::put($servicePath, "<?php
+        $this->createFile($path, $content, 'Repository');
+    }
 
-namespace App\Services;
+    protected function createService(string $name, string $folder)
+    {
+        $dir = app_path("Services/{$folder}");
+        File::ensureDirectoryExists($dir);
 
-use App\Repositories\\{$namespaceFolder}\Eloquent\\{$name}Repository;
+        $path = "{$dir}/{$name}Service.php";
+        $namespace = "App\Services\\{$folder}";
+        $interfaceNamespace = "App\Repositories\\{$folder}\Contracts\\{$name}RepositoryInterface";
+
+        $property = Str::camel($name) . 'Repository';
+
+        $content = <<<PHP
+<?php
+
+namespace {$namespace};
+
+use {$interfaceNamespace};
 
 class {$name}Service
 {
-    protected \${$name}Repository;
+    protected \${$property};
 
-    public function __construct({$name}Repository \${$name}Repository)
+    public function __construct({$name}RepositoryInterface \${$property})
     {
-        \$this->{$name}Repository = \${$name}Repository;
+        \$this->{$property} = \${$property};
     }
 }
-");
-        $this->info("✔️ Service created: {$servicePath}");
+
+PHP;
+
+        $this->createFile($path, $content, 'Service');
+    }
+
+    protected function createFile(string $path, string $content, string $type)
+    {
+        if (!File::exists($path)) {
+            File::put($path, $content);
+            $this->info("✔️ {$type} created: {$path}");
+        } else {
+            $this->warn("⚠️ Skipped (already exists): {$path}");
+        }
     }
 }
