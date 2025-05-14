@@ -13,7 +13,7 @@ class RepositoryModule extends Command
      *
      * @var string
      */
-    protected $signature = 'app:repository-module {name}';
+    protected $signature = 'make:repository-module {name}';
 
     /**
      * The console command description.
@@ -55,18 +55,18 @@ class {$name}Controller extends Controller
 ";
         File::put($controllerDir . "/{$name}Controller.php", $controllerContent);
         $this->info("✔️ Controller created: {$controllerPath}");
-        $namespaceFolder = $type === 'API' ? 'Api' : 'Dashboard';
+        $namespaceFolder = $type === 'Api' ? 'Api' : 'Dashboard';
 
         // Interface
         $contractDir = app_path("Repositories/{$namespaceFolder}/Contracts");
         File::ensureDirectoryExists($contractDir);
-        $interfacePath = "{$contractDir}/{$name}Interface.php";
+        $interfacePath = "{$contractDir}/{$name}RepositoryInterface.php";
 
         File::put($interfacePath, "<?php
 
             namespace App\Repositories\\{$namespaceFolder}\Contracts;
 
-            interface {$name}Interface
+            interface {$name}RepositoryInterface
             {
                 // define methods
             }
@@ -81,9 +81,9 @@ class {$name}Controller extends Controller
         File::put($repoPath, "<?php
 
 namespace App\Repositories\\{$namespaceFolder}\Eloquent;
-use App\Repositories\\{$namespaceFolder}\Contracts\\{$name}Interface;
+use App\Repositories\\{$namespaceFolder}\Contracts\\{$name}RepositoryInterface;
 
-class {$name}Repository implements {$name}Interface
+class {$name}Repository implements {$name}RepositoryInterface
 {
     // implement methods
 }
@@ -99,15 +99,15 @@ class {$name}Repository implements {$name}Interface
 
 namespace App\Services;
 
-use App\Repositories\\{$namespaceFolder}\Contracts\\{$name}Interface;
+use App\Repositories\\{$namespaceFolder}\Eloquent\\{$name}Repository;
 
 class {$name}Service
 {
-    protected \${$name}Repo;
+    protected \${$name}Repository;
 
-    public function __construct({$name}Interface \${$name}Repo)
+    public function __construct({$name}Repository \${$name}Repository)
     {
-        \$this->{$name}Repo = \${$name}Repo;
+        \$this->{$name}Repository = \${$name}Repository;
     }
 }
 ");
