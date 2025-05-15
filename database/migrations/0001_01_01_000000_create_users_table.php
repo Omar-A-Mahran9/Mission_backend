@@ -29,9 +29,7 @@ return new class extends Migration
             $table->integer('status')->comment('App\Enums\User')->default(UserStatus::Active->value);
             $table->string('password');
             $table->unsignedBigInteger('city_id');
-            // $table->unsignedBigInteger('field_id');
             $table->foreign('city_id')->references('id')->on('cities')->cascadeOnDelete();
-            // $table->foreign('field_id')->references('id')->on('fields')->cascadeOnDelete();
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->rememberToken();
