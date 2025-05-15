@@ -86,7 +86,8 @@
                                 class="menu-item menu-lg-down-accordion me-0 me-lg-2 {{ isTabHere('dashboard.promo-codes.*') }}">
                                 <!--begin:Menu link-->
                                 <a class="menu-link "href="{{ route('dashboard.promo-codes.index') }}">
-                                    {{--  <span class="menu-link">  --}} <span class="menu-title">{{ __('Promo Codes') }}</span>
+                                    {{--  <span class="menu-link">  --}} <span class="menu-title"
+                                        style="{{ isTabBold('dashboard.promo-codes.*') }}">{{ __('Promo Codes') }}</span>
                                     <span class="menu-arrow d-lg-none"></span>
                                     {{--  </span>  --}}
                                 </a>

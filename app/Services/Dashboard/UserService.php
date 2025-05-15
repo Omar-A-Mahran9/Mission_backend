@@ -2,13 +2,13 @@
 
 namespace App\Services\Dashboard;
 
-use App\Repositories\Dashboard\Eloquent\UserRepository;
+use App\Repositories\Dashboard\Contracts\UserRepositoryInterface;
 
 class UserService
 {
     protected $repository;
 
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }

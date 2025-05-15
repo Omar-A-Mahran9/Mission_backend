@@ -10,7 +10,6 @@ class PromoCodeRepository implements PromoCodeRepositoryInterface
 
     public function index($data)
     {
-        dd($data);
         $query = PromoCode::query();
         if ($data->search["value"]) {
             $query->where(function ($query) use ($data) {

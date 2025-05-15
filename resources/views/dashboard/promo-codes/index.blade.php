@@ -16,7 +16,7 @@
                 aria-controls="kt_account_profile_details">
                 <!--begin::Card title-->
                 <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">{{ __('Products list') }}</h3>
+                    <h3 class="fw-bold m-0">{{ __('Promo Codes list') }}</h3>
                 </div>
                 <!--end::Card title-->
             </div>
@@ -31,7 +31,7 @@
                         <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4"></i>
                         <input type="text" data-kt-docs-table-filter="search"
                             class="form-control form-control-solid w-250px ps-12"
-                            placeholder="{{ __('Search Product') }}" />
+                            placeholder="{{ __('Search for promo codes') }}" />
                     </div>
                     <!--end::Search-->
                 </div>
@@ -53,7 +53,7 @@
                     </div>
                     <!--begin::Add product-->
                     <a href="{{ route('dashboard.products.create') }}"
-                        class="btn btn-primary">{{ __('Create Product') }}</a>
+                        class="btn btn-primary">{{ __('Create Promo Code') }}</a>
                     <!--end::Add product-->
                     <!--begin::Group actions-->
                     <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
@@ -80,13 +80,14 @@
                                         data-kt-check-target="#kt_datatable .form-check-input" value="1" />
                                 </div>
                             </th>
-                            <th class="min-w-200px">{{ __('Name') }}</th>
-                            <th class="text-end min-w-70px">{{ __('Minimum bid') }}</th>
-                            <th class="text-end min-w-100px">{{ __('Product price') }}</th>
-                            <th class="text-end min-w-100px">{{ __('Opening Price') }}</th>
-                            <th class="text-end min-w-100px">{{ __('Status') }}</th>
-                            <th class="text-end min-w-100px">{{ __('Created at') }}</th>
-                            <th class="text-end min-w-70px">{{ __('Actions') }}</th>
+                            <th class="text-start ">{{ __('Code') }}</th>
+                            <th class="">{{ __('Value') }}</th>
+                            <th class="">{{ __('Start Date') }}</th>
+                            <th class="">{{ __('End Date') }}</th>
+                            <th class="">{{ __('Usage Limit') }}</th>
+                            <th class="">{{ __('Status') }}</th>
+                            <th class="">{{ __('Created at') }}</th>
+                            <th class="">{{ __('Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody class="fw-semibold text-gray-600">
@@ -107,7 +108,6 @@
     </script>
     <script src="{{ asset('assets/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    {{--  <script src="{{ asset('assets/js/datatables/datatables.bundle.js') }}"></script>  --}}
-    <script src="{{ asset('assets/js/datatables/products.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables/promo-codes.js') }}"></script>
     <script src="{{ asset('assets/js/global/crud-operations.js') }}"></script>
 @endpush
