@@ -55,6 +55,14 @@
                                 <!--end::Info-->
                             </div>
                             <!--end::User-->
+                            <div class="d-flex my-4">
+                                <!--begin::Menu-->
+                                <button type="button" class="btn btn-sm btn-light me-2" data-bs-toggle="modal"
+                                    data-bs-target="#kt_modal_create_app">
+                                    {{ __('Edit') }}
+                                </button>
+                                <!--end::Menu-->
+                            </div>
                             <!--begin::Actions-->
 
                             <!--end::Actions-->

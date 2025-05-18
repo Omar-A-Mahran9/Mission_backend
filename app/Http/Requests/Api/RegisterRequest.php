@@ -62,12 +62,6 @@ class RegisterRequest extends FormRequest
                 'registration_token' => ['required_with:field_id', 'string', new NotNumbersOnly()],
             ],
             [
-                // 'field_id' => ['required', 'exists:fields,id'],
-                'interest_id' => ['nullable', 'array'],
-                'interest_id.*' => ['exists:interests,id'],
-                'registration_token' => ['required_with:interest_id', 'string', new NotNumbersOnly()],
-            ],
-            [
                 'certificates' => ['nullable', 'array', 'min:1'],
                 'certificates.*.name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
                 'certificates.*.have_expiration_date' => ['required', 'boolean'],
@@ -94,6 +88,11 @@ class RegisterRequest extends FormRequest
                     'max:2048'
                 ],
                 'registration_token' => ['required_with:license', 'string', new NotNumbersOnly()],
+            ],
+            [
+                'interest_id' => ['nullable', 'array'],
+                'interest_id.*' => ['exists:interests,id'],
+                'registration_token' => ['required_with:interest_id', 'string', new NotNumbersOnly()],
             ],
         ];
         return array_key_exists($currentStep, $stepsRules) ? $stepsRules[$currentStep] : [];
