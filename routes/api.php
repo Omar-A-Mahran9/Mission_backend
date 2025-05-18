@@ -56,5 +56,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::apiResource('portfolios', 'PortfolioController');
         Route::post('portfolios/{id}/update', 'PortfolioController@update');
         Route::apiResource('promo-codes', 'PromoCodeController');
+        Route::get('fieldSkills', 'FieldController@fieldSkills');
+        Route::post('fieldSkills', 'FieldController@update');
     });
 });

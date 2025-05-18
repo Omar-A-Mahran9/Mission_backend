@@ -20,6 +20,7 @@ class DocumentResource extends JsonResource
             'expiration_date' => $this->expiration_date,
             'have_expiration_date' => (int)$this->have_expiration_date,
             'is_review' => $this->is_review,
+            'reason' => $this->reasons,
             'full_path' => DocumentImageResource::collection($this->files)
         ];
     }

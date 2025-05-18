@@ -20,9 +20,12 @@ class ProfileRepository implements ProfileRepositoryInterface
                 'certificates',
                 'Licenses',
                 'portfolios',
+                'skills',
+                'specialists',
             ]);
             $data = [
-                'over_view'     => !empty($user->short_description) && !empty($user->city_id),
+                'over_view'     => !empty($user->short_description) && !empty($user->city_id) && !empty($user->description),
+                'skills'        => $user->skills_count > 0 && $user->specialists_count > 0 && $user->field_id,
                 'experiences'  => $user->experiences_count > 0,
                 'certificates' => $user->certificates_count > 0,
                 'licenses'     => $user->licenses_count > 0,

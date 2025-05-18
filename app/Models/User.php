@@ -131,4 +131,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Interest::class, 'user_interests');
     }
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'skill_user');
+    }
+    public function specialists()
+    {
+        return $this->belongsToMany(Specialist::class, 'specialist_users');
+    }
 }

@@ -28,7 +28,6 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $result = $this->service->register($request);
-
         return $this->success(__("registered in successfully"), $result);
     }
     public function login(LoginRequest $request)

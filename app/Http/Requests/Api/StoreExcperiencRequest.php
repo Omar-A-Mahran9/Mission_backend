@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExcperiencRequest extends FormRequest
@@ -22,11 +23,8 @@ class StoreExcperiencRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "field_id" => "required|exists:fields,id",
-            "specialist_ids" => "required|array",
-            "specialist_ids.*" => "required|exists:specialists,id",
-            "skill_ids" => "required|array",
-            "skill_ids.*" => "required|exists:skills,id",
+            "title" => ["required", "string", "max:255", new NotNumbersOnly()],
+            "description" => ["required", "string", "max:255", new NotNumbersOnly()],
         ];
     }
 }

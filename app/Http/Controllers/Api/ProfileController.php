@@ -34,4 +34,6 @@ class ProfileController extends Controller
     {
         return $this->success("", new ProfileResource($this->service->store($request)));
     }
+
+    
 }

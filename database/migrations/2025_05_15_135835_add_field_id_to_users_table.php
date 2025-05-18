@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('specialist_users', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('specialist_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('field_id')->after('city_id')->nullable();
+            $table->foreign('field_id')->references('id')->on('fields')->cascadeOnDelete();
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('specialist_users');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

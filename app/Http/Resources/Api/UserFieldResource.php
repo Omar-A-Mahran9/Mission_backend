@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FieldResource extends JsonResource
+class UserFieldResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,9 @@ class FieldResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'is_critical' => $this->is_critical,
+            'field_id' => $this["field"],
+            'specialist_ids' =>  $this["specialists"],
+            'skill_ids' =>  $this["skills"]
         ];
     }
 }

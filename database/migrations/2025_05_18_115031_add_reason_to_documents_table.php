@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('specialist_users', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('specialist_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
+        Schema::table('documents', function (Blueprint $table) {
+            $table->longText('reason')->nullable()->after('is_review');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('specialist_users');
+        Schema::table('documents', function (Blueprint $table) {
+            //
+        });
     }
 };

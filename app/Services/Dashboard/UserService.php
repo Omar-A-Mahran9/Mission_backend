@@ -2,13 +2,13 @@
 
 namespace App\Services\Dashboard;
 
-use App\Repositories\Dashboard\Eloquent\UserRepository;
+use App\Repositories\Dashboard\Contracts\UserRepositoryInterface;
 
 class UserService
 {
     protected $repository;
 
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
@@ -28,10 +28,7 @@ class UserService
     public function show($user)
     {
         $user = $this->repository->show($user);
-        $certificates = $user->certificates()->with('files')->paginate(6, ['*'], 'certificates_page');
-        $licenses     = $user->licenses()->with('files')->paginate(6, ['*'], 'licenses_page');
-        $portfolios   = $user->portfolios()->with('files')->paginate(6, ['*'], 'portfolios_page');
-        return compact('user', 'certificates', 'licenses', 'portfolios');
+        return compact('user');
     }
     public function approve($user, $document)
     {

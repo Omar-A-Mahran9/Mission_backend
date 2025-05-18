@@ -4,15 +4,19 @@ namespace App\Models;
 
 use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PromoCode extends Model
 {
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $guarded = [];
+    protected $appends = ['status_text'];
+
     /**
      * The attributes that should be cast.
      *
@@ -37,12 +41,19 @@ class PromoCode extends Model
     public function scopeUsedByOthers($query)
     {
         return $query->whereHas('redemptions', function ($q) {
-            $q->where('user_id', '!=', auth()->id());
+            $q->where('user_id', auth()->id());
         });
     }
     public function scopeAvailable($query)
     {
         return $query->whereDate('starts_date', '<=', now())
             ->whereDate('expires_at', '>=', now())->where('is_active', true);
+    }
+    public function getStatusTextAttribute()
+    {
+        if ($this->is_active) {
+            return __('Active');
+        }
+        return __("Inactive");
     }
 }

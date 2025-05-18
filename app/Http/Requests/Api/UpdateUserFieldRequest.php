@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOverViewRequest extends FormRequest
+class UpdateUserFieldRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +22,11 @@ class StoreOverViewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "city_id" => ['required', 'integer', 'exists:cities,id'],
-            "short_description" => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            "description" => ['required', 'string', 'max:255', new NotNumbersOnly()],
+            "field_id" => ['required', 'integer', 'exists:fields,id'],
+            "specialist_ids" => ['required', 'array'],
+            "specialist_ids.*" => ['integer', 'exists:specialists,id'],
+            "skill_ids" => ['required', 'array'],
+            "skill_ids.*" => ['integer', 'exists:skills,id'],
         ];
     }
 }

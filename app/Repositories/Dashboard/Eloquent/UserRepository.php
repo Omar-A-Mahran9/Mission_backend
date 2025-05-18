@@ -27,7 +27,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function show($user)
     {
-        $user->load('field', 'city', 'certificates.files', 'licenses.files', 'portfolios.files')->loadCount('offers', 'missions');
+        $user->load('field', 'city')->loadCount('offers', 'missions');
 
         return $user;
     }
@@ -45,7 +45,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function experiencesAjax($user)
     {
-        $experiences = $user->experiences()->with(['field', 'specialists', 'skills'])->paginate(30); // paginate 6 items per page
+        $experiences = $user->experiences()->paginate(30); // paginate 6 items per page
         $total    = $user->experiences()->count();
         return ['experiences' => $experiences, 'total' => $total];
     }

@@ -3,7 +3,7 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSide = function () {
-    let dbTable = 'products';
+    let dbTable = 'promo-codes';
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -23,12 +23,12 @@ var KTDatatablesServerSide = function () {
             },
             columns: [
                 { data: 'id' },
-                { data: 'name_' + locale },
-                { data: 'minimum_bid' },
-                { data: 'product_price' },
-                { data: 'start_price' },
-                { data: 'status' },
-                // { data: 'status' },
+                { data: 'code' },
+                { data: 'value' },
+                { data: 'starts_date' },
+                { data: 'expires_at' },
+                { data: 'usage_limit' },
+                { data: 'status_text' },
                 { data: 'created_at' },
                 { data: null },
             ],
@@ -47,49 +47,19 @@ var KTDatatablesServerSide = function () {
                     targets: 1,
                     orderable: false,
                     render: function (data, type, row) {
-                        let imageUrl = (row.images && row.images.length > 0 && row.images[0].name)
-                            ? getImagePathFromDirectory(row.images[0].name, 'ProductImages')
-                            : '/placeholder_images/default.svg';
-                        // return `
-                        //     <div class="d-flex align-items-center">
-                        //         <span class="symbol-label" style="background-image: url('${imageUrl}');></span>
-                        //         <div class="ms-5">
-                        //         <span href="javascript:;" class="mb-1 text-gray-600">${row.name}</span>
-                        //         </div>
-                        //     </div>`;
                         return `
                             <div class="d-flex align-items-center">
-                                <span href="javascript:;" class="mb-1 text-gray-600">${row.name}</span>
+                                <span href="javascript:;" class="mb-1 text-gray-600">${data}</span>
                             </div>`;
                     }
                 },
                 // {
-                //     targets: 2,
+                //     targets: 6,
                 //     orderable: false,
                 //     render: function (data, type, row) {
                 //         return `
                 //             <div class="d-flex align-items-center">
-                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.price}</span>
-                //             </div>`;
-                //     }
-                // },
-                // {
-                //     targets: 3,
-                //     orderable: false,
-                //     render: function (data, type, row) {
-                //         return `
-                //             <div class="d-flex align-items-center">
-                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${__('' + row.status)}</span>
-                //             </div>`;
-                //     }
-                // },
-                // {
-                //     targets: 4,
-                //     orderable: false,
-                //     render: function (data, type, row) {
-                //         return `
-                //             <div class="d-flex align-items-center">
-                //                 <span href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</span>
+                //                 <span href="javascript:;" class="mb-1 text-gray-600">${data}</span>
                 //             </div>`;
                 //     }
                 // },
@@ -112,7 +82,7 @@ var KTDatatablesServerSide = function () {
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/products/${data.id}" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
+                                    <a href="/dashboard/${dbTable}/${data.id}" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
                                         ${__('Show')}
                                     </a>
                                 </div>
@@ -120,7 +90,7 @@ var KTDatatablesServerSide = function () {
 
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/products/${data.id}/edit" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
+                                    <a href="/dashboard/${dbTable}/${data.id}/edit" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
                                         ${__('Edit')}
                                     </a>
                                 </div>
