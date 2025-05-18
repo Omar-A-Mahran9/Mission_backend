@@ -39,9 +39,8 @@ class AuthRepository implements AuthRepositoryInterface
                 }
             }
             if (!empty($dataUser['field_id'])) {
-                $experience = $user->experiences()->create(["field_id" => $dataUser['field_id']]);
-                $experience->specialists()->sync($dataUser['specialist_ids']);
-                $experience->skills()->sync($dataUser['skill_ids']);
+                $user->specialists()->sync($dataUser['specialist_ids']);
+                $user->skills()->sync($dataUser['skill_ids']);
             }
             if (!empty($dataUser['interest_id'])) {
                 $user->interests()->sync($dataUser['interest_id']);

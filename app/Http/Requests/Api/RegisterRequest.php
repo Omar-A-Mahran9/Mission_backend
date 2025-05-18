@@ -54,7 +54,7 @@ class RegisterRequest extends FormRequest
                 'registration_token' => ['required', 'string', new NotNumbersOnly()],
             ],
             [
-                'field_id' => ['nullable', 'exists:fields,id'],
+                'field_id' => ['required', 'exists:fields,id'],
                 "specialist_ids" => "required_with:field_id|array",
                 "specialist_ids.*" => "required|exists:specialists,id",
                 "skill_ids" => "required_with:field_id|array",

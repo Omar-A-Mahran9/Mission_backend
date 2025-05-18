@@ -4,41 +4,46 @@ namespace App\Repositories\Api\Eloquent;
 
 use App\Models\Field;
 use App\Models\Skill;
-use App\Models\Interest;
-use App\Models\Specialist;
-use App\Models\SpecialistUser;
-use App\Models\SupportMessage;
-use App\Models\FieldSpecialist;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Api\Contracts\ExcperiencRepositoryInterface;
 
 class ExcperiencRepository implements ExcperiencRepositoryInterface
-{ 
-    public function specialists($id)
+{
+    public function specialists($request, $id)
     {
-        return Field::find($id)->specialists()->get();
+        return Field::find($id)->specialists()->when($request->filled('search'), function ($query) use ($request) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name_ar', 'like', "%{$search}%")
+                    ->orWhere('name_en', 'like', "%{$search}%");
+            });
+        })->get();
     }
+
     public function store($data)
     {
         try {
-            DB::transaction(function () use ($data) {
-                $experience = auth()->user()->experiences()->create(["field_id" => $data['field_id']]);
-                $experience->specialists()->sync($data['specialist_ids']);
-                $experience->skills()->sync($data['skill_ids']);
+            $experience = DB::transaction(function () use ($data) {
+                $experience = auth()->user()->experiences()->create(["title" => $data['title'], "description" => $data['description']]);
+                return $experience;
             });
-            return auth()->user()
-                ->experiences()
-                ->with(['skills', 'specialists', 'field'])
-                ->latest()
-                ->first();
+            return $experience;
         } catch (\Throwable $e) {
             return false;
         }
     }
-    public function skills()
+    public function skills($request)
     {
-        return Skill::all();
+        $search = $request->search;
+        if (!$search) return [];
+
+        return Skill::query()->where(function ($q) use ($search) {
+            $q->where('name_ar', 'like', "%{$search}%")
+                ->orWhere('name_en', 'like', "%{$search}%");
+        })
+            ->get();
     }
+
     public function update($data, $id)
     {
         try {
@@ -48,13 +53,9 @@ class ExcperiencRepository implements ExcperiencRepositoryInterface
             }
             DB::transaction(function () use ($data, $experience) {
                 if ($experience) {
-                    $experience->update(["field_id" => $data['field_id']]);
-                    $experience->specialists()->sync($data['specialist_ids']);
-                    $experience->skills()->sync($data['skill_ids']);
+                    $experience->update(["title" => $data['title'], "description" => $data['description']]);
                 }
             });
-            $experience->load(['field', 'skills', 'specialists']);
-
             return $experience;
         } catch (\Throwable $e) {
             return false;
@@ -62,7 +63,7 @@ class ExcperiencRepository implements ExcperiencRepositoryInterface
     }
     public function show()
     {
-        return auth()->user()->load('experiences.skills', 'experiences.specialists', 'experiences.field');
+        return auth()->user()->load('experiences');
     }
     public function destroy($id)
     {
@@ -72,13 +73,10 @@ class ExcperiencRepository implements ExcperiencRepositoryInterface
                 return false;
             }
             DB::transaction(function () use ($experience) {
-                $experience->specialists()->detach();
-                $experience->skills()->detach();
                 $experience->delete();
             });
             return auth()->user()
                 ->experiences()
-                ->with(['skills', 'specialists', 'field'])
                 ->get();
         } catch (\Throwable $e) {
             return false;

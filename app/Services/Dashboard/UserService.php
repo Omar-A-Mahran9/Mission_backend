@@ -28,10 +28,7 @@ class UserService
     public function show($user)
     {
         $user = $this->repository->show($user);
-        $certificates = $user->certificates()->with('files')->paginate(6, ['*'], 'certificates_page');
-        $licenses     = $user->licenses()->with('files')->paginate(6, ['*'], 'licenses_page');
-        $portfolios   = $user->portfolios()->with('files')->paginate(6, ['*'], 'portfolios_page');
-        return compact('user', 'certificates', 'licenses', 'portfolios');
+        return compact('user');
     }
     public function approve($user, $document)
     {

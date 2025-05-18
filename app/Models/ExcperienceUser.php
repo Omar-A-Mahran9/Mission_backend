@@ -40,18 +40,18 @@ class ExcperienceUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function field()
-    {
-        return $this->belongsTo(Field::class);
-    }
+    // public function field()
+    // {
+    //     return $this->belongsTo(Field::class);
+    // }
 
-    public function skills()
-    {
-        return $this->belongsToMany(Skill::class, 'excperience_user_skills');
-    }
+    // public function skills()
+    // {
+    //     return $this->belongsToMany(Skill::class, 'excperience_user_skills');
+    // }
 
-    public function specialists()
-    {
-        return $this->belongsToMany(Specialist::class, 'excperience_user_specialists');
-    }
+    // public function specialists()
+    // {
+    //     return $this->belongsToMany(Specialist::class, 'excperience_user_specialists');
+    // }
 }

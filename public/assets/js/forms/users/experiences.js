@@ -1,8 +1,4 @@
 $(document).ready(function () {
-    // const existingScript = document.getElementById('experiences');
-    // if (existingScript) {
-    //     existingScript.remove();
-    // }
     retrieveProductsFormBackend();
 
     $("#filter-form").submit(function (e) {
@@ -48,27 +44,22 @@ var productItems = function (response) {
 
         // $("#no-results-alert").hide();
         $.each(experiences, function (index, product) {
-            let skillsHtml = '';
-            let specialistsHtml = '';
+            const maxLength = 50;
+            const fullDesc = product.description || '';
+            const isLong = fullDesc.length > maxLength;
+            const shortDesc = isLong ? (fullDesc.slice(0, maxLength) + '...') : fullDesc;
+            let descriptionHtml = `
+                <span class="description-preview" id="desc-${product.id}">
+                    ${isLong ? shortDesc : fullDesc}
+                </span>`;
 
-            // Loop through skills if available
-            if (product.skills && product.skills.length > 0) {
-                $.each(product.skills, function (i, skill) {
-                    skillsHtml += `<span class=" fs-7 m-1" style="border-radius: 4px;
-    background: #409597;
-    color: white;
-    font-size: 14px;
-    font-weight: 400;   padding: 7px 7px;">${skill.name}</span>`;
-                });
-            }
-            if (product.specialists && product.specialists.length > 0) {
-                $.each(product.specialists, function (i, specialist) {
-                    specialistsHtml += `<span class=" fs-7 m-1" style="border-radius: 4px;
-    background: #409597;
-    color: white;
-    font-size: 14px;
-    font-weight: 400;   padding: 7px 7px;">${specialist.name}</span>`;
-                });
+            if (isLong) {
+                descriptionHtml += `
+        <a href="javascript:void(0);" class="fs-8 text-semibold ms-2 toggle-desc"
+            data-id="${product.id}" data-full="${fullDesc.replace(/"/g, '&quot;')}"
+            data-short="${shortDesc.replace(/"/g, '&quot;')}" style="color: gray">
+            (${__('Show more')})
+        </a>`;
             }
             productCards += `
             <div class="card mb-6 mb-xl-9 col-md-3">
@@ -79,29 +70,18 @@ var productItems = function (response) {
                     <div class="rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;font-size: 16px;  background: #409597">
                         ${index + 1}
                     </div>
-                        <a href="#" class="fs-4 fw-bold mb-1 text-gray-900 text-hover-primary mb-2"style="width: 225px;height: 19px;font-weight: 500 !important;
-font-size: 22px !important;
+                        <span class="mb-2"style="width: 100%;font-weight: 500 !important;
+font-size: 17px !important;
 line-height: 100%;
-">${product.field.name}</a>
+">${product.title}</span>
                     <!--end::Title-->
                     </div>
                     <!--begin::Header-->
                     <div>
-                    <h5 class="text-gray-600 fs-6 mb-2" style="font-size:14px;Weight:400;color:#555555;">${__(`Specialists`)}</h5>
-                    </div>
-                    <div class="d-flex align-items-center flex-wrap mb-6">
-                        <!--begin::Badge-->
-                        ${specialistsHtml}
-                        <!--end::Badge-->
-                    </div>
-                    <!--end::Header-->
-                    <!--begin::Header-->
-                    <div>
-                    <h5 class="text-gray-600 fs-6 mb-2"style="font-size:14px;Weight:400;color:#555555;">${__(`Skills`)}</h5>
                     </div>
                     <div class="d-flex align-items-center flex-wrap gap-1">
                         <!--begin::Badge-->
-                        ${skillsHtml}
+                        ${descriptionHtml}
                         <!--end::Badge-->
                     </div>
                     <!--end::Header-->
@@ -119,6 +99,23 @@ line-height: 100%;
         }
     }
     $(".experiences-container").html(productCards);
+    $(document).off('click', '.toggle-desc').on('click', '.toggle-desc', function () {
+        const id = $(this).data('id');
+        const full = $(this).data('full');
+        const short = $(this).data('short');
+        const target = $(`#desc-${id}`);
+        const link = $(this);
+
+        console.log("Toggle clicked", { id, full, short });
+
+        if (link.text().includes('Show more')) {
+            target.text(full);
+            link.text(`(${__('Show less')})`);
+        } else {
+            target.text(short);
+            link.text(`(${__('Show more')})`);
+        }
+    });
     paginator(response);
     KTMenu.createInstances();
 

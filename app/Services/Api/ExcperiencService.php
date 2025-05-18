@@ -13,9 +13,9 @@ class ExcperiencService
         $this->excperiencetRepository = $excperiencetRepository;
     }
 
-    public function specialists($id)
+    public function specialists($request,$id)
     {
-        return $this->excperiencetRepository->specialists($id);
+        return $this->excperiencetRepository->specialists($request,$id);
     }
     public function store($data)
     {
@@ -26,9 +26,9 @@ class ExcperiencService
     {
         return $this->excperiencetRepository->show();
     }
-    public function skills()
+    public function skills($request)
     {
-        return $this->excperiencetRepository->skills();
+        return $this->excperiencetRepository->skills($request);
     }
     public function update($data, $id)
     {

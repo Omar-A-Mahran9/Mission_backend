@@ -39,9 +39,8 @@
                                 <!--begin::Info-->
                                 <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
                                     <a href="#"
-                                        class="d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2 {{ $user->experiences()->first() ? '' : 'd-none' }}">
-                                        <i
-                                            class="ki-outline ki-profile-circle fs-4 me-1"></i>{{ $user->experiences()?->first()?->field->name }}</a>
+                                        class="d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2 {{ $user->field ? '' : 'd-none' }}">
+                                        <i class="ki-outline ki-profile-circle fs-4 me-1"></i>{{ $user->field?->name }}</a>
                                     <a href="#"
                                         class="d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2">
                                         <i class="ki-outline ki-geolocation fs-4 me-1"></i>{{ $user->city->name }}</a>
