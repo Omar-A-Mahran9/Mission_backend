@@ -57,10 +57,27 @@
                             <!--end::User-->
                             <div class="d-flex my-4">
                                 <!--begin::Menu-->
-                                <button type="button" class="btn btn-sm btn-light me-2" data-bs-toggle="modal"
-                                    data-bs-target="#kt_modal_create_app">
-                                    {{ __('Edit') }}
-                                </button>
+                                @if ($user->is_valid == 0)
+                                    <form class="form ajax-form"
+                                        action="{{ route('dashboard.users.is-valid', $user->id) }}" method="POST"
+                                        data-success-callback="onAjaxSuccess" data-hide-alert="true">
+                                        @csrf
+                                        <input type="hidden" name="is_valid" value="1">
+                                        <button type="submit" class="btn btn-sm btn-primary me-2">
+                                            <span class="indicator-label">
+                                                {{ __('Approved') }}
+                                            </span>
+                                            <span class="indicator-progress">
+                                                {{ __('Please wait...') }} <span
+                                                    class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                @endif
+                                {{--  <button type="submit" class="btn btn-sm btn-light me-2" data-bs-toggle="modal"
+                                            data-bs-target="#kt_modal_create_app">
+                                            {{ __('Approved') }}
+                                        </button>  --}}
                                 <!--end::Menu-->
                             </div>
                             <!--begin::Actions-->
@@ -284,6 +301,16 @@
             let script = document.createElement("script");
             script.src = scriptSrc;
             document.body.appendChild(script);
+        }
+    </script>
+    <script>
+        window['onAjaxSuccess'] = () => {
+
+            showToast();
+
+            setTimeout(function() {
+                window.location.reload();
+            }, 1000);
         }
     </script>
 @endpush

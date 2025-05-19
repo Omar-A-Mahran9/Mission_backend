@@ -20,13 +20,14 @@ class FieldRepository implements FieldRepositoryInterface
     }
     public function fieldSkils()
     {
-        return ["field" => auth()->user()->field->id, "skills" => auth()->user()->skills->pluck('id'), "specialists" => auth()->user()->specialists->pluck('id')];
+        return ["field" => auth()->user()->field->id, "skills" => auth()->user()->skills, "specialists" => auth()->user()->specialists->pluck('id')];
     }
     public function update($data)
     {
         $user = auth()->user();
         $field = Field::findOrFail($data['field_id']);
         $user = DB::transaction(function () use ($data, $user, $field) {
+            // dd($data);
             if ($field->id !== $user->field_id && $field->is_critical) {
                 $user->is_valid = 0;
             }
@@ -37,6 +38,6 @@ class FieldRepository implements FieldRepositoryInterface
             return $user;
         });
         $user->load(['field', 'skills', 'specialists']);
-        return ["field" => auth()->user()->field->id, "skills" => auth()->user()->skills->pluck('id'), "specialists" => auth()->user()->specialists->pluck('id')];
+        return ["field" => auth()->user()->field->id, "skills" => auth()->user()->skills, "specialists" => auth()->user()->specialists->pluck('id')];
     }
 }

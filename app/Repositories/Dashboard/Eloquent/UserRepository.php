@@ -31,10 +31,15 @@ class UserRepository implements UserRepositoryInterface
 
         return $user;
     }
-    public function approve($user, $document)
+    public function approve($request, $user, $document)
     {
         abort_if($document->user_id !== $user->id, 403);
-        $document->update(['is_review' => true]);
+        if ($request->input('action') === 'approve') {
+            $document->update(['is_review' => true]);
+            return $user;
+        } else {
+            $document->update(['reason'=> $request->input("reason")]);
+        }
         return $user;
     }
     public function certificatesAjax($user)
@@ -60,5 +65,19 @@ class UserRepository implements UserRepositoryInterface
         $portfolios = $user->portfolios()->with('files')->paginate(2); // paginate 6 items per page
         $total      = $user->portfolios()->count();
         return ['portfolios' => $portfolios, 'total' => $total];
+    }
+    public function status($user)
+    {
+        $user->update([
+            'status' => $user->status === 1 ? 2 : 1
+        ]);
+        return $user;
+    }
+    public function isValid($request, $user)
+    {
+        $user->update([
+            'is_valid' => $request->is_valid
+        ]);
+        return $user;
     }
 }

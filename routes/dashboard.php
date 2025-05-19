@@ -24,6 +24,8 @@ Route::get('users/{user}/licenses', "UserController@licensesAjax")
     ->name('dashboard.users.licenses.ajax');
 Route::get('users/{user}/portfolios', "UserController@portfoliosAjax")
     ->name('dashboard.users.portfolios.ajax');
+Route::get('users/status/{user}', 'UserController@status')->name('users.status');
+Route::post('users/is-valid/{user}', 'UserController@isValid')->name('users.is-valid');
 Route::resource('products', 'ProductController');
 Route::get("products/{product}/images", "ProductController@images");
 Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');
