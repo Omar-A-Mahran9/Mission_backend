@@ -3,8 +3,8 @@
 namespace App\Repositories\Api\Eloquent;
 
 use App\Models\User;
+use App\Models\ExcperienceUser;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use App\Repositories\Api\Contracts\AuthRepositoryInterface;
 
 class AuthRepository implements AuthRepositoryInterface
@@ -12,7 +12,7 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function login($credentials)
     {
-         $user = User::where('phone', 'LIKE', "%{$credentials['phone']}%")->first();
+        $user = User::where('phone', 'LIKE', "%{$credentials['phone']}%")->first();
         if (!$user) {
             return null;
         }
@@ -37,6 +37,13 @@ class AuthRepository implements AuthRepositoryInterface
                         $docModel->files()->create(['file' => $filePath]);
                     }
                 }
+            }
+            if (!empty($dataUser['field_id'])) {
+                $user->specialists()->sync($dataUser['specialist_ids']);
+                $user->skills()->sync($dataUser['skill_ids']);
+            }
+            if (!empty($dataUser['interest_id'])) {
+                $user->interests()->sync($dataUser['interest_id']);
             }
             DB::commit();
             // Return the user, or whatever you need

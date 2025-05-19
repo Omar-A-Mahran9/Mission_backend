@@ -61,12 +61,14 @@ class AuthService
         }
         $newData = array_merge($cachedData, $dataValidated);
         Cache::put($cacheKey, $newData, 60 * 60);
-        if ($step == 4) {
+
+        if ($step == 5) {
             $mergedDocument = array_merge(
                 $newData['certificates'] ?? [],
                 $newData['license'] ?? []
             );
             $dataUser = Arr::except($newData, ['certificates', 'license']);
+
             $user = $this->authRepository->register($mergedDocument, $dataUser);
             Cache::forget($cacheKey);
             return $user;

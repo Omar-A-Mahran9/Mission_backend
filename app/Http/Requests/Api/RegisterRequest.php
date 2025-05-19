@@ -55,13 +55,15 @@ class RegisterRequest extends FormRequest
             ],
             [
                 'field_id' => ['required', 'exists:fields,id'],
-                'interest_id' => ['nullable', 'array'],
-                'interest_id.*' => ['exists:interests,id'],
-                'registration_token' => ['required', 'string', new NotNumbersOnly()],
+                "specialist_ids" => "required_with:field_id|array",
+                "specialist_ids.*" => "required|exists:specialists,id",
+                "skill_ids" => "required_with:field_id|array",
+                "skill_ids.*" => "required|exists:skills,id",
+                'registration_token' => ['required_with:field_id', 'string', new NotNumbersOnly()],
             ],
             [
                 'certificates' => ['nullable', 'array', 'min:1'],
-                'certificates.*.name' => ['required', 'string', 'max:255'],
+                'certificates.*.name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
                 'certificates.*.have_expiration_date' => ['required', 'boolean'],
                 'certificates.*.expiration_date' => ['required_unless:certificates.*.have_expiration_date,true', 'nullable', 'date'],
                 'certificates.*.files' => ['required', 'array', 'min:1'],
@@ -69,13 +71,13 @@ class RegisterRequest extends FormRequest
                     'required',
                     'file',
                     'mimes:jpg,jpeg,png,pdf',
-                    'max:5120'
+                    'max:2048'
                 ],
-                'registration_token' => ['required', 'string', new NotNumbersOnly()],
+                'registration_token' => ['required_with:certificates', 'string', new NotNumbersOnly()],
             ],
             [
                 'license' => ['nullable', 'array', 'min:1'],
-                'license.*.name' => ['required', 'string', 'max:255'],
+                'license.*.name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
                 'license.*.have_expiration_date' => ['required', 'boolean'],
                 'license.*.expiration_date' => ['required_unless:license.*.have_expiration_date,true', 'nullable', 'date'],
                 'license.*.files' => ['required', 'array', 'min:2'],
@@ -83,9 +85,14 @@ class RegisterRequest extends FormRequest
                     'required',
                     'file',
                     'mimes:jpg,jpeg,png,pdf',
-                    'max:5120'
+                    'max:2048'
                 ],
-                'registration_token' => ['required', 'string', new NotNumbersOnly()],
+                'registration_token' => ['required_with:license', 'string', new NotNumbersOnly()],
+            ],
+            [
+                'interest_id' => ['nullable', 'array'],
+                'interest_id.*' => ['exists:interests,id'],
+                'registration_token' => ['required_with:interest_id', 'string', new NotNumbersOnly()],
             ],
         ];
         return array_key_exists($currentStep, $stepsRules) ? $stepsRules[$currentStep] : [];

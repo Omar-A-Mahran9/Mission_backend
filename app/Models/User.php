@@ -95,14 +95,48 @@ class User extends Authenticatable
     {
         return $this->hasOne(Field::class, 'id', 'field_id'); // if you want to track created_at/updated_at
     }
+    public function city()
+    {
+        return $this->hasOne(City::class, 'id', 'city_id'); // if you want to track created_at/updated_at
+    }
 
     public function certificates()
     {
         return $this->hasMany(Document::class)->where('type_id', 1);
     }
 
-    public function Licenses()
+    public function licenses()
     {
         return $this->hasMany(Document::class)->where('type_id', 2);
+    }
+
+    public function portfolios()
+    {
+        return $this->hasMany(Portfolio::class);
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Rate::class);
+    }
+    public function missions()
+    {
+        return $this->hasMany(Mission::class);
+    }
+    public function interests()
+    {
+        return $this->belongsToMany(Interest::class, 'user_interests');
+    }
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'skill_user');
+    }
+    public function specialists()
+    {
+        return $this->belongsToMany(Specialist::class, 'specialist_users');
     }
 }

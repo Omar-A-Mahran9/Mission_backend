@@ -30,7 +30,7 @@ class UpdateDocumentRequest extends FormRequest
                 'required',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
-                'max:5120'
+                'max:2048'
             ],
             'deleted_files' => ['array'],
             'deleted_files.*' => [

@@ -45,6 +45,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('logout', 'Auth\AuthController@logout');
 
+        // 🔒 User Profile Routes
+        Route::get('profile/steps', 'ProfileController@stepsStatus');
         Route::get('over-view', 'ProfileController@overView');
         Route::post('over-view', 'ProfileController@update');
         Route::apiResource('experiences', 'ExcperiencController');
@@ -53,5 +55,13 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::apiResource('missions', MissionController::class);
 
 
+        Route::post('certificates/{id}/update', 'CertificateController@update');
+        Route::apiResource('licenses', 'LicenseController');
+        Route::post('licenses/{id}/update', 'LicenseController@update');
+        Route::apiResource('portfolios', 'PortfolioController');
+        Route::post('portfolios/{id}/update', 'PortfolioController@update');
+        Route::apiResource('promo-codes', 'PromoCodeController');
+        Route::get('fieldSkills', 'FieldController@fieldSkills');
+        Route::post('fieldSkills', 'FieldController@update');
     });
 });

@@ -14,10 +14,21 @@ Route::get("products/restore-selected", "ProductController@restoreSelected");
 /* end Delete And restore */
 
 
-
+Route::resource('users', 'UserController');
+Route::put("users/{user}/document/{document}", "UserController@approve")->name('approve');
+Route::get('users/{user}/certificates', "UserController@certificatesAjax")
+    ->name('dashboard.users.certificates.ajax');
+Route::get('users/{user}/experiences', "UserController@experiencesAjax")
+    ->name('dashboard.users.experiences.ajax');
+Route::get('users/{user}/licenses', "UserController@licensesAjax")
+    ->name('dashboard.users.licenses.ajax');
+Route::get('users/{user}/portfolios', "UserController@portfoliosAjax")
+    ->name('dashboard.users.portfolios.ajax');
 Route::resource('products', 'ProductController');
 Route::get("products/{product}/images", "ProductController@images");
 Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');
+
+Route::resource('promo-codes', 'PromoCodeController');
 
 /** ajax routes **/
 Route::post('dropzone/validate-image', 'DropzoneController@validateImage')->name('dropzone.validate-image');

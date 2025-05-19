@@ -49,6 +49,14 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Contracts\ExcperiencRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\ExcperiencRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Dashboard\Contracts\UserRepositoryInterface::class,
+            \App\Repositories\Dashboard\Eloquent\UserRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Dashboard\Contracts\PromoCodeRepositoryInterface::class,
+            \App\Repositories\Dashboard\Eloquent\PromoCodeRepository::class
+        );
     }
 
     /**

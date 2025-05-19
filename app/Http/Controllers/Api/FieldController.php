@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Api\UpdateUserFieldRequest;
+use App\Http\Resources\Api\UserFieldResource;
 use App\Models\Field;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,9 +21,9 @@ class FieldController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->success("", FieldResource::collection($this->service->index()));
+        return $this->success("", FieldResource::collection($this->service->index($request)));
     }
 
     /**
@@ -59,9 +61,9 @@ class FieldController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Field $field)
+    public function update(UpdateUserFieldRequest $request, Field $field)
     {
-        //
+        return $this->success("", new UserFieldResource($this->service->update($request, $field)));
     }
 
     /**
@@ -70,5 +72,10 @@ class FieldController extends Controller
     public function destroy(Field $field)
     {
         //
+    }
+
+    public function fieldSkills()
+    {
+        return $this->success("", new UserFieldResource($this->service->fieldSkils()));
     }
 }

@@ -68,12 +68,29 @@
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                                 data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
-                                class="menu-item menu-lg-down-accordion me-0 me-lg-2">
+                                class="menu-item menu-lg-down-accordion me-0 me-lg-2 {{ isTabHere('dashboard.users.*') }}">
                                 <!--begin:Menu link-->
-                                <span class="menu-link">
-                                    <span class="menu-title">{{ __('Users') }}</span>
+                                <a class="menu-link" href="{{ route('dashboard.users.index') }}">
+                                    <span class="menu-title"
+                                        style="{{ isTabBold('dashboard.users.*') }}">{{ __('Users') }}</span>
                                     <span class="menu-arrow d-lg-none"></span>
-                                </span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
+                        @endcan
+                        @can('view_promo_codes')
+                            <!--begin:Menu item-->
+                            <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                                data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
+                                class="menu-item menu-lg-down-accordion me-0 me-lg-2 {{ isTabHere('dashboard.promo-codes.*') }}">
+                                <!--begin:Menu link-->
+                                <a class="menu-link "href="{{ route('dashboard.promo-codes.index') }}">
+                                    {{--  <span class="menu-link">  --}} <span class="menu-title"
+                                        style="{{ isTabBold('dashboard.promo-codes.*') }}">{{ __('Promo Codes') }}</span>
+                                    <span class="menu-arrow d-lg-none"></span>
+                                    {{--  </span>  --}}
+                                </a>
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
@@ -187,8 +204,8 @@
                                 data-kt-menu="true" data-kt-element="theme-mode-menu">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3 my-0">
-                                    <a href="{{ route('dashboard.change-mode','light') }}" class="menu-link px-3 py-2"
-                                        data-kt-element="mode" data-kt-value="light">
+                                    <a href="{{ route('dashboard.change-mode', 'light') }}"
+                                        class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="light">
                                         <span class="menu-icon" data-kt-element="icon">
                                             <i class="ki-outline ki-night-day fs-2"></i>
                                         </span>

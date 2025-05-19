@@ -41,7 +41,7 @@ if (!function_exists('uploadImageToDirectory')) {
         $model     = Str::plural($model);
         $model     = Str::ucfirst($model);
         $path      = "/Images/$model";
-        $imageName = str_replace(' ', '', 'webstdy_' . time() . $imageFile->getClientOriginalName());  // Set Image name
+        $imageName = str_replace(' ', '', 'webstdy_' . time() . "_" . random_int(10, 99) . $imageFile->getClientOriginalName());  // Set Image name
         $imageFile->storeAs($path, $imageName, 'public');
         return $imageName;
     }
@@ -163,6 +163,14 @@ if (!function_exists('isTabHere')) {
     }
 }
 
+if (!function_exists('isTabBold')) {
+
+    function isTabBold($path)
+    {
+        if (request()->routeIs($path))
+            return 'font-weight: 800';
+    }
+}
 
 if (!function_exists('isTabOpen')) {
 

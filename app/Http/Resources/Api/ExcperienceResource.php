@@ -16,9 +16,8 @@ class ExcperienceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'field' => new FieldResource($this->field),
-            'skills' => SkillResource::collection($this->skills),
-            'specialists' => SpecialistResource::collection($this->specialists),
+            'title' => $this->title,
+            'description' => $this->description,
         ];
     }
 }

@@ -16,6 +16,15 @@ class ProfileController extends Controller
     {
         $this->service = $service;
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function stepsStatus()
+    {
+        return $this->success("", $this->service->stepsStatus());
+    }
     public function overView()
     {
         return $this->success("", new ProfileResource($this->service->overView()));
@@ -25,4 +34,6 @@ class ProfileController extends Controller
     {
         return $this->success("", new ProfileResource($this->service->store($request)));
     }
+
+    
 }

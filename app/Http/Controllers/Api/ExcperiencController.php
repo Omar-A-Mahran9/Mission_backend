@@ -19,13 +19,13 @@ class ExcperiencController extends Controller
     {
         $this->service = $service;
     }
-    public function specialists($id)
+    public function specialists(Request $request, $id)
     {
-        return $this->success("", SpecialistResource::collection($this->service->specialists($id)));
+        return $this->success("", SpecialistResource::collection($this->service->specialists($request, $id)));
     }
-    public function skills()
+    public function skills(Request $request)
     {
-        return $this->success("", SkillResource::collection($this->service->skills()));
+        return $this->success("", SkillResource::collection($this->service->skills($request)));
     }
     public function store(StoreExcperiencRequest $request)
     {

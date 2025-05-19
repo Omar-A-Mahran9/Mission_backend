@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('skill_user', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('skill_id')->constrained()->onDelete('cascade'); // Foreign key for skill
-        //     $table->foreignId('user_id')->constrained()->onDelete('cascade');   // Foreign key for user
-        //     $table->timestamps();
-        // });
+        Schema::create('skill_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('skill_id')->constrained()->onDelete('cascade'); // Foreign key for skill
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');   // Foreign key for user
+            $table->timestamps();
+        });
     }
 
     /**

@@ -13,6 +13,11 @@ class ProfileService
         $this->profileRepository = $profileRepository;
     }
 
+    public function stepsStatus()
+    {
+        return $this->profileRepository->stepsStatus();
+    }
+
     public function overView()
     {
         return $this->profileRepository->overView();
