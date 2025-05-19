@@ -30,7 +30,7 @@ class MissionService
 
          if (isset($data['days_until_delivery'])) {
             $data['delivery_time'] = Carbon::now()->addDays($data['days_until_delivery']);
-            unset($data['days_until_delivery']); // Clean up
+            // unset($data['days_until_delivery']); // Clean up
         }
 
 
@@ -62,6 +62,7 @@ class MissionService
                 'payment',
                 'city',
                 'user',
+                'skills',            // User relation
                 'lastStatue.status',
             ]);
                     });
@@ -77,48 +78,52 @@ class MissionService
     public function update($id, $data)
     {
         return DB::transaction(function () use ($id, $data) {
+            // Fetch the mission to update
             $mission = $this->missionRepository->find($id);
 
             if (!$mission) {
                 throw new \Exception("Mission not found.");
             }
 
-            // Handle delivery time
+            // Handle delivery time: Calculate and set 'delivery_time' based on 'days_until_delivery'
             if (isset($data['days_until_delivery'])) {
                 $data['delivery_time'] = Carbon::now()->addDays($data['days_until_delivery']);
-                unset($data['days_until_delivery']);
+                // unset($data['days_until_delivery']);  // Remove 'days_until_delivery' field after processing
             }
 
-            // Extract and remove skills
+            // Extract and remove skills from the data
             $skills = $data['skills'] ?? [];
-            unset($data['skills']);
+            unset($data['skills']);  // Remove 'skills' from the mission data
 
-            // Update mission
+            // Update the mission with the remaining data
             $this->missionRepository->update($id, $data);
 
             // Sync skills if provided
             if (!empty($skills)) {
-                $mission->skills()->sync($skills);
+                $mission->skills()->sync($skills);  // Sync the skills with the mission
             }
 
-            // Handle new attachments
+            // Handle file attachments if they exist
             if (request()->hasFile('attachments')) {
                 foreach (request()->file('attachments') as $file) {
-                    $this->missionRepository->attachFile($mission, $file);
+                    $this->missionRepository->attachFile($mission, $file);  // Attach the files to the mission
                 }
             }
 
-            // Return updated with eager-loaded relations
+            // Return the updated mission with related data using eager loading
             return $mission->fresh()->load([
-                'field',
-                'specialist',
-                'payment',
-                'city',
+                'field',           // Field relation
+                'specialist',      // Specialist relation
+                'payment',         // Payment relation
+                'city',            // City relation
                 'user',
-                'lastStatue.status',
+                'skills',            // User relation
+                // User relation
+                'lastStatue.status',  // Last status relation
             ]);
         });
     }
+
 
 
     public function destroy($id)

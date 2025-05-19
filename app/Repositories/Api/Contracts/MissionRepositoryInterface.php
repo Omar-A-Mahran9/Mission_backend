@@ -7,7 +7,7 @@ interface MissionRepositoryInterface
 {
     public function index();
     public function store($data);
-    public function show($id);
+    public function find($id);
     public function update($id, array $data);
     public function destroy($id);
 }

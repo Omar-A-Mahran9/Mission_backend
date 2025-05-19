@@ -6,9 +6,12 @@ use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mission extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
 
     protected $appends = [];

@@ -3,6 +3,7 @@ namespace App\Repositories\Api\Eloquent;
 
 use App\Models\Mission;
 use App\Repositories\Api\Contracts\MissionRepositoryInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MissionRepository implements MissionRepositoryInterface
 {
@@ -33,9 +34,14 @@ class MissionRepository implements MissionRepositoryInterface
     }
 
 
-    public function show($id)
+    public function find($id)
     {
-        return Mission::findOrFail($id);
+        $mission = Mission::find($id);
+        if (!$mission) {
+            throw new ModelNotFoundException("Mission with ID {$id} not found.");
+        }
+
+        return $mission;
     }
 
 
@@ -46,9 +52,9 @@ class MissionRepository implements MissionRepositoryInterface
             return $mission;
         }
 
-    public function destroy($id) // 🔄 Rename to match interface
-    {
-        $mission = Mission::findOrFail($id);
-        return $mission->delete();
-    }
+        public function destroy($id)
+        {
+            $mission = Mission::findOrFail($id);
+            return $mission->delete();
+        }
 }

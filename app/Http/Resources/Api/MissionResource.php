@@ -19,13 +19,17 @@ class MissionResource extends JsonResource
             'description' => $this->description,
 
             'budget' => $this->budget,
-            'delivery_time' => $this->delivery_time?->toDateTimeString(),
+            'delivery_time' => $this->delivery_time,
             'is_publish' => (bool) $this->is_publish,
             'city' => $this->whenLoaded('city', fn () => [
                     'id' => $this->city->id,
                     'name' => $this->city->name,
                 ]),
-
+            // Skills - include the skills if loaded
+            'skills' => $this->whenLoaded('skills', fn () => $this->skills->map(fn($skill) => [
+                'id' => $skill->id,
+                'name' => $skill->name,
+            ])),
             // Optionally include relationships if loaded
             'field' => $this->whenLoaded('field', fn () => [
                     'id' => $this->field->id,

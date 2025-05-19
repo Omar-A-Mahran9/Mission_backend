@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreMissionRequest;
+use App\Http\Requests\Api\UpdateMissionRequest;
 use App\Http\Resources\Api\MissionResource;
 use App\Models\Mission;
 use App\Services\Api\MissionService;
@@ -26,17 +27,7 @@ class MissionController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreMissionRequest $request)
     {
         $validated = $request->validated();
@@ -48,16 +39,34 @@ class MissionController extends Controller
 
     }
 
-    public function update(Request $request, Mission $mission)
+
+    public function update(UpdateMissionRequest $request, $id)
     {
-        //
+        $validated = $request->validated();  // Validate the incoming request data
+
+        $mission = $this->service->update($id, $validated);
+
+        return $this->success('Mission updated successfully!', new MissionResource($mission));
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Mission $mission)
+    public function destroy($id)
     {
-        //
+        try {
+            $deleted = $this->service->destroy($id);
+
+            if (!$deleted) {
+                return $this->failure('Failed to delete the mission.');
+
+
+            }
+
+
+            return $this->success('Mission deleted successfully.');
+
+        } catch (\Exception $e) {
+            return $this->failure('Mission not found or an error occurred.');
+        }
     }
+
 }
