@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Notifications\NewNotification;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\NewNotificationDashboard;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('isArabic')) {
     function isArabic(): bool
@@ -43,6 +44,31 @@ if (!function_exists('uploadImageToDirectory')) {
         $imageName = str_replace(' ', '', 'webstdy_' . time() . "_" . random_int(10, 99) . $imageFile->getClientOriginalName());  // Set Image name
         $imageFile->storeAs($path, $imageName, 'public');
         return $imageName;
+    }
+}
+
+
+if (!function_exists('uploadAttachmentToDirectory')) {
+    function uploadAttachmentToDirectory($file, $folder = 'missions/attachments')
+    {
+        $folder = trim($folder, '/'); // clean up input
+        $fileName = 'attachment_' . time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
+        $file->storeAs($folder, $fileName, 'public');
+
+        return $folder . '/' . $fileName;
+    }
+}
+
+if (!function_exists('deleteAttachmentFromDirectory')) {
+    function deleteAttachmentFromDirectory($attachment, $folder = 'missions/attachments')
+    {
+        $folder = trim($folder, '/');
+        // Assuming the attachment contains only the path after the 'public' disk (i.e. 'missions/attachments/filename')
+        $path = $attachment->file;
+
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }
 

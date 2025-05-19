@@ -5,11 +5,17 @@ namespace App\Models;
 use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
 
-class Specialist extends Model
+class MissionStatue extends Model
 {
+    protected $table='mission_status';
     protected $guarded = [];
-    protected $appends = ['name'];
+    protected $appends = [];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -24,12 +30,21 @@ class Specialist extends Model
     {
         static::addGlobalScope(new SortingScope);
     }
-    public function getNameAttribute()
+
+
+
+    public function mission()
     {
-        return $this->attributes['name_' . app()->getLocale()];
+        return $this->belongsTo(Mission::class);
     }
-    public function fields()
+
+    public function status()
     {
-        return $this->belongsToMany(Field::class, 'field_specialists','specialist_id','field_id');
+        return $this->belongsTo(Status::class); // Correcting case-sensitivity
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
