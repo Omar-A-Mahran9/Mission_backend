@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ExcperiencController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\MissionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +35,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('fields', 'FieldController@index');
     Route::get('interests', 'InterestController@index');
     Route::get('faqs', 'FaqController@index');
+    Route::get('tips', 'TipController@index');
+
     Route::get('support', 'SupportMessageController@index');
     Route::post('support', 'SupportMessageController@store');
     Route::get('skills', 'ExcperiencController@skills');
@@ -50,6 +51,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('over-view', 'ProfileController@update');
         Route::apiResource('experiences', 'ExcperiencController');
         Route::apiResource('certificates', 'CertificateController');
+        Route::apiResource('license', 'CertificateController');
+        Route::apiResource('missions', MissionController::class);
+
+
         Route::post('certificates/{id}/update', 'CertificateController@update');
         Route::apiResource('licenses', 'LicenseController');
         Route::post('licenses/{id}/update', 'LicenseController@update');
