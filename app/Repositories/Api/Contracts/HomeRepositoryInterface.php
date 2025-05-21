@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Api\Contracts;
 
-interface  BannerRepositoryInterface
+interface HomeRepositoryInterface
 {
     public function index();
 }
