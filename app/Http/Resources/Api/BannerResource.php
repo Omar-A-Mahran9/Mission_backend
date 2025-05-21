@@ -14,6 +14,8 @@ class BannerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'full_image_path' => $this->full_image_path
+        ];
     }
 }

@@ -37,4 +37,8 @@ class Field extends Model
     {
         return $this->belongsToMany(Specialist::class, 'field_specialists');
     }
+    public function missions()
+    {
+        return $this->hasMany(Mission::class);
+    }
 }

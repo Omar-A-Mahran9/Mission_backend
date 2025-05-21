@@ -36,12 +36,18 @@ class ExcperiencRepository implements ExcperiencRepositoryInterface
     {
         $search = $request->search;
         if (!$search) return [];
-
-        return Skill::query()->where(function ($q) use ($search) {
+        $isArabic = preg_match('/\p{Arabic}/u', $search);
+        $skills = Skill::query()->where(function ($q) use ($search) {
             $q->where('name_ar', 'like', "%{$search}%")
                 ->orWhere('name_en', 'like', "%{$search}%");
         })
             ->get();
+        return $skills->map(function ($skill) use ($isArabic) {
+            return [
+                'id' => $skill->id,
+                'name' => $isArabic ? $skill->name_ar : $skill->name_en,
+            ];
+        });
     }
 
     public function update($data, $id)

@@ -24,14 +24,12 @@ function retrieveLicensesFormBackend(page = 1) {
         data: $(form).serialize(),
         success: function (response) {
             hideLoading();
-            console.log(response);
             licenseItems(response);
         },
         error: function (response) {
             hideLoading();
-            console.log(response);
         }
-    });
+    }); 
 }
 
 var licenseItems = function (response) {
@@ -42,7 +40,7 @@ var licenseItems = function (response) {
         <div  id="licenses-grid">
         <div class="row g-6 g-xl-9 mb-6 mb-xl-9">
         `;
-        $("#no-results-alert").hide();
+        document.getElementById("no-results-alert").style.setProperty('display', 'none', 'important');
         licenses.forEach((license, index) => {
             const expirationHtml = license.expiration_date
                 ? `<div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3">
@@ -51,17 +49,58 @@ var licenseItems = function (response) {
            </div>`
                 : '';
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            const approveFormHtml = !license.is_review
+            const approveFormHtml = !(license.is_review == 1 || license.reason)
                 ? `<form method="POST"
-                    action="/dashboard/users/${userId}/document/${license.id}"
-                    data-redirection-url="${window.location.href}"
-                    class="form ajax-form">
+                    action="/dashboard/users/${userId}/document/${license.id}" data-redirection-url="${window.location.href}"
+                    class="form ajax-form d-flex align-items-center justify-content-center gap-2" data-success-callback="onAjaxSuccess">
                 <input type="hidden" name="_token" value="${csrfToken}">
                 <input type="hidden" name="_method" value="PUT">
-                <button type="submit" class="btn btn-sm btn-primary mt-3">
-                    ${__('Approve')}
+                <button type="submit" name="action" value="approve" class="btn btn-sm btn-primary mt-3">
+                    ${__('Approved')}
                 </button>
+                <div  id="add_btn" data-bs-toggle="modal"
+                        data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">
+                        <button type="button" class="btn btn-sm btn-danger mt-3 open-reject-modal" data-bs-toggle="tooltip"
+                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                           ${__('Reject')}</button>
+                    </div>
+                    <div class="modal fade" tabindex="-1" id="crud_modal">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="form_title">${__('Reason for Rejection')}</h5>
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <i class="ki-outline ki-cross fs-1"></i>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="fv-row mb-0 fv-plugins-icon-container">
+                            <label for="reason_inp" class="form-label required fs-6 fw-bold mb-3" style="display: block;text-align: ${locale == 'ar' ? "right" : "left"};">${__('Reason')}</label>
+                            <textarea class="form-control form-control-lg form-control-solid" name="reason" data-kt-autosize="true" id="reason_inp" placeholder="${__('Reason')}" data-kt-initialized="1" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 68px;" spellcheck="true"></textarea>
+                            <div class="fv-plugins-message-container invalid-feedback" id="reason" style="text-align: ${locale == 'ar' ? "right" : "left"};"></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light"
+                            data-bs-dismiss="modal">${__('Close')}</button>
+                        <button class="btn btn-primary" id="submit-reject-btn">
+                            <span class="indicator-label">
+                                ${__('Save')}
+                            </span>
+                            <span class="indicator-progress">
+                                ${__('Please wait....')} <span
+                                    class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
             </form>`
                 : '';
             licenseCards += `
@@ -99,7 +138,8 @@ var licenseItems = function (response) {
                         <!--begin::Stats-->
                         <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3">
                             <div class="fs-6 fw-bold text-gray-700">
-                                ${license.is_review ? __('Yes') : __('No')}
+                                ${(license.is_review == 1 && isEmpty(license.reason)) ? __('Approved') : (license.is_review == 0 && isEmpty(license.reason)) ? __("No") : __('Rejected')}
+
                             </div>
                             <div class="fw-semibold text-gray-500">${__('Reviewed?')}</div>
                         </div>
@@ -191,10 +231,26 @@ var licenseItems = function (response) {
         $("#licenses-grid").fadeIn();
     });
 
+    $('#submit-reject-btn').on('click', function (e) {
+        e.preventDefault();
+        const reason = $('#reason_inp').val().trim();
+        if (!reason) {
+            $('#reason').text(__('Please enter a reason'));
+            $('#reason_inp').addClass('is-invalid');
+            return;
+        }
+        $('#reason').text('');
+        $('#reason_inp').removeClass('is-invalid');
+
+        $(this).closest('form').submit();
+    });
     paginator(response);
     KTMenu.createInstances();
     // window.products = products;
 
+}
+function isEmpty(val) {
+    return (val === undefined || val == null || val.length <= 0) ? true : false;
 }
 var paginator = function (response) {
     var links = '';

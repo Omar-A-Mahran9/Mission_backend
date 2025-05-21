@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserFieldRequest extends FormRequest
@@ -27,6 +28,8 @@ class UpdateUserFieldRequest extends FormRequest
             "specialist_ids.*" => ['integer', 'exists:specialists,id'],
             "skill_ids" => ['required', 'array'],
             "skill_ids.*" => ['integer', 'exists:skills,id'],
+            "skills_name" => ['nullable', 'array'],
+            "skills_name.*" => ['nullable', new NotNumbersOnly()]
         ];
     }
 }
