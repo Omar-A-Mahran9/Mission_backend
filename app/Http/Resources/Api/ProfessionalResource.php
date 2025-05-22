@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FieldResource extends JsonResource
+class ProfessionalResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,11 @@ class FieldResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => $this->full_name,
             'full_image_path' => $this->full_image_path,
-            'missions_count' => $this->missions_count,
-            'is_critical' => $this->is_critical,
+            'short_description' => $this->short_description,
+            'average_rating' => $this->average_rating,
+            'specialist' => $this->specialists?->first()?->name,
         ];
     }
 }

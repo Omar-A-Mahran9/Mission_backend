@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FieldResource extends JsonResource
+class MissionHomeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,11 @@ class FieldResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'full_image_path' => $this->full_image_path,
-            'missions_count' => $this->missions_count,
-            'is_critical' => $this->is_critical,
+            'field_name' => $this->field->name,
+            'description' => $this->description,
+            'user_name' => $this->user->full_name,
+            'offers_count' => $this->offers_count,
+            'created_at' => $this->created_at->locale(app()->getLocale())->diffForHumans(),
         ];
     }
 }

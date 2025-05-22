@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Field extends Model
 {
     protected $guarded = [];
-    protected $appends = ['name'];
+    protected $appends = ['name', 'full_image_path'];
 
     /**
      * Get the attributes that should be cast.
@@ -40,5 +40,9 @@ class Field extends Model
     public function missions()
     {
         return $this->hasMany(Mission::class);
+    }
+    public function getFullImagePathAttribute()
+    {
+        return asset(getImagePathFromDirectory($this->image, 'Fields', "default.svg"));
     }
 }
