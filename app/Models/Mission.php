@@ -67,6 +67,8 @@ class Mission extends Model
     {
         return $this->hasOne(MissionStatue::class)->latestOfMany();
     }
-
-
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
 }
