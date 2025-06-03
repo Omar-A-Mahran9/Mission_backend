@@ -9,8 +9,8 @@ Route::get('/', function () {
 })->name('index');
 
 /* begin Delete And restore */
-Route::delete("products/delete-selected", "ProductController@deleteSelected");
-Route::get("products/restore-selected", "ProductController@restoreSelected");
+// Route::delete("products/delete-selected", "ProductController@deleteSelected");
+// Route::get("products/restore-selected", "ProductController@restoreSelected");
 /* end Delete And restore */
 
 
@@ -26,14 +26,14 @@ Route::get('users/{user}/portfolios', "UserController@portfoliosAjax")
     ->name('dashboard.users.portfolios.ajax');
 Route::get('users/status/{user}', 'UserController@status')->name('users.status');
 Route::post('users/is-valid/{user}', 'UserController@isValid')->name('users.is-valid');
-Route::resource('products', 'ProductController');
-Route::get("products/{product}/images", "ProductController@images");
-Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');
+// Route::resource('products', 'ProductController');
+// Route::get("products/{product}/images", "ProductController@images");
+// Route::put("delivery/{winner}", "ProductController@updateDelivery")->name('delivery');
 
 Route::resource('promo-codes', 'PromoCodeController');
 
 /** ajax routes **/
-Route::post('dropzone/validate-image', 'DropzoneController@validateImage')->name('dropzone.validate-image');
+// Route::post('dropzone/validate-image', 'DropzoneController@validateImage')->name('dropzone.validate-image');
 
 // Route::post('/set-theme-mode', function (Request $request) {
 //     // $themeMode = $request->input('theme_mode', 'light'); // Default to 'light'

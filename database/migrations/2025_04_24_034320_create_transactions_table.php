@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('status_id');
+            // $table->unsignedBigInteger('status_id');
             $table->foreignId('payment_way_id')->constrained();
             $table->foreignId('user_id_paid')->constrained('users');
             $table->foreignId('user_id_delivered')->constrained('users');
             $table->foreignId('mission_id')->constrained('missions');
+
+$table->foreignId('status_id')->constrained('status');
+
             $table->decimal('total_cost', 10, 2);
-            $table->foreignId('status_id')->constrained('statuses');
-            $table->timestamps();
+             $table->timestamps();
         });
     }
 

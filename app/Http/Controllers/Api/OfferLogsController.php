@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Services\Api\OfferLogsService;
+use App\Http\Requests\TaskHandOverRequest;
+use App\Http\Resources\Api\OffersResource;
+
+class OfferLogsController extends Controller
+{
+    protected $service;
+
+    public function __construct(OfferLogsService $service)
+    {
+        $this->service = $service;
+    }
+
+    public function taskHandOver(TaskHandOverRequest $request)
+    {
+        $data = $request->validated();
+        // $data['client_id'] = $request->mission->user_id; // Assuming the client is the mission owner
+
+         $this->service->taskHandOver($data);
+
+        return response()->json([
+            'message' => 'Task handed over successfully',
+         ], 201);
+    }
+    public function cancelOffer(TaskHandOverRequest $request)
+    {
+        $data = $request->validated();
+        // $data['client_id'] = $request->mission->user_id; // Assuming the client is the mission owner
+
+         $this->service->cancelOffer($data);
+
+        return response()->json([
+            'message' => 'Task handed over successfully',
+         ], 201);
+    }
+}

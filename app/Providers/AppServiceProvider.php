@@ -65,6 +65,14 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Contracts\HomeRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\HomeRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\OfferRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\OfferRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\OfferLogsRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\OfferLogsRepository::class
+        );
     }
 
     /**
