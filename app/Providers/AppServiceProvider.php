@@ -18,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Eloquent\AuthRepository::class
         );
         $this->app->bind(
+            \App\Repositories\Api\Contracts\MissionRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\MissionRepository::class
+        );
+        $this->app->bind(
             \App\Repositories\Api\Contracts\CityRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\CityRepository::class
         );

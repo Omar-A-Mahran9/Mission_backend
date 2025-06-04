@@ -18,11 +18,8 @@ class OfferController extends Controller
 
     public function store(StoreOffer $request)
     {
-         $this->service->store($request);
-
-         return response()->json([
-            'message' => 'Offer created successfully',
-          ],200);
+       return  $this->service->store($request);
+ 
     }   
 
     public function getDoneOffers()
@@ -41,6 +38,10 @@ class OfferController extends Controller
     public function getOfferById(int $id)
     {
         return $this->service->getOfferById($id);
+    }
+    public function getOffersByMissionId(int $mission_id)
+    {
+        return $this->service->getOffersByMissionId($mission_id);
     }
 
 

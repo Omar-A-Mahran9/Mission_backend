@@ -4,9 +4,11 @@ namespace App\Services\Api;
 
 use App\Repositories\Api\Contracts\OfferLogsRepositoryInterface;
 use App\Repositories\Api\Contracts\OfferRepositoryInterface;
-
+use App\Traits\RespondsWithHttpStatus;
 class OfferLogsService
 {
+
+    use RespondsWithHttpStatus;
     protected $offerLogsRepository;
     protected $offerRepository;
 
@@ -19,10 +21,13 @@ class OfferLogsService
 
     public function taskHandOver($data)
     {
-        $offer = $this->offerRepository->getOfferById($data['offer_id']);
+        // $offer = $this->offerRepository->getOfferById($data['offer_id']);
+        $offer = $this->offerLogsRepository->userOfferLogs($data['offer_id']);
 
-        if (!$offer) {
-            return response()->json(['message' => 'Failed to hand over the task'], 500);
+         if (!$offer) {
+
+            return $this->errorModel('offer not found', 'offer not found', 404, 'offer');
+            // return response()->json(['message' => 'Failed to hand over the task'], 500);
         }
 
         // Get the related mission
@@ -43,7 +48,7 @@ class OfferLogsService
 
         $offerLog = $this->offerLogsRepository->taskHandOver($data);
         return response()->json([
-            'data' => $offerLog,
+            'message' =>'Task handed over successfully',
         ], 201);
     }
     public function cancelOffer($data)

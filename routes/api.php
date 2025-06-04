@@ -58,6 +58,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('/done-offer',[OfferController::class, 'getDoneOffers']);
         Route::get('/current-offer',[OfferController::class, 'getCurrentOffers']);
         Route::get('/offer/{id}',[OfferController::class, 'getOfferById']);
+        Route::get('/offers/mission/{mission_id}',[OfferController::class, 'getOffersByMissionId']);
         Route::post('/accept-offer/{id}',[OfferController::class, 'acceptOffer']);
         Route::post('/reject-offer/{id}',[OfferController::class, 'rejectOfferByClient']);
 

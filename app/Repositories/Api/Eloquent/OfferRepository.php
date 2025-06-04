@@ -18,6 +18,12 @@ class OfferRepository implements OfferRepositoryInterface
         $this->offer = $offer;  
         // You can inject any dependencies here if needed
     }
+    public function getOfferByMission($mission_Id){
+        return $this->offer
+            ->with(['mission.specialist', 'status'])  // <- eager load related models
+            ->where('mission_id', $mission_Id)
+            ->paginate(12);
+    }
 
     public function createOffer(array $data){
 
@@ -57,20 +63,18 @@ class OfferRepository implements OfferRepositoryInterface
     return $offer->load('mission', 'user', 'status');        
     }
    
-    public function acceptOffer(int $offerId, int $userId){
+    public function acceptOffer(int $offerId){
 
         $status = Status::where('name_en', 'Accepted')->first();
 
         return $this->offer->where('id', $offerId)
-            ->where('user_id', $userId)
             ->update(['status_id' => $status->id]);  // Update the status to 'Accepted'     
           ; // Assuming 2 is the ID for 'Accepted' status
     }
-    public function rejectOfferByClient(int $offerId, int $userId){
+    public function rejectOfferByClient(int $offerId){
                 $status = Status::where('name_en', 'Cancelled')->first();
 
         return $this->offer->where('id', $offerId)
-            ->where('user_id', $userId)
             ->update(['status_id' => $status->id]);  // Update the status to 'Accepted'     
           ; // Assuming 2 is the ID for 'Accepted' status
 

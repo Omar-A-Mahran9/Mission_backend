@@ -60,11 +60,6 @@ class MissionResource extends JsonResource
             ]),
 
 
-            'offers'=>$this->whenLoaded('offers', fn () => $this->offers->map(fn($offer) => [
-                'id' => $offer->id,
-                'user_Name' => $offer->user->first_name .  ' ' . $offer->user->last_name,
-                'user_city' => $offer->user->city->name ?? null,
-                'available_budget'=> $offer->available_budget,
-             ])),
+            'offers_count'=>$this->offers->count(),
         ]; }
 }
