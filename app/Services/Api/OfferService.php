@@ -10,7 +10,7 @@ use App\Models\Status;
 use App\Repositories\Api\Contracts\OfferRepositoryInterface;
 use App\Repositories\Api\Contracts\MissionRepositoryInterface;
 use App\Traits\RespondsWithHttpStatus;
-use  \Illuminate\Auth\Access\AuthorizationException;
+use \Illuminate\Auth\Access\AuthorizationException;
 
 class OfferService
 {
@@ -33,8 +33,18 @@ class OfferService
     {
         $mission = $this->missionRepository->find($request->mission_id);
         $user = $this->getAuthUser();
+        if ($user->is_valid === 0 && $mission->field->is_critical === 1) {
+            return $this->errorModel('You are not valid user', 'You are not valid user', 403, 'user');
+        }
+        if ($mission->user_id === $user->id) {
+            return $this->errorModel(
+                'Unauthorized action',
+                'You cannot create an offer for your own mission',
+                403,
+                'offer'
+            );
+        }
 
-        $this->validateOfferCreation($mission, $user);
 
         $offerData = $this->prepareOfferData($request, $user);
         $this->offerRepository->createOffer($offerData);
@@ -45,11 +55,11 @@ class OfferService
     public function getOfferById(int $id)
     {
         $offer = $this->offerRepository->getOfferById($id);
-        
+
         if (!$offer) {
-          return   $this->errorModel('Offer not found', 'Offer not found', 404, 'offer');
+            return $this->errorModel('Offer not found', 'Offer not found', 404, 'offer');
         }
-        
+
         return $this->success('Offer retrieved', new OfferResource($offer));
     }
 
@@ -57,7 +67,7 @@ class OfferService
     {
         $mission = $this->getValidMission($missionId);
         $offers = $this->offerRepository->getOfferByMission($mission->id);
-        
+
         return OffersResource::collection($offers);
     }
 
@@ -65,7 +75,7 @@ class OfferService
     {
         $statusIds = $this->getStatusIds(['received', 'Cancelled']);
         $offers = $this->offerRepository->getDoneOffers($statusIds);
-        
+
         return $this->success('Done offers retrieved', OffersResource::collection($offers));
     }
 
@@ -73,20 +83,20 @@ class OfferService
     {
         $statusIds = $this->getStatusIds(['Accepted']);
         $offers = $this->offerRepository->getCurrentOffers($statusIds);
-        
+
         return $this->success('Current offers retrieved', OffersResource::collection($offers));
     }
 
     public function acceptOffer(int $offerId)
     {
+
+
         $user = $this->getAuthUser();
         $offer = $this->getValidOffer($offerId);
-        if (!$offer) {
-          return   $this->errorModel('Offer not found', 'Offer not found', 404, 'offer');
+        if ($errorResponse = $this->validateOfferAcceptance($offer, $user)) {
+            return $errorResponse;
         }
-
- 
-        $this->validateOfferAcceptance($offer, $user);
+        
 
         $this->offerRepository->rejectOfferByClient($offer->mission_id);
         $this->offerRepository->acceptOffer($offer->id);
@@ -99,7 +109,13 @@ class OfferService
         $user = $this->getAuthUser();
         $mission = $this->getValidMission($missionId);
 
-        $this->validateMissionOwnership($mission, $user);
+       
+
+        if ($errorResponse = $this->validateOfferCancellation($mission, $user)) {
+            return $errorResponse;
+        }
+        
+
 
         $this->offerRepository->rejectOfferByClient($mission->id);
         return $this->success('Offer canceled successfully');
@@ -113,6 +129,11 @@ class OfferService
 
         return $this->filterByRate($missionId, $ratingSort);
     }
+
+
+
+
+
 
     /* ==================== Private Methods ==================== */
 
@@ -134,60 +155,42 @@ class OfferService
             ->orderBy('available_budget', $direction)
             ->paginate(12);
 
-    return     OfferFilterResource::collection($offers);
+        return OfferFilterResource::collection($offers);
     }
 
     private function filterByRate(int $missionId, ?string $ratingSort)
-{
-      $mission = $this->getValidMission($missionId);
-    $query = $this->offerRepository->filterOfferByPriceAndRate($mission->id);
-    
-    // Apply the relationship loading
-    $query = $this->offerRepository->withUserAndRating($query, $mission->id);
+    {
+        $mission = $this->getValidMission($missionId);
+        $query = $this->offerRepository->filterOfferByPriceAndRate($mission->id);
 
-    if ($ratingSort) {
-        $direction = strtolower($ratingSort) === 'top' ? 'desc' : 'asc';
-        $query = $this->offerRepository->orderByAverageRating($query, $direction, $mission->id);
+        // Apply the relationship loading
+        $query = $this->offerRepository->withUserAndRating($query, $mission->id);
+
+        if ($ratingSort) {
+            $direction = strtolower($ratingSort) === 'top' ? 'desc' : 'asc';
+            $query = $this->offerRepository->orderByAverageRating($query, $direction, $mission->id);
+        }
+
+        // Now paginate the final query
+        $offers = $query->paginate(12);
+        return OfferFilterResource::collection($offers);
+
+
+
     }
-
-    // Now paginate the final query
-    $offers = $query->paginate(12);
-    return     OfferFilterResource::collection($offers);
-
-    
-
-}
 
     /* ==================== Validation Methods ==================== */
 
-    private function validateOfferCreation($mission, $user)
+       private function validateOfferAcceptance($offer, $user)
     {
-        if (!$mission) {
-         return   $this->errorModel('Mission not found', 'Mission not found', 404, 'mission');
+
+
+
+         if (!$offer) {
+            return $this->errorModel('Offer not found', 'Offer not found', 404, 'offer');
         }
-
-        if ($user->is_valid === 0 && $mission->field->is_critical === 1) {
-        return    $this->errorModel('You are not valid user', 'You are not valid user', 403, 'user');
-        }
-
-        if ($mission->user_id === $user->id) {
-        return    $this->errorModel(
-                'Unauthorized action',
-                'You cannot create an offer for your own mission',
-                403,
-                'offer'
-            );
-        }
-
-        
-
-
-    }
-
-    private function validateOfferAcceptance($offer, $user)
-    {
         if ($offer->user_id === $user->id) {
-            $this->errorModel(
+            return $this->errorModel(
                 'Unauthorized action',
                 'You are not the owner of this offer',
                 403,
@@ -195,22 +198,38 @@ class OfferService
             );
         }
 
-       
 
-        $this->validateMissionOwnership($offer->mission, $user);
-    }
 
-    private function validateMissionOwnership($mission, $user)
+
+     }
+
+        private function validateOfferCancellation($mission, $user)
     {
-           if ($mission->user_id !== $user->id) {
-        throw new  AuthorizationException(
-            'Unauthorized action: Only the mission owner can perform this action'
-        );
-    }
 
-    }
 
-    /* ==================== Utility Methods ==================== */
+         if (!$mission) {
+            return $this->errorModel('mission not found', 'mission not found', 404, 'mission');
+        }
+        if ($mission->user_id != $user->id) {
+            return $this->errorModel(
+                'Unauthorized action',
+                'You are not the owner of this mission',
+                403,
+                'offer'
+            );
+        }
+
+
+
+
+     }
+
+
+
+  
+     /* ==================== Utility Methods ==================== */
+
+
 
     private function getValidOffer(int $id)
     {
@@ -220,17 +239,18 @@ class OfferService
     }
 
 
-    public function offerNotFound($offer){
-          if (!$offer) {
-          return   $this->errorModel('Offer not found', 'Offer not found', 404, 'offer');
+    public function offerNotFound($offer)
+    {
+        if (!$offer) {
+            return $this->errorModel('Offer not found', 'Offer not found', 404, 'offer');
         }
     }
     private function getValidMission(int $id)
     {
         $mission = $this->missionRepository->find($id);
-        if (!$mission) {
-            $this->errorModel('Mission not found', 'Mission not found', 404, 'mission');
-        }
+        // if (!$mission) {
+        //     $this->errorModel('Mission not found', 'Mission not found', 404, 'mission');
+        // }
         return $mission;
     }
 

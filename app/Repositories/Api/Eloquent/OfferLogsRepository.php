@@ -33,4 +33,11 @@ class OfferLogsRepository implements OfferLogsRepositoryInterface
         // ->where('user_id', auth()->id()) // u need to delete this line
              ->first();
     }
+
+        public function CloseTheOffers($offerId){
+              return  $this->offerLogs->where('offer_id', $offerId)
+              ->get(); 
+        }
+    
+ 
 }

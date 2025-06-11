@@ -38,7 +38,7 @@ class OfferLogsService
 
 
         $authUserId = auth()->id();
-
+                // 21                 21              
             if($mission->user_id !== $authUserId &&  $offer->user_id !== $authUserId){
             return response()->json(['message' => 'You are not authorized to hand over this task'], 403); 
                 }        
@@ -94,5 +94,17 @@ class OfferLogsService
 
 
 
+
+ //function to check if client cancel offer and freelance say i want to cancel it //that mean cancel
+    //  if client received offer and freelance say  received it //that mean done
+    //if client cancel
+ public function CloseTheOffers($offerId){
+            //get offer by id 
+    // $offer 
+
+
+}
+    
+   
      
 }
