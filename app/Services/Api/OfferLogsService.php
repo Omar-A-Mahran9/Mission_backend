@@ -21,7 +21,6 @@ class OfferLogsService
 
     public function taskHandOver($data)
     {
-        // $offer = $this->offerRepository->getOfferById($data['offer_id']);
         $offer = $this->offerLogsRepository->userOfferLogs($data['offer_id']);
 
          if (!$offer) {
@@ -37,7 +36,13 @@ class OfferLogsService
             return response()->json(['message' => 'Related mission not found'], 404);
         }
 
+
         $authUserId = auth()->id();
+
+            if($mission->user_id !== $authUserId &&  $offer->user_id !== $authUserId){
+            return response()->json(['message' => 'You are not authorized to hand over this task'], 403); 
+                }        
+    
 
         // Determine role based on who created the mission
 
@@ -46,7 +51,7 @@ class OfferLogsService
         $data['mission_id'] = $mission->id;
         $data['role'] = ((int) $mission->user_id === (int) $authUserId) ? 1 : 2;
 
-        $offerLog = $this->offerLogsRepository->taskHandOver($data);
+  $this->offerLogsRepository->taskHandOver($data);
         return response()->json([
             'message' =>'Task handed over successfully',
         ], 201);
@@ -68,17 +73,26 @@ class OfferLogsService
 
         $authUserId = auth()->id();
 
-        // Determine role based on who created the mission
 
-        $data['user_id'] = $authUserId;
+      
+        // Determine role based on who created the mission
+            if($mission->user_id !== $authUserId &&  $offer->user_id !== $authUserId){
+            return response()->json(['message' => 'You are not authorized to hand over this task'], 403); 
+                }
+         
+         
+         $data['user_id'] = $authUserId;
         $data['offer_action_at'] = now();
         $data['mission_id'] = $mission->id;
         $data['role'] = ((int) $mission->user_id === (int) $authUserId) ? 1 : 2;
 
         $offerLog = $this->offerLogsRepository->taskHandOver($data);
-        return response()->json([
-            'data' => $offerLog,
+         return response()->json([
+            'message' =>'Task handed over successfully',
         ], 201);
     }
 
+
+
+     
 }

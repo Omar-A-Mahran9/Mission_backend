@@ -6,6 +6,7 @@ use App\Models\Offer;
 use App\Models\OfferLogs;
 use App\Models\Status;
 use App\Repositories\Api\Contracts\OfferRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
 
 class OfferRepository implements OfferRepositoryInterface
 {
@@ -67,17 +68,52 @@ class OfferRepository implements OfferRepositoryInterface
 
         $status = Status::where('name_en', 'Accepted')->first();
 
-        return $this->offer->where('id', $offerId)
+        $this->offer->where('id', $offerId)
             ->update(['status_id' => $status->id]);  // Update the status to 'Accepted'     
           ; // Assuming 2 is the ID for 'Accepted' status
+ 
+
     }
-    public function rejectOfferByClient(int $offerId){
+    public function rejectOfferByClient($mission_id){
                 $status = Status::where('name_en', 'Cancelled')->first();
 
-        return $this->offer->where('id', $offerId)
+        return $this->offer
+        ->where('mission_id', $mission_id)
             ->update(['status_id' => $status->id]);  // Update the status to 'Accepted'     
           ; // Assuming 2 is the ID for 'Accepted' status
 
+    }
+
+   public function filterOfferByPriceAndRate($mission_id){
+    // Return the query builder, don't call get() here
+    return $this->offer->with(['status'])
+        ->where('mission_id', $mission_id);
+}
+
+ 
+    public function withUserAndRating(Builder $query, int $missionId)
+    {
+        return $query->with([
+            'user' => function ($query) use ($missionId) {
+                $query->with(['city'])
+                    ->withAvg([
+                        'reviews as average_rating' => function ($q) use ($missionId) {
+                            $q->where('mission_id', $missionId);
+                        }
+                    ], 'rate');
+            }
+        ]);
+    }
+
+    public function orderByAverageRating(Builder $query, string $direction, int $missionId)
+    {
+        return $query->orderBy(
+            \App\Models\Rate::selectRaw('AVG(rate)')
+                ->whereColumn('profissionalist_id', 'offers.user_id')
+                ->where('mission_id', $missionId)
+                ->groupBy('profissionalist_id'),
+            $direction
+        );
     }
 
 

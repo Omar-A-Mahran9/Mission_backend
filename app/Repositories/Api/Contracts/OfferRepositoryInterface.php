@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\Api\Contracts;
+use Illuminate\Database\Eloquent\Builder;
 
 interface OfferRepositoryInterface
 {
@@ -16,7 +17,12 @@ interface OfferRepositoryInterface
     public function getOfferById(int $id);
 
     public function acceptOffer(int $offerId);
-    public function rejectOfferByClient(int $offerId);
+    public function rejectOfferByClient(int $mission_id);
+
+    public function filterOfferByPriceAndRate($mission_id);
+
+        public function withUserAndRating(Builder $query, int $missionId);
+    public function orderByAverageRating(Builder $query, string $direction, int $missionId);
 
  
  

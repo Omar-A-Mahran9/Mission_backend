@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreOffer;
 use App\Http\Requests\TaskHandOverRequest;
  use App\Services\Api\OfferService;
-
+use App\Http\Requests\OfferFilterRequest;
 class OfferController extends Controller
 {
     protected $service;
@@ -55,6 +55,20 @@ class OfferController extends Controller
     {
         return $this->service->rejectOfferByClient($id);
     }
-
+public function filterOfferByPriceAndRate(OfferFilterRequest $request)
+{
+    $priceSort = $request->query('priceSort'); //  
+    $missionId = $request->query('missionId'); //  
+    $rate = $request->query('rate'); // Get query parameter
+     
+    return $this->service->filterOfferByPriceAndRate($priceSort, $missionId,$rate);
+}
+// public function filterByRate(\Illuminate\Http\Request $request)
+// {
+//     $rate = $request->query('rate'); // Get query parameter
+//     $missionId = $request->query('missionId'); // Optional mission ID parameter
+     
+//     return $this->service->filterByRate( $missionId, $rate);
+// }
     
 }

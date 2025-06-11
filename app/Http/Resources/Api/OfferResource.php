@@ -15,9 +15,7 @@ class OfferResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-$currentTime = \Carbon\Carbon::now()->format('H:i:s');
-$deliveryTime = Carbon::parse($this->mission->delivery_time)->setTimezone(config('app.timezone'));
-
+ 
         return [
             'id' => $this->id,
             'user_name' => $this->user->first_name . ' ' .$this->user->last_name,

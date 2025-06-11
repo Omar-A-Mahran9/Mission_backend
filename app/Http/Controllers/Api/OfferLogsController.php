@@ -28,12 +28,8 @@ class OfferLogsController extends Controller
     public function cancelOffer(TaskHandOverRequest $request)
     {
         $data = $request->validated();
-        // $data['client_id'] = $request->mission->user_id; // Assuming the client is the mission owner
-
-         $this->service->cancelOffer($data);
-
-        return response()->json([
-            'message' => 'Task handed over successfully',
-         ], 201);
+ 
+      return    $this->service->cancelOffer($data);
+ 
     }
 }

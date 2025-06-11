@@ -30,7 +30,7 @@ class OfferLogsRepository implements OfferLogsRepositoryInterface
     {
         // Fetch the offer logs for a specific offer
         return $this->offer->where('id', $offerId)
-        ->where('user_id', auth()->id())
+        // ->where('user_id', auth()->id()) // u need to delete this line
              ->first();
     }
 }
