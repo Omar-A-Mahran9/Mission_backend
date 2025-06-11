@@ -149,4 +149,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(SearchHistory::class);
     }
+
+
+
+
+    public function OfferLogs()
+{
+    return $this->hasMany(OfferLogs::class, 'freelancer_id');
+}
+
+
+
 }

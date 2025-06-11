@@ -10,4 +10,5 @@ interface MissionRepositoryInterface
     public function find($id);
     public function update($id, array $data);
     public function destroy($id);
+
 }

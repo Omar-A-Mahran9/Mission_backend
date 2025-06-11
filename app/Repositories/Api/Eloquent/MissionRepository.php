@@ -10,7 +10,16 @@ class MissionRepository implements MissionRepositoryInterface
     public function index()
     {
 
-        return Mission::all();
+        return Mission::with([
+        'field',
+        'specialist',
+        'payment',
+        'city',
+        'user',
+        'skills',
+        'lastStatue.status',
+        'offers'
+    ])->get();
     }
 
     public function store($data)
@@ -36,7 +45,16 @@ class MissionRepository implements MissionRepositoryInterface
 
     public function find($id)
     {
-        $mission = Mission::find($id);
+        $mission =   Mission::with([
+        'field',
+        'specialist',
+        'payment',
+        'city',
+        'user',
+        'skills',
+        'lastStatue.status',
+        'offers'
+    ])->find($id);
         if (!$mission) {
             throw new ModelNotFoundException("Mission with ID {$id} not found.");
         }

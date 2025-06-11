@@ -58,5 +58,8 @@ class MissionResource extends JsonResource
                     'name' => $this->lastStatue->status->name,
 
             ]),
+
+
+            'offers_count'=>$this->offers->count(),
         ]; }
 }

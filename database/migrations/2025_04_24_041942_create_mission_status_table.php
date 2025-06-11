@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('reason')->nullable(); // Reason (nullable)
 
             // Adding foreign key constraints
-            $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
+            $table->foreign('status_id')->references('id')->on('status')->onDelete('cascade');
             $table->foreign('mission_id')->references('id')->on('missions')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();

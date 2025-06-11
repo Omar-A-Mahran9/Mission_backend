@@ -41,4 +41,21 @@ trait RespondsWithHttpStatus
             "errors" => $errors
         ], $status);
     }
+
+
+ protected function errorModel(
+    string $message = 'Resource not found',
+    string $error = 'Not found',
+    int $status = Response::HTTP_NOT_FOUND,
+    string $field = 'field'
+) {
+    return response([
+        'message' => $message,
+        'errors' => [
+            $field => [$error], // wrap the error in an array
+        ],
+    ], $status);
 }
+
+}
+ 

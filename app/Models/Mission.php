@@ -71,4 +71,13 @@ class Mission extends Model
     {
         return $this->hasMany(Offer::class);
     }
+    public function OfferLogs()
+    {
+        return $this->hasMany(OfferLogs::class);
+    }
+
+
+    public function rates(){
+        return $this->hasMany(Rate::class);
+    }
 }

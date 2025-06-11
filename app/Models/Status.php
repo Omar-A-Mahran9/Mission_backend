@@ -42,4 +42,13 @@ class Status extends Model
     {
         return $this->name_ar ?? $this->name_en; // Assuming you have name_ar and name_en fields
     }
+
+
+    public function OfferLogs()
+{
+    return $this->hasMany(OfferLogs::class);
+}
+
+ 
+
 }

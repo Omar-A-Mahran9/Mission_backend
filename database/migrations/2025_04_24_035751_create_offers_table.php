@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('mission_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('status_id')->constrained()->onDelete('cascade');
+$table->foreignId('status_id')->constrained('status');
             $table->decimal('available_budget', 10, 2)->nullable();
             $table->timestamps();
         });
