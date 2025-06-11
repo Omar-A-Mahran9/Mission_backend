@@ -15,17 +15,18 @@ class OfferFilterResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-                        'id' => $this->id,
-            'user_name' => $this->user->first_name . ' ' .$this->user->last_name,
-            'user_city' => $this->user->city->name,
-            'available_budget'=> $this->available_budget,
-         
+          'id' => $this->id,
+              'status' => $this->status->name,
+           
+            
+            'mission_description' => $this->mission->description,
+           'specialists' =>   $this->mission->specialist->name,
+            // 'available_budget'=> $this->available_budget,
             
 
 
-                    'average_rating' => $this->user->average_rating, // From withAvg()
-         'user_id' => $this->user->id,
-
+        //  'average_rating' => $this->user->average_rating, // From withAvg()
+ 
         ];
     }
 }

@@ -132,14 +132,14 @@ class OfferService
 
         $offers = $this->offerRepository->filterOfferByPriceAndRate($mission->id)
             ->orderBy('available_budget', $direction)
-            ->get();
+            ->paginate(12);
 
-        return $this->success('Offers filtered by price ', OfferFilterResource::collection($offers));
+    return     OfferFilterResource::collection($offers);
     }
 
     private function filterByRate(int $missionId, ?string $ratingSort)
 {
-    $mission = $this->getValidMission($missionId);
+      $mission = $this->getValidMission($missionId);
     $query = $this->offerRepository->filterOfferByPriceAndRate($mission->id);
     
     // Apply the relationship loading
@@ -150,10 +150,12 @@ class OfferService
         $query = $this->offerRepository->orderByAverageRating($query, $direction, $mission->id);
     }
 
-    return $this->success(
-        'Offers filtered by rating', 
-        OfferFilterResource::collection($query->get())
-    );
+    // Now paginate the final query
+    $offers = $query->paginate(12);
+    return     OfferFilterResource::collection($offers);
+
+    
+
 }
 
     /* ==================== Validation Methods ==================== */
