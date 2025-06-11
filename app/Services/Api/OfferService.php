@@ -139,10 +139,13 @@ class OfferService
 
     private function prepareOfferData(StoreOffer $request, $user): array
     {
+
+        $status = Status::where('name_en', 'Under review')->first();
+      
         return [
             'mission_id' => $request->mission_id,
             'user_id' => $user->id,
-            'status_id' => Status::where('name_en', 'Under review')->first()->id,
+            'status_id' => $status->id,
         ] + $request->all();
     }
 
