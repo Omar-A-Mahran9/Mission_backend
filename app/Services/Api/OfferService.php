@@ -10,6 +10,7 @@ use App\Models\Status;
 use App\Repositories\Api\Contracts\OfferRepositoryInterface;
 use App\Repositories\Api\Contracts\MissionRepositoryInterface;
 use App\Traits\RespondsWithHttpStatus;
+use  \Illuminate\Auth\Access\AuthorizationException;
 
 class OfferService
 {
@@ -83,6 +84,8 @@ class OfferService
         if (!$offer) {
           return   $this->errorModel('Offer not found', 'Offer not found', 404, 'offer');
         }
+
+ 
         $this->validateOfferAcceptance($offer, $user);
 
         $this->offerRepository->rejectOfferByClient($offer->mission_id);
@@ -98,7 +101,7 @@ class OfferService
 
         $this->validateMissionOwnership($mission, $user);
 
-        $this->offerRepository->rejectOfferByClient($mission);
+        $this->offerRepository->rejectOfferByClient($mission->id);
         return $this->success('Offer canceled successfully');
     }
 
@@ -158,21 +161,25 @@ class OfferService
     private function validateOfferCreation($mission, $user)
     {
         if (!$mission) {
-            $this->errorModel('Mission not found', 'Mission not found', 404, 'mission');
+         return   $this->errorModel('Mission not found', 'Mission not found', 404, 'mission');
         }
 
         if ($user->is_valid === 0 && $mission->field->is_critical === 1) {
-            $this->errorModel('You are not valid user', 'You are not valid user', 403, 'user');
+        return    $this->errorModel('You are not valid user', 'You are not valid user', 403, 'user');
         }
 
         if ($mission->user_id === $user->id) {
-            $this->errorModel(
+        return    $this->errorModel(
                 'Unauthorized action',
                 'You cannot create an offer for your own mission',
                 403,
                 'offer'
             );
         }
+
+        
+
+
     }
 
     private function validateOfferAcceptance($offer, $user)
@@ -186,28 +193,19 @@ class OfferService
             );
         }
 
-        if ($offer->status->name_en === 'Cancelled') {
-            $this->errorModel(
-                'Offer already accepted',
-                'Offer already accepted',
-                403,
-                'offer'
-            );
-        }
+       
 
         $this->validateMissionOwnership($offer->mission, $user);
     }
 
     private function validateMissionOwnership($mission, $user)
     {
-        if ($mission->user_id !== $user->id) {
-            $this->errorModel(
-                'Unauthorized action Only The Owner Of Mission Can Accept Offer',
-                'Unauthorized action',
-                403,
-                'offer'
-            );
-        }
+           if ($mission->user_id !== $user->id) {
+        throw new  AuthorizationException(
+            'Unauthorized action: Only the mission owner can perform this action'
+        );
+    }
+
     }
 
     /* ==================== Utility Methods ==================== */
