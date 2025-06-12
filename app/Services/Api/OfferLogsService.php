@@ -2,6 +2,7 @@
 
 namespace App\Services\Api;
 
+use App\Models\Status;
 use App\Repositories\Api\Contracts\OfferLogsRepositoryInterface;
 use App\Repositories\Api\Contracts\OfferRepositoryInterface;
 use App\Traits\RespondsWithHttpStatus;
@@ -22,8 +23,15 @@ class OfferLogsService
     public function taskHandOver($data)
     {
         $offer = $this->offerLogsRepository->userOfferLogs($data['offer_id']);
+        $authUserId = auth()->id();
 
-         if (!$offer) {
+        $isUserChangeOfferStatus = $this->offerLogsRepository->isUserChangeOfferStatus($data['offer_id'],$authUserId);
+         if ($isUserChangeOfferStatus) {
+            return $this->errorModel('You Change The Status Before', 'You Change The Status Before', 404, 'offer');
+        }
+
+
+        if (!$offer) {
 
             return $this->errorModel('offer not found', 'offer not found', 404, 'offer');
             // return response()->json(['message' => 'Failed to hand over the task'], 500);
@@ -37,12 +45,11 @@ class OfferLogsService
         }
 
 
-        $authUserId = auth()->id();
-                // 21                 21              
-            if($mission->user_id !== $authUserId &&  $offer->user_id !== $authUserId){
-            return response()->json(['message' => 'You are not authorized to hand over this task'], 403); 
-                }        
-    
+        // 21                 21              
+        if ($mission->user_id !== $authUserId && $offer->user_id !== $authUserId) {
+            return response()->json(['message' => 'You are not authorized to hand over this task'], 403);
+        }
+
 
         // Determine role based on who created the mission
 
@@ -52,15 +59,31 @@ class OfferLogsService
         $data['role'] = ((int) $mission->user_id === (int) $authUserId) ? 1 : 2;
         //check if user (freelance or client) not make taskhandover twice 
 
-  $this->offerLogsRepository->taskHandOver($data);
+        $this->offerLogsRepository->taskHandOver($data);
+
+           $allOfferLogs = $this->offerLogsRepository->userOfferLogsById($data['offer_id']);
+        if($allOfferLogs->count() === 2) {
+            // If both client and freelancer have logged their actions, close the offer
+            $this->CloseTheOffers($data['offer_id']);
+        }  
         return response()->json([
-            'message' =>'Task handed over successfully',
+            'message' => 'Task handed over successfully',
         ], 201);
     }
     public function cancelOffer($data)
     {
-        $offer = $this->offerRepository->getOfferById($data['offer_id']);
 
+
+        $offer = $this->offerRepository->getOfferById($data['offer_id']);
+     
+     
+        
+     
+     
+        // $userOfferLog = $this->offerLogsRepository->userOfferLogs($data['offer_id']);
+        // if ($userOfferLog) {
+        //     return $this->errorModel('offer status already exist', 'offer status already exist', 404, 'offer');
+        // }
         if (!$offer) {
             return response()->json(['message' => 'Failed to hand over the task'], 500);
         }
@@ -75,49 +98,90 @@ class OfferLogsService
         $authUserId = auth()->id();
 
 
-      
+
         // Determine role based on who created the mission
-            if($mission->user_id !== $authUserId &&  $offer->user_id !== $authUserId){
-            return response()->json(['message' => 'You are not authorized to hand over this task'], 403); 
-                }
-         
-         
-         $data['user_id'] = $authUserId;
+        if ($mission->user_id !== $authUserId && $offer->user_id !== $authUserId) {
+            return response()->json(['message' => 'You are not authorized to hand over this task'], 403);
+        }
+
+
+        $data['user_id'] = $authUserId;
         $data['offer_action_at'] = now();
         $data['mission_id'] = $mission->id;
+        //check if the user is the owner of mission or the offer
         $data['role'] = ((int) $mission->user_id === (int) $authUserId) ? 1 : 2;
 
         //check if user (freelance or client) not make taskhandover twice 
-        $offerLog = $this->offerLogsRepository->taskHandOver($data);
-         return response()->json([
-            'message' =>'Task handed over successfully',
+         $this->offerLogsRepository->taskHandOver($data);
+
+
+           $allOfferLogs = $this->offerLogsRepository->userOfferLogsById($data['offer_id']);
+           
+           if($allOfferLogs->count() >= 2) {
+               // If both client and freelancer have logged their actions, close the offer
+                return   $this->CloseTheOffers($data['offer_id']);
+
+           
+        }  
+
+        return response()->json([
+            'message' => 'Task handed over successfully',
         ], 201);
     }
 
 
 
 
- //function to check if client cancel offer and freelance say i want to cancel it //that mean cancel
+    //function to check if client cancel offer and freelance say i want to cancel it //that mean cancel
     //  if client received offer and freelance say  received it //that mean done
     //if client cancel
- public function CloseTheOffers($offerId){
-    //get offer log of the client and freelance
-    //if bot cancel the offer then close it
-    //if both received the offer then close it
-    //if client cancel the offer and freelance say im working and not finished then send to  arbitration
-    //if freelance say received the offer and client  say its Not finished then send to arbitration
+    private function CloseTheOffers($offerId)
+    {
+
+        $offerLogs = $this->offerLogsRepository->userOfferLogsById($offerId);
+        $clientStatus = null;
+        $freelancerStatus = null;
+
+        foreach ($offerLogs as $log) {
+            if ($log->role == 1) {  // adjust this condition based on your data
+                $clientStatus = $log->offer_status_id;
+            } elseif ($log->role == 2) {
+                $freelancerStatus = $log->offer_status_id;
+            }
+        }
+
+       
+        
+        
+        
+        if ($clientStatus !== $freelancerStatus) {
+
+            return response()->json(['message' => 'Offer cannot be closed, client and freelancer have different statuses'], 400);
+            //craete report to arbitration
+
+        }
+        $receivedStatus = Status::where('name_en', 'received')->first()->id;
+        $cancelledStatus = Status::where('name_en', 'Cancelled')->first()->id;
+
+        if ($clientStatus && $freelancerStatus == $receivedStatus) {
+
+
+            return $this->offerLogsRepository->CloseTheOffers($offerId, $receivedStatus);
+
+
+        }
+        if ($clientStatus && $freelancerStatus == $cancelledStatus) {
+
+
+            return $this->offerLogsRepository->CloseTheOffers($offerId, $cancelledStatus);
+
+
+        }
+        return $this->success('Offer closed successfully', [], 200);
+
+
+    }
 
 
 
-    $offers =   $this->offerLogsRepository->CloseTheOffers($offerId);
- return $offers;
-//  dd($offers);
-        //  return response()->json(['message' => 'Offer closed successfully'], 200);
-        // return $this->success('Offer closed successfully', [], 200);
-
-
-}
-    
-   
-     
 }

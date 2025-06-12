@@ -32,11 +32,11 @@ class OfferLogsController extends Controller
       return    $this->service->cancelOffer($data);
  
     }
-    public function CloseTheOffers($id)
-    {
-        $offers =  $this->service->CloseTheOffers($id);
+    // public function CloseTheOffers($id)
+    // {
+    //     $offers =  $this->service->CloseTheOffers($id);
  
-      return   $offers;
+    //   return   $offers;
  
-    }
+    // }
 }
