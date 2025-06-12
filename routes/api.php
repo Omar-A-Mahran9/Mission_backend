@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\MissionController;
 use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\OfferLogsController;
+use App\Http\Controllers\Api\ReportsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -62,11 +63,22 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('/accept-offer/{id}',[OfferController::class, 'acceptOffer']);
         Route::post('/reject-offer/{id}',[OfferController::class, 'rejectOfferByClient']);
         Route::post('/filter-by/price',[OfferController::class, 'filterOfferByPriceAndRate']);
-        // Route::post('/filter-by/rate',[OfferController::class, 'filterByRate']);
 
+        
+
+
+        //offer logs
         Route::post('/task-hand-over',[OfferLogsController::class, 'taskHandOver']);
         Route::post('/offer-cancel',[OfferLogsController::class, 'cancelOffer']);
         Route::post('/offer-close/{id}',[OfferLogsController::class, 'CloseTheOffers']);
+
+         
+
+        //report modules
+        Route::post('store/report', [ReportsController::class,'store']);
+        Route::get('/reports', [ReportsController::class,'index']);
+
+
 
         // 🔒 User Profile Routes
         Route::get('profile/steps', 'ProfileController@stepsStatus');

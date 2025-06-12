@@ -22,6 +22,11 @@ class StoreReportRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'report_id'=>'required|exists:reports,id',
+            'mission_id' => 'required|exists:missions,id',
+            'details'=>'required_if:report_id,4|string'
+
+            
         ];
     }
 }

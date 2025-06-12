@@ -158,6 +158,8 @@ class User extends Authenticatable
     return $this->hasMany(OfferLogs::class, 'freelancer_id');
 }
 
-
+  public function reports(){
+        return $this->hasMany(Report::class);
+    }
 
 }
