@@ -40,7 +40,7 @@ class Status extends Model
     // Example of appending the name attribute (adjust according to your data)
     public function getNameAttribute()
     {
-        return $this->name_ar ?? $this->name_en; // Assuming you have name_ar and name_en fields
+        return app()->getLocale() == 'ar'? $this->name_ar : $this->name_en; // Assuming you have name_ar and name_en fields
     }
 
 

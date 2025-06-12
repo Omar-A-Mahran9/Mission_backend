@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             // RoleSeeder::class,
             // SettingSeeder::class,
             // CitySeeder::class,
-            StatusSeeder::class,
+            // StatusSeeder::class,
+            ReportSeeder::class
          ]);
     }
 }

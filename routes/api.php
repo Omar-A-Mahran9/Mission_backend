@@ -66,6 +66,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
         Route::post('/task-hand-over',[OfferLogsController::class, 'taskHandOver']);
         Route::post('/offer-cancel',[OfferLogsController::class, 'cancelOffer']);
+        Route::post('/offer-close/{id}',[OfferLogsController::class, 'CloseTheOffers']);
 
         // 🔒 User Profile Routes
         Route::get('profile/steps', 'ProfileController@stepsStatus');
