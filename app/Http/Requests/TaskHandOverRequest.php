@@ -23,8 +23,7 @@ class TaskHandOverRequest extends FormRequest
     {
         return [
             'offer_id' => 'required|exists:offers,id',
-            'offer_status_id' => 'required|exists:status,id',
-            // 'mission_id' => 'required|exists:missions,id',
+             // 'mission_id' => 'required|exists:missions,id',
          ];
     }
 }

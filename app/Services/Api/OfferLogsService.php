@@ -52,9 +52,11 @@ class OfferLogsService
 
 
         // Determine role based on who created the mission
-
+        $statusRecive = Status::where('name_en','received')->first()->id;
         $data['user_id'] = $authUserId;
         $data['offer_action_at'] = now();
+        $data['offer_status_id'] =$statusRecive;
+        
         $data['mission_id'] = $mission->id;
         $data['role'] = ((int) $mission->user_id === (int) $authUserId) ? 1 : 2;
         //check if user (freelance or client) not make taskhandover twice 
@@ -104,6 +106,8 @@ class OfferLogsService
             return response()->json(['message' => 'You are not authorized to hand over this task'], 403);
         }
 
+        $statusRecive = Status::where('name_en','Cancelled')->first()->id;
+        $data['offer_status_id'] =$statusRecive;
 
         $data['user_id'] = $authUserId;
         $data['offer_action_at'] = now();
@@ -156,7 +160,7 @@ class OfferLogsService
         
         if ($clientStatus !== $freelancerStatus) {
 
-            return response()->json(['message' => 'Offer cannot be closed, client and freelancer have different statuses'], 400);
+            return response()->json(['message' => 'Offer cannot be closed, client and freelancer have different statuses'], 200);
             //craete report to arbitration
 
         }
