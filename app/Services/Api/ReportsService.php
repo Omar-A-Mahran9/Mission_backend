@@ -50,10 +50,10 @@ class ReportsService
             ->where('user_id', auth()->id())
             ->exists();
 
-        if (!$isAuthorized) {
+        if ($isAuthorized) {
             return $this->errorModel(
                 __('unauthorized action'),
-                403
+                
             );
         }
 
