@@ -160,7 +160,7 @@ class OfferLogsService
         
         if ($clientStatus !== $freelancerStatus) {
 
-            return response()->json(['message' => 'Offer cannot be closed, client and freelancer have different statuses'], 200);
+            return response()->json(['message' => 'offer will not be close becuse client and freelancer have different statuses'], 200);
             //craete report to arbitration
 
         }
