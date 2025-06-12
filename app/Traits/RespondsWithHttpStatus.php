@@ -57,5 +57,14 @@ trait RespondsWithHttpStatus
     ], $status);
 }
 
+ protected function created($message, $status = Response::HTTP_CREATED)
+    {
+        return response([
+            'success' => true,
+            'message' => $message,
+        ], $status);
+    }
+
+
 }
  

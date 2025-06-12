@@ -29,6 +29,7 @@ class OfferResource extends JsonResource
             'user_city' => $this->user->city->name,
             'available_budget'=> $this->available_budget,
             'mission_description' => $this->mission->description,
+            'mission_id' => $this->mission->id,
             'mission_attachment' => $this->mission->attachments->map(function ($attachment) {
                 return [
                     'file' => $attachment->file,
