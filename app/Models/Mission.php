@@ -12,7 +12,7 @@ class Mission extends Model
 {
     use SoftDeletes;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     protected $appends = [];
 
@@ -80,4 +80,10 @@ class Mission extends Model
     public function rates(){
         return $this->hasMany(Rate::class);
     }
+
+    public function reports()
+{
+    return $this->belongsToMany(Report::class)
+                ->withTimestamps();
+ }
 }
