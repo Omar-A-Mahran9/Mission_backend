@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskHandOverRequest extends FormRequest
+class CancelOfferHandRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,9 @@ class TaskHandOverRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'offer_id' => 'required|exists:offers,id',
-              // 'mission_id' => 'required|exists:missions,id',
-         ];
+                       'offer_id' => 'required|exists:offers,id',
+            'cancel_reason' => 'required|string|max:255',
+
+        ];
     }
 }

@@ -80,12 +80,13 @@ class OfferLogsService
      
      
         
+        $authUserId = auth()->id();
      
      
-        // $userOfferLog = $this->offerLogsRepository->userOfferLogs($data['offer_id']);
-        // if ($userOfferLog) {
-        //     return $this->errorModel('offer status already exist', 'offer status already exist', 404, 'offer');
-        // }
+        $userOfferLog = $this->offerLogsRepository->isUserChangeOfferStatus($data['offer_id'],$authUserId);
+        if ($userOfferLog) {
+            return $this->errorModel('You Change The Status Before', 'You Change The Status Before', 404, 'offer');
+        }
         if (!$offer) {
             return response()->json(['message' => 'Failed to hand over the task'], 500);
         }
@@ -97,7 +98,6 @@ class OfferLogsService
             return response()->json(['message' => 'Related mission not found'], 404);
         }
 
-        $authUserId = auth()->id();
 
 
 
@@ -106,8 +106,9 @@ class OfferLogsService
             return response()->json(['message' => 'You are not authorized to hand over this task'], 403);
         }
 
-        $statusRecive = Status::where('name_en','Cancelled')->first()->id;
-        $data['offer_status_id'] =$statusRecive;
+        $statusCancel = Status::where('name_en','Cancelled')->first()->id;
+        $data['offer_status_id'] =$statusCancel;
+        $data['cancel_reason'] = $data['cancel_reason'] ?? null; // Optional field, can be null
 
         $data['user_id'] = $authUserId;
         $data['offer_action_at'] = now();

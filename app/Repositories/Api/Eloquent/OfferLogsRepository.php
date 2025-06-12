@@ -41,7 +41,8 @@ class OfferLogsRepository implements OfferLogsRepositoryInterface
  public function userOfferLogsById($offerId){
     // Fetch the offer logs for a specific offer by ID
     return $this->offerLogs->where('offer_id', $offerId)
-        ->get();
+        
+    ->get();
  }
 
  public function isUserChangeOfferStatus($offerId, $userId)

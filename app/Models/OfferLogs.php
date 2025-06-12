@@ -14,7 +14,9 @@ class OfferLogs extends Model
         'user_id',
         'mission_id',
         'role', // 1: Client, 2: Freelancer
-    ];
+        'cancel_reason'
+        ]
+    ;
 
     public function offer()
     {
