@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\Api\OfferLogsService;
 use App\Http\Requests\TaskHandOverRequest;
+use App\Http\Requests\CancelOfferHandRequest;
 use App\Http\Resources\Api\OffersResource;
 
 class OfferLogsController extends Controller
@@ -25,7 +26,7 @@ class OfferLogsController extends Controller
 
     
     }
-    public function cancelOffer(TaskHandOverRequest $request)
+    public function cancelOffer(CancelOfferHandRequest $request)
     {
         $data = $request->validated();
  

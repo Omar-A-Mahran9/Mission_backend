@@ -20,11 +20,11 @@ return new class extends Migration
                 $table->foreignId('mission_id')->constrained('missions');
                 $table->enum('role', [1, 2])
                 ->comment('1: Client, 2: Freelancer');
-
-
-
-
-                // $table->foreignId('client_confirmed')->constrained('status');
+                
+                
+                
+                
+                 // $table->foreignId('client_confirmed')->constrained('status');
 
                 // $table->timestamp('client_action_at')->nullable();
                 // $table->foreignId('client_id')->constrained('users');
