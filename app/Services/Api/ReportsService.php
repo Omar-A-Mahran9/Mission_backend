@@ -26,50 +26,51 @@ class ReportsService
 
     }
 
-    public function storeReport($data)
-    {
-        //check if the user id and mission id exxcit
-   $missionReportExist =  DB::table('mission_reports')->where(
-    'mission_id',$data['mission_id']
-   )->where('user_id', auth()->id())
-         ->exists();
+public function storeReport($data)
+{
+    // Ensure report_ids are integers
+    $reportIds = array_map('intval', 
+        is_array($data['report_id']) ? $data['report_id'] : [$data['report_id']]
+    );
+    // Check existing reports
+    $existingReports = DB::table('mission_reports')
+        ->where('mission_id', $data['mission_id'])
+        ->where('user_id', auth()->id())
+        ->whereIn('report_id', $reportIds)
+        ->pluck('report_id')
+        ->toArray();
 
-        if ($missionReportExist) {
-            return $this->errorModel(
-                __('report already exists for this mission'),
-                'report exists',
-                422
-            );
-        }
-
-        
-
-        // Check if the user is authorized to report on this mission
-        $isAuthorized = DB::table('missions')
-            ->where('id', $data['mission_id'])
-            ->where('user_id', auth()->id())
-            ->exists();
-
-        if ($isAuthorized) {
-            return $this->errorModel(
-                __('unauthorized action'),
-                
-            );
-        }
-
- 
-
-         $reportData = array_merge($data, [
-        'user_id' => auth()->id(),
-                'created_at' => now(), // Current timestamp
-        'updated_at' => now(), // Current timestamp
-
-    ]);
-    DB::table('mission_reports')->insert($reportData);
-
-         return $this->created(
-            __('report created successfully'),
-              
+    if (!empty($existingReports)) {
+        return $this->errorModel(
+            __('Reports already exist: ') . implode(', ', $existingReports),
+            'reports_exist',
+            422
         );
     }
+
+    // Prepare data with proper typing
+    $reportsData = [];
+    $now = now();
+    
+    foreach ($reportIds as $reportId) {
+        $reportsData[] = [
+            'mission_id' => (int)$data['mission_id'],
+            'report_id' => (int)$reportId,
+            'user_id' => (int)auth()->id(),
+'details' => $reportId === 4 ? ($data['details'] ?? null) : null,
+            'created_at' => $now,
+            'updated_at' => $now
+        ];
+    }
+
+    // Insert with error handling
+         DB::table('mission_reports')->insert($reportsData);
+    
+
+    return $this->created(
+        __('Reports created successfully'),
+    );
+}
+
+
 }
