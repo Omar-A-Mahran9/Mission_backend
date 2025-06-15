@@ -109,21 +109,19 @@
                             </div>
                             <!--end:Menu item-->
                         @endcan
-                        @can('view_products')
-                            <!--begin:Menu item-->
+                        {{-- @can('view_products')
                             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                                 data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
                                 class="menu-item menu-lg-down-accordion me-0 me-lg-2 {{ isTabHere('dashboard.products.*') }}">
-                                <!--begin:Menu link-->
                                 <a class="menu-link "href="{{ route('dashboard.products.index') }}">
-                                    {{--  <span class="menu-link">  --}} <span class="menu-title">{{ __('Products') }}</span>
+                                        
+                                        
+                                        
+                                        <span class="menu-title">{{ __('Products') }}</span>
                                     <span class="menu-arrow d-lg-none"></span>
-                                    {{--  </span>  --}}
                                 </a>
-                                <!--end:Menu link-->
                             </div>
-                            <!--end:Menu item-->
-                        @endcan
+                        @endcan --}}
                         @can('view_refunds')
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"

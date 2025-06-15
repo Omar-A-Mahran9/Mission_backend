@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Dashboard\OffersController;
 Route::get('/', function () {
     return view('welcome');
 })->name('index');
@@ -45,3 +45,10 @@ Route::get('/language/{lang}', function (Request $request) {
     session()->put('locale', $request->lang);
     return redirect()->back();
 })->name('change-language');
+
+
+ 
+// offers 
+
+
+Route::get('/offer/{user_id}',[OffersController::class,'userOffers']);
