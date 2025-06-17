@@ -81,6 +81,14 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Contracts\ReportsRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\ReportsRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Dashboard\Contracts\OffersRepositoryInterface::class,
+            \App\Repositories\Dashboard\Eloquent\OffersRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Dashboard\Contracts\ReportsRepositoryInterface::class,
+            \App\Repositories\Dashboard\Eloquent\ReportsRepository::class
+        );
     }
 
     /**

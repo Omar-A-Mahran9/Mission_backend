@@ -1,3 +1,4 @@
+
 @extends('dashboard.partials.master')
 @push('styles')
     <link href="{{ asset('assets/css/datatables' . (isDarkMode() ? '.dark' : '') . '.bundle.css') }}" rel="stylesheet"
@@ -172,10 +173,14 @@
                     </li>
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
-                    <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                            href="#offer">{{ __('Offers') }}</a>
-                    </li>
+<li class="nav-item mt-2">
+    <a   class="nav-link text-active-primary ms-0 me-10 py-5"
+     data-bs-toggle="tab"
+     data-type="offers"
+      href="#offers">
+        {{ __('Offers') }}
+    </a>
+</li>
                     <!--end::Nav item-->
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
@@ -220,6 +225,8 @@
             </div>
             <div class="tab-pane fade portfolios-container" id="portfolios" role="tabpanel">
             </div>
+            <div class="tab-pane fade  " id="offers" role="tabpanel">
+            </div>
         </div>
         <!--end::Row-->
         <!--begin::Row-->
@@ -260,9 +267,22 @@
 
     <!--end::Content-->
 @endsection
-@push('scripts')
+
+
+ @push('scripts')
     <script>
         window.isArabic = '{{ isArabic() }}';
+    
+    let user = {!! json_encode($user) !!};
+       const t = {
+        id: "{{ __('ID') }}",
+        mission: "{{ __('Mission') }}",
+        user: "{{ __('User') }}",
+        status: "{{ __('Status') }}",
+        budget: "{{ __('Available Budget') }}",
+        created_at: "{{ __('Created At') }}"
+    };
+
     </script>
     <script>
         let userId = @json($user->id);
@@ -278,30 +298,31 @@
                     type = this.getAttribute("data-type"); // Read the selected type
                     console.log("Clicked Tab Type:", type); // Verify in console
                     // Call the function to reload DataTable based on the selected tab
+                    
                     loadScriptForType(type);
                 });
             });
         });
 
+
         // Function to load the required script based on tab selection
-        function loadScriptForType(type) {
-            let scriptSrc = type === "certificates" ?
-                "{{ asset('assets/js/forms/users/certificates.js') }}" :
-                type === "experiences" ?
-                "{{ asset('assets/js/forms/users/experiences.js') }}" : type === "licenses" ?
-                "{{ asset('assets/js/forms/users/licenses.js') }}" :
-                type === "portfolios" ?
-                "{{ asset('assets/js/forms/users/portfolios.js') }}" :
-                "{{ asset('assets/js/datatables/product-tickets-show.js') }}";
+      function loadScriptForType(type) {
+    let scriptSrc =
+        type === "certificates" ? "{{ asset('assets/js/forms/users/certificates.js') }}" :
+        type === "experiences" ? "{{ asset('assets/js/forms/users/experiences.js') }}" :
+        type === "licenses" ? "{{ asset('assets/js/forms/users/licenses.js') }}" :
+        type === "portfolios" ? "{{ asset('assets/js/forms/users/portfolios.js') }}" :
+        type === "offers" ? "{{ asset('assets/js/forms/users/offer.js') }}" :
+        null;
 
+    if (!scriptSrc) return; // Prevent execution if type is not valid
 
-            if (!scriptSrc) return; // Prevent execution if type is not valid
+    // Create script element
+    let script = document.createElement("script");
+    script.src = scriptSrc;
+    document.body.appendChild(script);
+}
 
-            // Create script element
-            let script = document.createElement("script");
-            script.src = scriptSrc;
-            document.body.appendChild(script);
-        }
     </script>
     <script>
         window['onAjaxSuccess'] = () => {

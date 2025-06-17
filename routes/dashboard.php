@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Dashboard\OffersController;
+use App\Http\Controllers\Dashboard\ReportsController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\Group;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,3 +48,33 @@ Route::get('/language/{lang}', function (Request $request) {
     session()->put('locale', $request->lang);
     return redirect()->back();
 })->name('change-language');
+
+
+ 
+// offers 
+
+
+Route::get('/offer/{user_id}',[OffersController::class,'userOffers']);
+
+
+
+
+//reportController
+
+
+Route::prefix('/report')->group(function(){
+Route::get('/',[ReportsController::class,'index'])->name('report.index');
+Route::get('/all',[ReportsController::class,'getAllReport'])->name('report.getAllReport');
+Route::get('/create/form',[ReportsController::class,'storeForm'])->name('report.create');
+Route::get('/edit/form/{report}',[ReportsController::class,'edit'])->name('report.edit');
+Route::post('/store',[ReportsController::class,'storeReport'])->name('report.storeReport');
+Route::post('/update/{report}',[ReportsController::class,'updateReport'])->name('report.update');
+Route::delete('/delete/{id}',[ReportsController::class,'delete'])->name('report.delete');
+
+
+});
+
+
+
+// 
+

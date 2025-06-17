@@ -2,15 +2,16 @@
 
 namespace App\Services\Api;
 
+use \Illuminate\Auth\Access\AuthorizationException;
 use App\Http\Requests\Api\StoreOffer;
+use App\Http\Resources\Api\OfferFilterResource;
 use App\Http\Resources\Api\OfferResource;
 use App\Http\Resources\Api\OffersResource;
-use App\Http\Resources\Api\OfferFilterResource;
+use App\Http\Resources\OffersByMissionResource;
 use App\Models\Status;
-use App\Repositories\Api\Contracts\OfferRepositoryInterface;
 use App\Repositories\Api\Contracts\MissionRepositoryInterface;
+use App\Repositories\Api\Contracts\OfferRepositoryInterface;
 use App\Traits\RespondsWithHttpStatus;
-use \Illuminate\Auth\Access\AuthorizationException;
 
 class OfferService
 {
@@ -68,7 +69,7 @@ class OfferService
         $mission = $this->getValidMission($missionId);
         $offers = $this->offerRepository->getOfferByMission($mission->id);
 
-        return OffersResource::collection($offers);
+        return OffersByMissionResource::collection($offers);
     }
 
     public function getDoneOffers()

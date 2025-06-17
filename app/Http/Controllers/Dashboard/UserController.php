@@ -24,7 +24,7 @@ class UserController extends Controller
     }
     public function show(User $user)
     {
-        $this->authorize('show_users');
+        $this->authorize('view_users');
         return view('dashboard.users.show', $this->service->show($user));
     }
     public function certificatesAjax(Request $request, User $user)
