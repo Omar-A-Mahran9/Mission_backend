@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Eloquent;
 
 use App\Models\User;
 use App\Models\ExcperienceUser;
+use App\Models\Field;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Api\Contracts\AuthRepositoryInterface;
 
@@ -23,6 +24,10 @@ class AuthRepository implements AuthRepositoryInterface
     {
         DB::beginTransaction();
         try {
+            $field = Field::find($dataUser['field_id']);
+            if (!($field->is_critical)) {
+                $dataUser['is_valid'] = 1;
+            }
             $user = User::create($dataUser);
             if ($document) {
                 foreach ($document as $doc) {

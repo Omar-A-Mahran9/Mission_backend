@@ -25,10 +25,10 @@ class Interest extends Model
     /**
      * The "booted" method of the model.
      */
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new SortingScope);
-    }
+    // protected static function booted(): void
+    // {
+    //     static::addGlobalScope(new SortingScope);
+    // }
     public function getNameAttribute()
     {
         return $this->attributes['name_' . app()->getLocale()];

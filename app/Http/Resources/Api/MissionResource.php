@@ -63,5 +63,8 @@ class MissionResource extends JsonResource
                 'file' => $attachment->full_path,
             ])),
 
+
+            'offers_count'=>$this->offers->count(),
+
         ]; }
 }

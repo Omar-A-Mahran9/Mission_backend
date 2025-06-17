@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\MissionController;
+use App\Http\Controllers\Api\OfferController;
+use App\Http\Controllers\Api\OfferLogsController;
+use App\Http\Controllers\Api\ReportsController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +31,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('change-password/{phone}', 'Auth\ForgetPasswordController@changePassword');
 
     // 🔹 Public Home Routes (Both No Auth Required, Require)
-    Route::get('products', 'ProductController@index');
-    Route::get('products/{product}', 'ProductController@show');
+    // Route::get('products', 'ProductController@index');
+    // Route::get('products/{product}', 'ProductController@show');
 
     Route::get('support', 'SupportController@supportData');
     Route::get('cities', 'CityController@index');
@@ -41,9 +45,40 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('support', 'SupportMessageController@store');
     Route::get('skills', 'ExcperiencController@skills');
     Route::get('specialists/{specialist}', 'ExcperiencController@specialists');
+
+
+
     // 🔒 Protected Routes (Require Auth)
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('logout', 'Auth\AuthController@logout');
+    // Route::resource('offers', 'OfferController');
+
+
+    //offers modules
+        Route::post('/offers',[OfferController::class, 'store']);
+        Route::get('/done-offer',[OfferController::class, 'getDoneOffers']);
+        Route::get('/current-offer',[OfferController::class, 'getCurrentOffers']);
+        Route::get('/offer/{id}',[OfferController::class, 'getOfferById']);
+        Route::get('/offers/mission/{mission_id}',[OfferController::class, 'getOffersByMissionId']);
+        Route::post('/accept-offer/{id}',[OfferController::class, 'acceptOffer']);
+        Route::post('/reject-offer/{id}',[OfferController::class, 'rejectOfferByClient']);
+        Route::post('/filter-by/price',[OfferController::class, 'filterOfferByPriceAndRate']);
+
+        
+
+
+        //offer logs
+        Route::post('/task-hand-over',[OfferLogsController::class, 'taskHandOver']);
+        Route::post('/offer-cancel',[OfferLogsController::class, 'cancelOffer']);
+        Route::post('/offer-close/{id}',[OfferLogsController::class, 'CloseTheOffers']);
+
+         
+
+        //report modules
+        Route::post('store/report', [ReportsController::class,'store']);
+        Route::get('/reports', [ReportsController::class,'index']);
+
+
 
         // 🔒 User Profile Routes
         Route::get('profile/steps', 'ProfileController@stepsStatus');
@@ -63,5 +98,13 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::apiResource('promo-codes', 'PromoCodeController');
         Route::get('fieldSkills', 'FieldController@fieldSkills');
         Route::post('fieldSkills', 'FieldController@update');
+        Route::apiResource('banners', 'BannerController');
+        Route::get('home', 'HomeController@index');
+        Route::get('home/search', 'HomeController@search');
+        Route::get('home/go-search', 'HomeController@goTosearch');
+
+
+
+
     });
 });

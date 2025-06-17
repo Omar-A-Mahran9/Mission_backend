@@ -85,11 +85,11 @@
                                 data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
                                 class="menu-item menu-lg-down-accordion me-0 me-lg-2 {{ isTabHere('dashboard.promo-codes.*') }}">
                                 <!--begin:Menu link-->
-                                <a class="menu-link "href="{{ route('dashboard.promo-codes.index') }}">
-                                    {{--  <span class="menu-link">  --}} <span class="menu-title"
-                                        style="{{ isTabBold('dashboard.promo-codes.*') }}">{{ __('Promo Codes') }}</span>
-                                    <span class="menu-arrow d-lg-none"></span>
-                                    {{--  </span>  --}}
+                                <a class="menu-link " href="{{ route('dashboard.promo-codes.index') }}">
+                                    {{-- <span class="menu-link"> --}} <span class="menu-title"
+                                            style="{{ isTabBold('dashboard.promo-codes.*') }}">{{ __('Promo Codes') }}</span>
+                                        <span class="menu-arrow d-lg-none"></span>
+                                        {{-- </span> --}}
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -109,21 +109,7 @@
                             </div>
                             <!--end:Menu item-->
                         @endcan
-                        @can('view_products')
-                            <!--begin:Menu item-->
-                            <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                                data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
-                                class="menu-item menu-lg-down-accordion me-0 me-lg-2 {{ isTabHere('dashboard.products.*') }}">
-                                <!--begin:Menu link-->
-                                <a class="menu-link "href="{{ route('dashboard.products.index') }}">
-                                    {{--  <span class="menu-link">  --}} <span class="menu-title">{{ __('Products') }}</span>
-                                    <span class="menu-arrow d-lg-none"></span>
-                                    {{--  </span>  --}}
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                        @endcan
+
                         @can('view_refunds')
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
@@ -170,8 +156,7 @@
                                     <div class="fw-bold d-flex align-items-center fs-5">Max Smith
                                         <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
                                     </div>
-                                    <a href="#"
-                                        class="fw-semibold text-muted text-hover-primary fs-7">max@kt.com</a>
+                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">max@kt.com</a>
                                 </div>
                                 <!--end::Username-->
                             </div>
@@ -204,8 +189,8 @@
                                 data-kt-menu="true" data-kt-element="theme-mode-menu">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3 my-0">
-                                    <a href="{{ route('dashboard.change-mode', 'light') }}"
-                                        class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="light">
+                                    <a href="{{ route('dashboard.change-mode', 'light') }}" class="menu-link px-3 py-2"
+                                        data-kt-element="mode" data-kt-value="light">
                                         <span class="menu-icon" data-kt-element="icon">
                                             <i class="ki-outline ki-night-day fs-2"></i>
                                         </span>
@@ -215,8 +200,7 @@
                                 <!--end::Menu item-->
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3 my-0">
-                                    <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                        data-kt-value="dark">
+                                    <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="dark">
                                         <span class="menu-icon" data-kt-element="icon">
                                             <i class="ki-outline ki-moon fs-2"></i>
                                         </span>
@@ -250,16 +234,14 @@
                                             class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
                                             {{ __('Arabic') }}
                                             <img class="w-15px h-15px rounded-1 ms-2"
-                                                src="{{ asset('assets/media/flags/saudi-arabia.svg') }}"
-                                                alt="" />
+                                                src="{{ asset('assets/media/flags/saudi-arabia.svg') }}" alt="" />
                                         </span>
                                     @else
                                         <span
                                             class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
                                             {{ __('English') }}
                                             <img class="w-15px h-15px rounded-1 ms-2"
-                                                src="{{ asset('assets/media/flags/united-states.svg') }}"
-                                                alt="" />
+                                                src="{{ asset('assets/media/flags/united-states.svg') }}" alt="" />
                                         </span>
                                     @endif
                                 </span>
@@ -272,8 +254,7 @@
                                         class="menu-link d-flex px-5 @if (!isArabic()) active @endif">
                                         <span class="symbol symbol-20px me-4">
                                             <img class="rounded-1"
-                                                src="{{ asset('assets/media/flags/united-states.svg') }}"
-                                                alt="" />
+                                                src="{{ asset('assets/media/flags/united-states.svg') }}" alt="" />
                                         </span>
                                         {{ __('English') }}
                                     </a>
@@ -285,8 +266,7 @@
                                         class="menu-link d-flex px-5 @if (isArabic()) active @endif">
                                         <span class="symbol symbol-20px me-4">
                                             <img class="rounded-1"
-                                                src="{{ asset('assets/media/flags/saudi-arabia.svg') }}"
-                                                alt="" />
+                                                src="{{ asset('assets/media/flags/saudi-arabia.svg') }}" alt="" />
                                         </span>
                                         {{ __('Arabic') }}
                                     </a>
@@ -317,9 +297,8 @@
                 <!--end::User menu-->
                 <!--begin::Chat-->
                 <div class="app-navbar-item me-3">
-                    <a href="#" class="d-flex align-items-center"
-                        data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
-                        data-kt-menu-placement="bottom-end">
+                    <a href="#" class="d-flex align-items-center" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                        data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                         <button
                             class="btn btn-icon btn-body position-relative btn btn-icon btn-icon-gray-600 border border-dashed border-gray-300 w-35px h-35px w-md-40px h-md-40px"
                             id="kt_drawer_chat_toggle">
@@ -412,8 +391,7 @@
                                             <!--end::Symbol-->
                                             <!--begin::Title-->
                                             <div class="mb-0 me-2">
-                                                <a href="#"
-                                                    class="fs-6 text-gray-800 text-hover-primary fw-bold">HR
+                                                <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">HR
                                                     Confidential</a>
                                                 <div class="text-gray-500 fs-7">Confidential staff documents</div>
                                             </div>
@@ -516,8 +494,7 @@
                                             <!--end::Symbol-->
                                             <!--begin::Title-->
                                             <div class="mb-0 me-2">
-                                                <a href="#"
-                                                    class="fs-6 text-gray-800 text-hover-primary fw-bold">Banner
+                                                <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Banner
                                                     Assets</a>
                                                 <div class="text-gray-500 fs-7">Collection of banner images</div>
                                             </div>
@@ -542,8 +519,7 @@
                                             <!--end::Symbol-->
                                             <!--begin::Title-->
                                             <div class="mb-0 me-2">
-                                                <a href="#"
-                                                    class="fs-6 text-gray-800 text-hover-primary fw-bold">Icon
+                                                <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Icon
                                                     Assets</a>
                                                 <div class="text-gray-500 fs-7">Collection of SVG icons</div>
                                             </div>
@@ -581,8 +557,7 @@
                                         <!--end::Text-->
                                         <!--begin::Action-->
                                         <div class="text-center mt-5 mb-9">
-                                            <a href="#" class="btn btn-sm btn-primary px-6"
-                                                data-bs-toggle="modal"
+                                            <a href="#" class="btn btn-sm btn-primary px-6" data-bs-toggle="modal"
                                                 data-bs-target="#kt_modal_upgrade_plan">Upgrade</a>
                                         </div>
                                         <!--end::Action-->
@@ -646,8 +621,7 @@
                                             <span class="w-70px badge badge-light-success me-4">200 OK</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">Payment
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">Payment
                                                 process</a>
                                             <!--end::Title-->
                                         </div>
@@ -665,8 +639,8 @@
                                             <span class="w-70px badge badge-light-warning me-4">300 WRN</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">Search query</a>
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">Search
+                                                query</a>
                                             <!--end::Title-->
                                         </div>
                                         <!--end::Section-->
@@ -701,8 +675,7 @@
                                             <span class="w-70px badge badge-light-success me-4">200 OK</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">Database
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">Database
                                                 restore</a>
                                             <!--end::Title-->
                                         </div>
@@ -720,8 +693,8 @@
                                             <span class="w-70px badge badge-light-warning me-4">300 WRN</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">System update</a>
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">System
+                                                update</a>
                                             <!--end::Title-->
                                         </div>
                                         <!--end::Section-->
@@ -738,8 +711,7 @@
                                             <span class="w-70px badge badge-light-warning me-4">300 WRN</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">Server OS
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">Server OS
                                                 update</a>
                                             <!--end::Title-->
                                         </div>
@@ -775,8 +747,7 @@
                                             <span class="w-70px badge badge-light-danger me-4">500 ERR</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">Refund
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">Refund
                                                 process</a>
                                             <!--end::Title-->
                                         </div>
@@ -794,8 +765,7 @@
                                             <span class="w-70px badge badge-light-danger me-4">500 ERR</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">Withdrawal
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">Withdrawal
                                                 process</a>
                                             <!--end::Title-->
                                         </div>
@@ -813,8 +783,8 @@
                                             <span class="w-70px badge badge-light-danger me-4">500 ERR</span>
                                             <!--end::Code-->
                                             <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 text-hover-primary fw-semibold">Mail tasks</a>
+                                            <a href="#" class="text-gray-800 text-hover-primary fw-semibold">Mail
+                                                tasks</a>
                                             <!--end::Title-->
                                         </div>
                                         <!--end::Section-->

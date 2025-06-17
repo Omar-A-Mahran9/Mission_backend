@@ -18,7 +18,7 @@ class User extends Authenticatable
     use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
 
     protected $guarded = ["password_confirmation"];
-    protected $appends = ['full_image_path', 'full_name'];
+    protected $appends = ['full_image_path', 'full_name', 'average_rating'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -121,7 +121,12 @@ class User extends Authenticatable
     }
     public function reviews()
     {
-        return $this->hasMany(Rate::class);
+        return $this->hasMany(Rate::class, 'profissionalist_id');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return round($this->reviews()->avg('rate'), 1); // مثلاً: 4.3
     }
     public function missions()
     {
@@ -139,4 +144,22 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Specialist::class, 'specialist_users');
     }
+
+    public function searchHistory()
+    {
+        return $this->hasMany(SearchHistory::class);
+    }
+
+
+
+
+    public function OfferLogs()
+{
+    return $this->hasMany(OfferLogs::class, 'freelancer_id');
+}
+
+  public function reports(){
+        return $this->hasMany(Report::class);
+    }
+
 }

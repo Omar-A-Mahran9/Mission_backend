@@ -12,7 +12,7 @@ class Mission extends Model
 {
     use SoftDeletes;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     protected $appends = [];
 
@@ -67,6 +67,23 @@ class Mission extends Model
     {
         return $this->hasOne(MissionStatue::class)->latestOfMany();
     }
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+    public function OfferLogs()
+    {
+        return $this->hasMany(OfferLogs::class);
+    }
 
 
+    public function rates(){
+        return $this->hasMany(Rate::class);
+    }
+
+    public function reports()
+{
+    return $this->belongsToMany(Report::class)
+                ->withTimestamps();
+ }
 }

@@ -18,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Api\Eloquent\AuthRepository::class
         );
         $this->app->bind(
+            \App\Repositories\Api\Contracts\MissionRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\MissionRepository::class
+        );
+        $this->app->bind(
             \App\Repositories\Api\Contracts\CityRepositoryInterface::class,
             \App\Repositories\Api\Eloquent\CityRepository::class
         );
@@ -56,6 +60,26 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\Dashboard\Contracts\PromoCodeRepositoryInterface::class,
             \App\Repositories\Dashboard\Eloquent\PromoCodeRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\BannerRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\BannerRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\HomeRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\HomeRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\OfferRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\OfferRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\OfferLogsRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\OfferLogsRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Api\Contracts\ReportsRepositoryInterface::class,
+            \App\Repositories\Api\Eloquent\ReportsRepository::class
         );
     }
 

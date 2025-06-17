@@ -12,8 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('excperience_users', function (Blueprint $table) {
-            $table->dropForeign(['field_id']);
-            $table->dropColumn('field_id');
             $table->string('title')->after('user_id')->nullable();
             $table->longText('description')->after('title')->nullable();
         });
@@ -25,7 +23,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('excperience_users', function (Blueprint $table) {
-            //
+                        $table->dropForeign(['field_id']);
+            $table->dropColumn('field_id');
+
         });
     }
 };

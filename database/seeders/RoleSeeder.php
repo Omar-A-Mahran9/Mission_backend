@@ -33,9 +33,10 @@ class RoleSeeder extends Seeder
         $exceptions = [
             'settings' => ['unused_actions' => [1, 2, 4], 'extra_actions' => []], // 1,2,4 are the indices of unused action from $actions array
             'recycle_bin' => ['unused_actions' => [1, 2, 3], 'extra_actions' => ['restore']],
+            'dashboard' => ['unused_actions' => [1, 2, 3, 4], 'extra_actions' => []], // 1,2,4 are the indices of unused action from $actions array
             'contact_us' => ['unused_actions' => [1, 2, 4], 'extra_actions' => []],
             'inactive_orders' => ['unused_actions' => [2, 3], 'extra_actions' => []], // Includes view, show, delete
-            'customers' => ['unused_actions' => [1, 2, 4], 'extra_actions' => ['block']],
+            'users' => ['unused_actions' => [1, 2, 4], 'extra_actions' => ['upadate_status', 'is_valid']],
         ];
 
 

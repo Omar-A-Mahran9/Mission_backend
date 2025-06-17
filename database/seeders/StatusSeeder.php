@@ -35,6 +35,19 @@ class StatusSeeder extends Seeder
             'name_en' => 'Cancelled',
             'color' => 'red',
         ]);
+
+
+
+        Status::create([
+            'name_ar' => 'تم الاستلام',
+            'name_en' => 'received',
+            'color' => '#66ffff',
+        ]);
+        Status::create([
+            'name_ar' => 'لم يتم الانتهاء',
+            'name_en' => 'Not finished',
+            'color' => '#666633',
+        ]);
     }
 }
 

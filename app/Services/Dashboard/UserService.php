@@ -30,9 +30,13 @@ class UserService
         $user = $this->repository->show($user);
         return compact('user');
     }
-    public function approve($user, $document)
+    public function approve($request, $user, $document)
     {
-        return $this->repository->approve($user, $document);
+        // $request->validate([
+        //     'reason' => 'required'
+        // ]);
+        // dd($request->all());
+        return $this->repository->approve($request, $user, $document);
     }
     public function certificatesAjax($user)
     {
@@ -49,5 +53,13 @@ class UserService
     public function portfoliosAjax($user)
     {
         return $this->repository->portfoliosAjax($user);
+    }
+    public function status($user)
+    {
+        return $this->repository->status($user);
+    }
+    public function isValid($request, $user)
+    {
+        return $this->repository->isValid($request, $user);
     }
 }

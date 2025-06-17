@@ -17,7 +17,7 @@ class UserFieldResource extends JsonResource
         return [
             'field_id' => $this["field"],
             'specialist_ids' =>  $this["specialists"],
-            'skill_ids' =>  $this["skills"]
+            'skill_ids' => SkillResource::collection( $this["skills"])
         ];
     }
 }

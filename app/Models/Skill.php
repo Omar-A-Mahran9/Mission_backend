@@ -31,6 +31,10 @@ class Skill extends Model
     }
     public function getNameAttribute()
     {
+        // dd($this->attributes['name_' . app()->getLocale()]);
+        // if (!$this->attributes['name_' . app()->getLocale()]) {
+        //     # code...
+        // }
         return $this->attributes['name_' . app()->getLocale()];
     }
 }

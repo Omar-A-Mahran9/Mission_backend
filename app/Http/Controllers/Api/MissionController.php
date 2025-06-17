@@ -69,4 +69,11 @@ class MissionController extends Controller
         }
     }
 
+    public function show($id)
+    {
+
+        return $this->success("Missions fetched successfully", new MissionResource($this->service->show($id)));
+
+    }
+
 }

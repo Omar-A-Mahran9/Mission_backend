@@ -1,9 +1,8 @@
 <?php
 
-            namespace App\Repositories\Api\Contracts;
+namespace App\Repositories\Api\Contracts;
 
-            interface BannerRepositoryInterface
-            {
-                // define methods
-            }
-            
+interface  BannerRepositoryInterface
+{
+    public function index();
+}

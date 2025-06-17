@@ -769,8 +769,15 @@
     "Promo Codes list": "قائمة أكواد الخصم",
     "Search for promo codes": "ابحث عن رموز الترويج",
     "Create Promo Code": "إنشاء رمز ترويجي",
-    "": "",
-    "": "",
-    "": "",
-    "": ""
+    "search": "بحث",
+    "Offer created successfully": "تم إنشاء العرض بنجاح",                   
+    "days": "ايام",
+    "Under review": "قيد المراجعة",
+    "Publishing": "جاري النشر",
+    "Accepted": "تم القبول",
+
+
+    "Cancelled": "تم الإلغاء",
+    "received": "تم الاستلام",
+    "Not finished": "لم يتم الانتهاء"
 }

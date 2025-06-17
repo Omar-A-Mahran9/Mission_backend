@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
-            $table->string('name_ar'); // Arabic name
-            $table->string('name_en'); // English name
+            $table->string('name_ar')->nullable(); // Arabic name
+            $table->string('name_en')->nullable(); // English name
             $table->timestamps();
         });
     }

@@ -70,9 +70,9 @@ class MissionService
 
 
 
-    public function show($id)
+  public function show($id)
     {
-        return $this->missionRepository->show($id);
+        return $this->missionRepository->find($id);
     }
 
     public function update($id, $data)

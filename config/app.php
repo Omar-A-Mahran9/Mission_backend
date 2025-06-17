@@ -65,9 +65,10 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => env('APP_TIMEZONE', 'Asia/Riyadh'),
 
-    /*
+    /*'timezone' => 'Asia/Riyadh',
+
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------

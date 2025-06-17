@@ -17,6 +17,8 @@ class FieldResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'full_image_path' => $this->full_image_path,
+            'missions_count' => $this->missions_count,
             'is_critical' => $this->is_critical,
         ];
     }
