@@ -31,9 +31,15 @@ class MissionResource extends JsonResource
                 'name' => $skill->name,
             ])),
             // Optionally include relationships if loaded
-            'field' => $this->field->name,
+            'field' => $this->whenLoaded('field', fn () => [
+                    'id' => $this->field->id,
+                    'name' => $this->field->name,
+                ]),
 
-            'specialist' => $this->specialist->name,
+            'specialist' => $this->whenLoaded('specialist', fn () => [
+                'id' => $this->specialist->id,
+                'name' => $this->specialist->name,
+            ]),
 
             'user' => $this->whenLoaded('user', fn () => [
                 'id' => $this->user->id,
