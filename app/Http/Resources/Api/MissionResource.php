@@ -58,8 +58,13 @@ class MissionResource extends JsonResource
                     'name' => $this->lastStatue->status->name,
 
             ]),
+             'attachments' => $this->whenLoaded('attachments', fn () => $this->attachments->map(fn($attachment) => [
+                'id' => $attachment->id,
+                'file' => $attachment->full_path,
+            ])),
 
 
             'offers_count'=>$this->offers->count(),
+
         ]; }
 }

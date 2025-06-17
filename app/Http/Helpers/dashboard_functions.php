@@ -46,7 +46,19 @@ if (!function_exists('uploadImageToDirectory')) {
         return $imageName;
     }
 }
+if (!function_exists('getAttachmentPathFromDirectory')) {
+    function getAttachmentPathFromDirectory($fileName = null, $directory = null)
+    {
+        $directory = Str::plural($directory);
+        $directory = Str::ucfirst($directory);
 
+        if ($fileName && $directory && Storage::disk('public')->exists("missions/attachments/$directory/$fileName")) {
+            return asset("storage/attachments/$directory/$fileName");
+        }
+
+        return null;
+    }
+}
 
 if (!function_exists('uploadAttachmentToDirectory')) {
     function uploadAttachmentToDirectory($file, $folder = 'missions/attachments')
