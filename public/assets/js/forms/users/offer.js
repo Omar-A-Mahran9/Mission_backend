@@ -24,8 +24,8 @@ let userId = user;
             
             .then(data => {
 
-                console.log(data);
-        document.getElementById("no-results-alert").style.setProperty('display', 'none', 'important');
+
+                document.getElementById("no-results-alert").style.setProperty('display', 'none', 'important');
                 const offerDiv = document.getElementById('offers');
 
                 if (!Array.isArray(data) || data.length === 0) {

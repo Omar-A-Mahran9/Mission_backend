@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+           use Carbon\Carbon;
 
-class OfferFilterResource extends JsonResource
+class OffersByMissionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,7 +15,7 @@ class OfferFilterResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        return[
               'id'=>$this->id,
             'status' => $this->status->name,
            
@@ -30,7 +31,8 @@ class OfferFilterResource extends JsonResource
 
             
                          'available_budget'=> $this->available_budget,
- 
+
+
         ];
     }
 }

@@ -274,6 +274,14 @@
         window.isArabic = '{{ isArabic() }}';
     
     let user = {!! json_encode($user) !!};
+       const t = {
+        id: "{{ __('ID') }}",
+        mission: "{{ __('Mission') }}",
+        user: "{{ __('User') }}",
+        status: "{{ __('Status') }}",
+        budget: "{{ __('Available Budget') }}",
+        created_at: "{{ __('Created At') }}"
+    };
 
     </script>
     <script>

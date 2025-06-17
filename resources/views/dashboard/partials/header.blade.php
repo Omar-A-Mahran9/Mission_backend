@@ -122,16 +122,16 @@
                                 </a>
                             </div>
                         @endcan --}}
-                        @can('view_refunds')
+                        @can('view_reports')
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                                 data-kt-menu-placement="bottom-start" data-kt-menu-offset="12,0"
                                 class="menu-item menu-lg-down-accordion me-0 me-lg-2">
                                 <!--begin:Menu link-->
-                                <span class="menu-link">
-                                    <span class="menu-title">{{ __('Refunded tickets') }}</span>
+                                <a class="menu-link" href="{{ route('dashboard.report.index') }}">
+                                    <span class="menu-title">{{ __('Reports') }}</span>
                                     <span class="menu-arrow d-lg-none"></span>
-                                </span>
+                                </a>
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
