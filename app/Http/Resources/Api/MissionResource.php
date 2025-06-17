@@ -21,15 +21,15 @@ class MissionResource extends JsonResource
             'budget' => $this->budget,
             'delivery_time' => $this->delivery_time,
             'is_publish' => (bool) $this->is_publish,
-            'city' => $this->whenLoaded('city', fn () => [
-                    'id' => $this->city->id,
-                    'name' => $this->city->name,
-                ]),
+            // 'city' => $this->whenLoaded('city', fn () => [
+            //         'id' => $this->city->id,
+            //         'name' => $this->city->name,
+            //     ]),
             // Skills - include the skills if loaded
-            'skills' => $this->whenLoaded('skills', fn () => $this->skills->map(fn($skill) => [
-                'id' => $skill->id,
-                'name' => $skill->name,
-            ])),
+            // 'skills' => $this->whenLoaded('skills', fn () => $this->skills->map(fn($skill) => [
+            //     'id' => $skill->id,
+            //     'name' => $skill->name,
+            // ])),
             // Optionally include relationships if loaded
             'field' => $this->field->name,
 
