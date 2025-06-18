@@ -71,9 +71,16 @@ class MissionController extends Controller
 
     public function show($id)
     {
-
         return $this->success("Missions fetched successfully", new MissionResource($this->service->show($id)));
+    }
 
+        public function getDoneMission()
+    {
+       return $this->service->getDoneMission();
+    }
+    public function getCurrentMission()
+    {
+       return $this->service->getCurrentMission();
     }
 
 }

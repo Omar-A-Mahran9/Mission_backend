@@ -17,10 +17,10 @@ class MissionResource extends JsonResource
         return [
             'id' => $this->id,
             'description' => $this->description,
-
+             'status' => $this->lastStatue->name,
             'budget' => $this->budget,
             'delivery_time' => $this->delivery_time,
-            'is_publish' => (bool) $this->is_publish,
+            // 'is_publish' => (bool) $this->is_publish,
             'city' => $this->whenLoaded('city', fn () => [
                     'id' => $this->city->id,
                     'name' => $this->city->name,
@@ -58,6 +58,7 @@ class MissionResource extends JsonResource
                     'name' => $this->lastStatue->status->name,
 
             ]),
+
              'attachments' => $this->whenLoaded('attachments', fn () => $this->attachments->map(fn($attachment) => [
                 'id' => $attachment->id,
                 'file' => $attachment->full_path,

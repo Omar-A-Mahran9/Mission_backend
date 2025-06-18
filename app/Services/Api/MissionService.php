@@ -2,14 +2,18 @@
 
 namespace App\Services\Api;
 
+use App\Http\Resources\Api\MissionResource;
 use App\Models\Status;
 use App\Repositories\Api\Eloquent\MissionRepository;
+use App\Traits\RespondsWithHttpStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class MissionService
 {
+    use RespondsWithHttpStatus;
+
     protected $missionRepository;
 
     public function __construct(MissionRepository $missionRepository)
@@ -130,4 +134,20 @@ class MissionService
     {
         return $this->missionRepository->destroy($id);
     }
+
+        public function getDoneMission()
+    {
+         $Mission = $this->missionRepository->getDoneMission();
+
+        return $this->success('Done mission retrieved', MissionResource::collection($Mission));
+    }
+
+    public function getCurrentMission()
+    {
+
+         $Mission = $this->missionRepository->getCurrentMission();
+        return $this->success('Current mission retrieved', MissionResource::collection($Mission));
+    }
+
+
 }
