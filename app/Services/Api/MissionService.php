@@ -28,12 +28,13 @@ class MissionService
 
     public function store($data)
     {
+
         return DB::transaction(function () use ($data) {
             $data['user_id'] = Auth::id();  // This stores only the user's ID
 
 
          if (isset($data['days_until_delivery'])) {
-            $data['delivery_time'] = Carbon::now()->addDays($data['days_until_delivery']);
+            $data['delivery_time'] = Carbon::now()->addDays((int)$data['days_until_delivery']);
             // unset($data['days_until_delivery']); // Clean up
         }
 
@@ -55,11 +56,13 @@ class MissionService
                 $mission->skills()->sync($skills);
             }
 
-            if (request()->hasFile('attachments')) {
-                foreach (request()->file('attachments') as $file) {
-                    $this->missionRepository->attachFile($mission, $file);
-                }
+              // Attach uploaded files if present
+        if (request()->hasFile('attachments')) {
+            foreach (request()->file('attachments') as $file) {
+                $this->missionRepository->attachFile($mission, $file);
             }
+        }
+
             return $mission->load([
                 'field',
                 'specialist',
@@ -68,6 +71,8 @@ class MissionService
                 'user',
                 'skills',            // User relation
                 'lastStatue.status',
+                'attachments',
+
             ]);
                     });
     }

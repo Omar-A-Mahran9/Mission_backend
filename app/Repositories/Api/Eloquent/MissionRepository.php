@@ -79,23 +79,26 @@ class MissionRepository implements MissionRepositoryInterface
 
 
 
-public function getDoneMission()
+public function getCurrentMission()
 {
-    return Mission::where('user_id', Auth::id())
+    return Mission::with('specialist', 'attachments')
+        ->where('user_id', Auth::id())
         ->whereHas('lastStatue.status', function ($query) {
-            $query->whereIn('name_en', ['Accepted', 'Completed']); // adjust as per your real statuses
+            $query->whereIn('name_en', ['Under review', 'Publishing']);
         })
         ->latest()
         ->get();
 }
 
-public function getCurrentMission()
+public function getDoneMission()
 {
-    return Mission::where('user_id', Auth::id())
+    return Mission::with('specialist', 'attachments')
+        ->where('user_id', Auth::id())
         ->whereHas('lastStatue.status', function ($query) {
-            $query->whereIn('name_en', ['Under Review', 'Publishing']); // adjust as needed
+            $query->whereIn('name_en', ['Accepted', 'Received']);
         })
         ->latest()
         ->get();
 }
+
 }

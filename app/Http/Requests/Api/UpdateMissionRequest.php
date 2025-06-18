@@ -25,7 +25,7 @@ class UpdateMissionRequest extends FormRequest
             'description' => 'required|string',
             'city_id' => 'required|exists:cities,id',
             'budget' => 'required|numeric',
-            'payment_way_id' => 'required|exists:payment_ways,id',
+            // 'payment_way_id' => 'required|exists:payment_ways,id',
             'days_until_delivery' => 'required|integer|min:1',
             'available_attachment' => 'required|boolean',
             'attachments' => 'nullable|array',

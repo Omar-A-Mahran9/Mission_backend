@@ -16,6 +16,6 @@ class MissionAttachment extends Model
 
     public function getFullPathAttribute(): ?string
     {
-        return getAttachmentPathFromDirectory($this->file);
+        return getAttachmentPathFromDirectory($this->file,'mission/attachments');
     }
 }

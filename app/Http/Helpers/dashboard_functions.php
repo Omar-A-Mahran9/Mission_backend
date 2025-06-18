@@ -34,26 +34,16 @@ if (!function_exists('isDarkMode')) {
     }
 }
 
-if (!function_exists('uploadImageToDirectory')) {
 
-    function uploadImageToDirectory($imageFile, $model = '')
-    {
-        $model     = Str::plural($model);
-        $model     = Str::ucfirst($model);
-        $path      = "/Images/$model";
-        $imageName = str_replace(' ', '', 'webstdy_' . time() . "_" . random_int(10, 99) . $imageFile->getClientOriginalName());  // Set Image name
-        $imageFile->storeAs($path, $imageName, 'public');
-        return $imageName;
-    }
-}
+
 if (!function_exists('getAttachmentPathFromDirectory')) {
     function getAttachmentPathFromDirectory($fileName = null, $directory = null)
     {
         $directory = Str::plural($directory);
         $directory = Str::ucfirst($directory);
 
-        if ($fileName && $directory && Storage::disk('public')->exists("missions/attachments/$directory/$fileName")) {
-            return asset("storage/attachments/$directory/$fileName");
+        if ($fileName && $directory ) {
+            return asset("storage/$directory/$fileName");
         }
 
         return null;
@@ -61,13 +51,13 @@ if (!function_exists('getAttachmentPathFromDirectory')) {
 }
 
 if (!function_exists('uploadAttachmentToDirectory')) {
-    function uploadAttachmentToDirectory($file, $folder = 'missions/attachments')
+    function uploadAttachmentToDirectory($file, $folder)
     {
         $folder = trim($folder, '/'); // clean up input
         $fileName = 'attachment_' . time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
         $file->storeAs($folder, $fileName, 'public');
 
-        return $folder . '/' . $fileName;
+        return  $fileName;
     }
 }
 

@@ -17,7 +17,13 @@ class MissionResource extends JsonResource
         return [
             'id' => $this->id,
             'description' => $this->description,
-             'status' => $this->lastStatue->name,
+            'status' => $this->lastStatue && $this->lastStatue->status
+                ? [
+                    'id' => $this->lastStatue->status->id,
+                    'name' => $this->lastStatue->status->name,
+                    'color' => $this->lastStatue->status->color,
+                ]
+                : null,
             'budget' => $this->budget,
             'delivery_time' => $this->delivery_time,
             // 'is_publish' => (bool) $this->is_publish,
@@ -49,14 +55,6 @@ class MissionResource extends JsonResource
             'payment_way' => $this->whenLoaded('paymentWay', fn () => [
                 'id' => $this->paymentWay->id,
                 'name' => $this->paymentWay->name,
-            ]),
-
-             // Last status
-            'last_statue' => $this->whenLoaded('lastStatue', fn () => [
-
-                    'id' => $this->lastStatue->status->id,
-                    'name' => $this->lastStatue->status->name,
-
             ]),
 
              'attachments' => $this->whenLoaded('attachments', fn () => $this->attachments->map(fn($attachment) => [
