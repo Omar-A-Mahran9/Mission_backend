@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('specialist_id');
             $table->decimal('budget', 10, 2);
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('payment_way_id');
+            $table->unsignedBigInteger('payment_way_id')->nullable();
             $table->integer('days_until_delivery')->nullable();
             $table->timestamp('delivery_time');
             $table->boolean('is_publish')->default(false);

@@ -64,7 +64,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('/reject-offer/{id}',[OfferController::class, 'rejectOfferByClient']);
         Route::post('/filter-by/price',[OfferController::class, 'filterOfferByPriceAndRate']);
 
-        
+
 
 
         //offer logs
@@ -72,7 +72,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('/offer-cancel',[OfferLogsController::class, 'cancelOffer']);
         Route::post('/offer-close/{id}',[OfferLogsController::class, 'CloseTheOffers']);
 
-         
+
 
         //report modules
         Route::post('store/report', [ReportsController::class,'store']);
@@ -88,7 +88,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::apiResource('certificates', 'CertificateController');
         Route::apiResource('license', 'CertificateController');
         Route::apiResource('missions', MissionController::class);
-
+        Route::get('/done-missions',[MissionController::class, 'getDoneMission']);
+        Route::get('/current-missions',[MissionController::class, 'getCurrentMission']);
 
         Route::post('certificates/{id}/update', 'CertificateController@update');
         Route::apiResource('licenses', 'LicenseController');
