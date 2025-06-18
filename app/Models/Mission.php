@@ -57,7 +57,7 @@ class Mission extends Model
     }
     public function statue(): HasMany
     {
-        return $this->hasMany(MissionStatue::class);
+        return $this->hasMany(MissionStatue::class,'mission_id');
     }
     public function user()
     {
@@ -86,4 +86,5 @@ class Mission extends Model
     return $this->belongsToMany(Report::class)
                 ->withTimestamps();
  }
+
 }

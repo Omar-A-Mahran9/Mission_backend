@@ -38,13 +38,13 @@ class MissionStatue extends Model
         return $this->belongsTo(Mission::class);
     }
 
-    public function status()
-    {
-        return $this->belongsTo(Status::class); // Correcting case-sensitivity
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+    public function status()
+{
+    return $this->belongsTo(Status::class, 'status_id');
+}
+
 }

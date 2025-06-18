@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Eloquent;
 use App\Models\Mission;
 use App\Repositories\Api\Contracts\MissionRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class MissionRepository implements MissionRepositoryInterface
 {
@@ -53,8 +54,9 @@ class MissionRepository implements MissionRepositoryInterface
         'user',
         'skills',
         'lastStatue.status',
-        'offers'
-    ])->find($id);
+        'offers',
+        'attachments'
+        ])->find($id);
         if (!$mission) {
             throw new ModelNotFoundException("Mission with ID {$id} not found.");
         }
@@ -75,4 +77,29 @@ class MissionRepository implements MissionRepositoryInterface
             $mission = Mission::findOrFail($id);
             return $mission->delete();
         }
+
+
+
+public function getCurrentMission()
+{
+    return Mission::with('specialist', 'attachments')
+        ->where('user_id', Auth::id())
+        ->whereHas('lastStatue.status', function ($query) {
+            $query->whereIn('name_en', ['Under review', 'Publishing']);
+        })
+        ->latest()
+        ->get();
+}
+
+public function getDoneMission()
+{
+    return Mission::with('specialist', 'attachments')
+        ->where('user_id', Auth::id())
+        ->whereHas('lastStatue.status', function ($query) {
+            $query->whereIn('name_en', ['Accepted', 'Received']);
+        })
+        ->latest()
+        ->get();
+}
+
 }

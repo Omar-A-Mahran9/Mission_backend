@@ -2,14 +2,18 @@
 
 namespace App\Services\Api;
 
+use App\Http\Resources\Api\MissionResource;
 use App\Models\Status;
 use App\Repositories\Api\Eloquent\MissionRepository;
+use App\Traits\RespondsWithHttpStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class MissionService
 {
+    use RespondsWithHttpStatus;
+
     protected $missionRepository;
 
     public function __construct(MissionRepository $missionRepository)
@@ -24,12 +28,13 @@ class MissionService
 
     public function store($data)
     {
+
         return DB::transaction(function () use ($data) {
             $data['user_id'] = Auth::id();  // This stores only the user's ID
 
 
          if (isset($data['days_until_delivery'])) {
-            $data['delivery_time'] = Carbon::now()->addDays($data['days_until_delivery']);
+            $data['delivery_time'] = Carbon::now()->addDays((int)$data['days_until_delivery']);
             // unset($data['days_until_delivery']); // Clean up
         }
 
@@ -51,11 +56,13 @@ class MissionService
                 $mission->skills()->sync($skills);
             }
 
-            if (request()->hasFile('attachments')) {
-                foreach (request()->file('attachments') as $file) {
-                    $this->missionRepository->attachFile($mission, $file);
-                }
+              // Attach uploaded files if present
+        if (request()->hasFile('attachments')) {
+            foreach (request()->file('attachments') as $file) {
+                $this->missionRepository->attachFile($mission, $file);
             }
+        }
+
             return $mission->load([
                 'field',
                 'specialist',
@@ -64,6 +71,8 @@ class MissionService
                 'user',
                 'skills',            // User relation
                 'lastStatue.status',
+                'attachments',
+
             ]);
                     });
     }
@@ -130,4 +139,20 @@ class MissionService
     {
         return $this->missionRepository->destroy($id);
     }
+
+        public function getDoneMission()
+    {
+         $Mission = $this->missionRepository->getDoneMission();
+
+        return $this->success('Done mission retrieved', MissionResource::collection($Mission));
+    }
+
+    public function getCurrentMission()
+    {
+
+         $Mission = $this->missionRepository->getCurrentMission();
+        return $this->success('Current mission retrieved', MissionResource::collection($Mission));
+    }
+
+
 }
