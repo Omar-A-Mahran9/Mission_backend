@@ -31,6 +31,7 @@ class MissionResource extends JsonResource
                     'id' => $this->city->id,
                     'name' => $this->city->name,
                 ]),
+                'available_attachment'=>$this->available_attachment,
             // Skills - include the skills if loaded
             'skills' => $this->whenLoaded('skills', fn () => $this->skills->map(fn($skill) => [
                 'id' => $skill->id,
