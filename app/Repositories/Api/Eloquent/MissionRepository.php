@@ -54,7 +54,8 @@ class MissionRepository implements MissionRepositoryInterface
         'user',
         'skills',
         'lastStatue.status',
-        'offers'
+        'offers',
+        'attachments'
         ])->find($id);
         if (!$mission) {
             throw new ModelNotFoundException("Mission with ID {$id} not found.");

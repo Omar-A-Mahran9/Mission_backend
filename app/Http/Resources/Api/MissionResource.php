@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,7 +26,11 @@ class MissionResource extends JsonResource
                 ]
                 : null,
             'budget' => $this->budget,
-            'delivery_time' => $this->delivery_time,
+            'delivery_duration' => $this->days_until_delivery . ' days',
+
+    'delivery_time' => $this->delivery_time
+            ? Carbon::parse($this->delivery_time)->diffForHumans()
+            : null,
             // 'is_publish' => (bool) $this->is_publish,
             'city' => $this->whenLoaded('city', fn () => [
                     'id' => $this->city->id,
@@ -63,6 +68,7 @@ class MissionResource extends JsonResource
                 'file' => $attachment->full_path,
             ])),
 
+            'publish_at'=>$this->created_at,
 
             'offers_count'=>$this->offers->count(),
 
