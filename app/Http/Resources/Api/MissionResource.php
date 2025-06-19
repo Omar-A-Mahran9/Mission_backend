@@ -56,6 +56,7 @@ class MissionResource extends JsonResource
             'user' => $this->whenLoaded('user', fn () => [
                 'id' => $this->user->id,
                 'name' => $this->user->first_name . ' '. $this->user->last_name ,
+                'image'=>$this->full_image_path,
             ]),
 
             'payment_way' => $this->whenLoaded('paymentWay', fn () => [
@@ -68,8 +69,9 @@ class MissionResource extends JsonResource
                 'file' => $attachment->full_path,
             ])),
 
-            'publish_at'=>$this->created_at,
-
+        'publish_at' => $this->created_at
+            ? Carbon::parse($this->created_at)->diffForHumans()
+            : null,
             'offers_count'=>$this->offers->count(),
 
         ]; }
